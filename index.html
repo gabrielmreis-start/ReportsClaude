@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reports | Last Mile Analytics</title>
+<link href="https://fonts.googleapis.com/css2?family=Proxima+Nova:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{--ml-yellow:#FFE600;--ml-blue:#2D3277;--ml-blue-light:#3483FA;--ml-green:#00A650}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Proxima Nova','Arial',sans-serif;background:#F5F5F5;color:#1A1A2E;min-height:100vh}
+  .header{background:var(--ml-blue);color:#fff;padding:24px 40px;display:flex;align-items:center;gap:16px}
+  .logo{background:var(--ml-yellow);color:var(--ml-blue);font-weight:700;font-size:13px;padding:6px 12px;border-radius:6px}
+  .header h1{font-size:22px;font-weight:700}
+  .header-sub{font-size:13px;opacity:.65;margin-top:3px}
+  .wrap{max-width:900px;margin:40px auto;padding:0 24px}
+  h2{font-size:14px;font-weight:700;color:#6B7280;text-transform:uppercase;letter-spacing:.6px;margin-bottom:16px}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px;margin-bottom:40px}
+  .card{background:#fff;border-radius:10px;border:1px solid #E5E7EB;padding:24px;text-decoration:none;color:inherit;display:flex;flex-direction:column;gap:8px;transition:all .2s;position:relative;overflow:hidden}
+  .card::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:var(--accent,var(--ml-blue-light))}
+  .card:hover{box-shadow:0 4px 20px rgba(0,0,0,.1);transform:translateY(-2px)}
+  .card-tag{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--ml-blue-light)}
+  .card-title{font-size:16px;font-weight:700}
+  .card-desc{font-size:12px;color:#6B7280;line-height:1.5}
+  .card-footer{font-size:11px;color:#9CA3AF;margin-top:4px}
+  footer{text-align:center;padding:32px;font-size:12px;color:#9CA3AF}
+</style>
+</head>
+<body>
+<div class="header">
+  <div class="logo">MELI</div>
+  <div>
+    <h1>Last Mile Reports</h1>
+    <div class="header-sub">Dashboards analíticos · Logística · Frota Fixa & SDD</div>
+  </div>
+</div>
+
+<div class="wrap">
+  <h2>Relatórios disponíveis</h2>
+  <div class="grid">
+    <a class="card" href="relatorio_ff_placas.html" style="--accent:#3483FA">
+      <div class="card-tag">Frota Fixa</div>
+      <div class="card-title">FF – Placas Rodadas</div>
+      <div class="card-desc">Aderência Frota Fixa × Calendarização por SVC, MLP, Semana e Bucket de dias.</div>
+      <div class="card-footer">Fonte: BT_BASEROTAS_LASTMILE × CALENDARIZACAO_FF_HISTORICA</div>
+    </a>
+  </div>
+
+  <h2>Em breve</h2>
+  <div class="grid">
+    <div class="card" style="--accent:#9B59B6;opacity:.5;cursor:not-allowed">
+      <div class="card-tag">SDD</div>
+      <div class="card-title">SDD – Aderência ER/EX</div>
+      <div class="card-desc">Relatório de aderência Super Dedicados por região e período.</div>
+      <div class="card-footer">Em construção</div>
+    </div>
+  </div>
+</div>
+
+<footer>Last Mile Analytics · Mercado Livre · Atualizado via script Python + BigQuery</footer>
+</body>
+</html>
