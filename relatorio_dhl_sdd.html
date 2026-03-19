@@ -40,7 +40,7 @@
     .header h1 { font-size: 1.5rem; font-weight: 700; }
     .info-aderencia { background: #fff; border-radius: 8px; padding: 14px 20px; margin-bottom: 24px; box-shadow: 0 1px 4px rgba(0,0,0,.08); border-left: 4px solid var(--meli-yellow); font-size: 0.95rem; }
     .info-aderencia strong { color: var(--er-vermelho); }
-    .z-charts { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 24px; }
+    .z-charts { display: grid; grid-template-columns: 1fr; gap: 24px; margin-bottom: 24px; }
     @media (max-width: 700px) { .z-charts { grid-template-columns: 1fr; } }
     .chart-svc-er { min-height: 520px; }
     .chart-box { background: #fff; border-radius: 8px; padding: 20px; box-shadow: 0 1px 4px rgba(0,0,0,.08); border-left: 4px solid var(--meli-yellow); }
@@ -102,7 +102,6 @@
 <div class='resumo-executivo'><h2>Resumo executivo</h2><p class='resumo-titulo'><strong>Crítico</strong></p><ul class='resumo-lista resumo-critico'><li>ER <strong>abaixo de 80%</strong> em Fev/2026 (75.9%)</li><li>Semana W8 com ER <strong>abaixo de 80%</strong> (67.1%)</li><li>Semana W9 com ER <strong>abaixo de 80%</strong> (71.6%)</li><li>Semana W10 com ER <strong>abaixo de 80%</strong> (66.2%)</li><li>Semana W11 com ER <strong>abaixo de 80%</strong> (67.9%)</li></ul><p class='resumo-titulo'><strong>Destaques</strong></p><ul class='resumo-lista resumo-positivo'><li>ER &gt;= 90% em Nov/2025 (93.7%)</li><li>ER &gt;= 90% em Dez/2025 (94.5%)</li><li>ER &gt;= 90% em Jan/2026 (96.4%)</li><li>Alta do ER em relacao a semana anterior (66.2% &rarr; 67.9%)</li></ul></div>
   <p class="info-aderencia">Aderencia ao plano na semana passada: <strong>67,9%</strong></p>
   <div class="z-charts">
-    <div class="chart-box"><h2>ER x Carros negociados – Mes</h2><div class="chart-container"><canvas id="chartMes"></canvas></div></div>
     <div class="chart-box"><h2>ER x Carros negociados – Semana</h2><div class="chart-container"><canvas id="chartSem"></canvas></div></div>
   </div>
   <div class="legenda-er">
@@ -197,11 +196,8 @@ W11	485	329,5	67,9%`;
         Chart.defaults.color = '#333';
         var fmtErBr = function(v) { return typeof v === "number" ? Math.round(v) + "%" : (v && v.toString ? v.toString().replace(/,\d+/, "") : v) + "%"; };
         var erSemDisplay = ["67,1%", "71,6%", "66,2%", "67,9%"];
-        var carrosNegMes = [206.0, 245.8, 233.2, 357.2];
         var carrosNegSem = [407.0, 405.0, 462.0, 485.0];
-        var optsMes = { responsive: true, maintainAspectRatio: false, layout: { padding: { top: 0 } }, plugins: { legend: { display: true, position: "bottom", align: "center" }, tooltip: { callbacks: { label: function(ctx) { if (ctx.dataset.yAxisID === "yEr") return fmtErBr(ctx.raw); return ctx.raw + " carros"; } } }, datalabels: { display: true, formatter: function(v, ctx) { return ctx.datasetIndex === 0 ? Math.round(v) : Math.round(v) + "%"; }, anchor: "end", align: "top", color: "#333", font: { size: 10 } } }, scales: { x: { grid: { display: false } }, yCarros: { type: "linear", position: "left", min: 0, grid: { color: "#eee" } }, yEr: { type: "linear", position: "right", min: 0, max: 110, ticks: { callback: function(v) { return v + "%"; } }, grid: { display: false } } } };
         var optsSem = { responsive: true, maintainAspectRatio: false, layout: { padding: { top: 0 } }, plugins: { legend: { display: true, position: "bottom", align: "center" }, tooltip: { callbacks: { label: function(ctx) { if (ctx.dataset.yAxisID === "yEr") return erSemDisplay[ctx.dataIndex] || fmtErBr(ctx.raw); return ctx.raw + " veic."; } } }, datalabels: { display: true, formatter: function(v, ctx) { var val = ctx.datasetIndex === 0 ? v : (typeof v === "number" ? v : parseFloat(String(v).replace(",", ".")) || 0); return ctx.datasetIndex === 0 ? Math.round(val) : Math.round(val) + "%"; }, anchor: "end", align: "top", color: "#333", font: { size: 10 } } }, scales: { x: { grid: { display: false } }, yCarros: { type: "linear", position: "left", min: 0, grid: { color: "#eee" } }, yEr: { type: "linear", position: "right", min: 0, max: 100, ticks: { callback: function(v) { return v + "%"; } }, grid: { display: false } } } };
-        new Chart(document.getElementById("chartMes"), { type: "bar", data: { labels: ["Nov/2025", "Dez/2025", "Jan/2026", "Fev/2026"], datasets: [{ label: "Carros negociados", data: carrosNegMes, backgroundColor: "rgba(255,230,0,0.8)", borderColor: "#FFE600", borderWidth: 1, yAxisID: "yCarros", order: 1 }, { label: "ER %", data: [93.7, 94.5, 96.4, 75.9], type: "line", borderColor: "#333", backgroundColor: "transparent", borderWidth: 2, fill: false, yAxisID: "yEr", pointBackgroundColor: ["#7ED321", "#7ED321", "#348338", "#E60000"], pointBorderColor: ["#7ED321", "#7ED321", "#348338", "#E60000"], order: 2 }] }, options: optsMes });
         new Chart(document.getElementById("chartSem"), { type: "bar", data: { labels: ["W8", "W9", "W10", "W11"], datasets: [{ label: "Carros negociados", data: carrosNegSem, backgroundColor: "rgba(255,230,0,0.8)", borderColor: "#FFE600", borderWidth: 1, yAxisID: "yCarros", order: 1 }, { label: "ER %", data: [67.1, 71.6, 66.2, 67.9], type: "line", borderColor: "#333", backgroundColor: "transparent", borderWidth: 2, fill: false, yAxisID: "yEr", pointBackgroundColor: ["#E60000", "#E60000", "#E60000", "#E60000"], pointBorderColor: ["#E60000", "#E60000", "#E60000", "#E60000"], order: 2 }] }, options: optsSem });
     (function() {
       var tbl = document.getElementById("tabelaGantt");
