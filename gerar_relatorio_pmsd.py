@@ -40,8 +40,7 @@ resp = requests.get(
     '1yETyJzRyl-4c1ZjORlVXAVPKfHUHD5nsu_OEhY9GTUk/values/Cronograma', headers=H)
 cr_rows = resp.json().get('values', [])[2:]
 
-pares    = set()          # (svc, mlp_bq)
-neg_semana = {w: 0 for w in SEMANAS}  # quantidade negociada por semana
+pares = set()  # (svc, mlp_bq)
 
 for row in cr_rows:
     if len(row) < 3 or row[0].strip() != 'Expansão PM/SD':
@@ -53,7 +52,7 @@ for row in cr_rows:
         ci = COL_IDX[w]
         if len(row) > ci and row[ci] not in ('', '0'):
             try:
-                neg_semana[w] += int(row[ci])
+                int(row[ci])
                 tem_entrada = True
             except ValueError:
                 pass
@@ -132,7 +131,6 @@ cor_ader   = '#22c55e' if pct_ader >= 80 else '#f97316' if pct_ader >= 50 else '
 labels_js   = str(SEMANAS)
 pmsd_js     = str([agg[w]['pmsd'] for w in SEMANAS])
 am_js       = str([agg[w]['am']   for w in SEMANAS])
-neg_js      = str([neg_semana[w]  for w in SEMANAS])
 ader_js     = str([agg[w]['pct']  for w in SEMANAS])
 pct_am_js   = str([round(agg[w]['am']  / agg[w]['total'] * 100) if agg[w]['total'] > 0 else 0 for w in SEMANAS])
 pct_pmsd_js = str([round(agg[w]['pmsd'] / agg[w]['total'] * 100) if agg[w]['total'] > 0 else 0 for w in SEMANAS])
@@ -362,11 +360,10 @@ tr.hidden{{display:none}}
 </div>
 
 <script>
-const labels    = {labels_js};
-const calPmsd   = {pmsd_js};
-const calAm     = {am_js};
-const negociado = {neg_js};
-const ader      = {ader_js};
+const labels  = {labels_js};
+const calPmsd = {pmsd_js};
+const calAm   = {am_js};
+const ader    = {ader_js};
 const pctPmsd   = {pct_pmsd_js};
 const pctAm     = {pct_am_js};
 const wAtualiz  = {W_ATUALIZADO};
