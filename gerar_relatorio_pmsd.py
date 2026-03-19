@@ -403,12 +403,6 @@ new Chart(document.getElementById('chartMain'), {{
         borderRadius:{{topLeft:0,topRight:0,bottomLeft:4,bottomRight:4}}}},
       {{label:'AM (incorreto)',  data:calAm,   backgroundColor:'rgba(239,68,68,.80)',  stack:'s',
         borderRadius:{{topLeft:4,topRight:4,bottomLeft:0,bottomRight:0}}}},
-      {{label:'Negociado (Cronograma)', data:negociado,
-        type:'line', order:0,
-        borderColor:'#0f172a', backgroundColor:'transparent',
-        borderWidth:2.5, borderDash:[6,4],
-        pointRadius:5, pointBackgroundColor:'#FFE600',
-        pointBorderColor:'#0f172a', pointBorderWidth:2}},
     ]
   }},
   options: {{
@@ -420,12 +414,8 @@ new Chart(document.getElementById('chartMain'), {{
         footer: items => {{
           const pm  = items.find(i => i.dataset.label.startsWith('PM'))?.raw  ?? 0;
           const am  = items.find(i => i.dataset.label.startsWith('AM'))?.raw  ?? 0;
-          const neg = items.find(i => i.dataset.label.startsWith('Neg'))?.raw ?? 0;
           const tot = pm + am;
-          const lines = [];
-          if (tot > 0)  lines.push(`Aderência ciclo: ${{Math.round(pm/tot*100)}}%`);
-          if (neg > 0 && tot > 0) lines.push(`Calend. vs negociado: ${{Math.round(tot/neg*100)}}%`);
-          return lines.join('  |  ');
+          return tot > 0 ? `Aderência ciclo: ${{Math.round(pm/tot*100)}}%` : '';
         }}
       }}}}
     }},
