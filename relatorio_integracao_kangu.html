@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Report Semanal: Integração Logística Meli & Kangu</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
+  <style>
+    :root {
+      --meli-yellow: #FFE600;
+      --meli-yellow-dark: #F0D800;
+      --navy: #1A2942;
+      --navy-light: #243450;
+      --slate: #2D4067;
+    }
+
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: #F4F6FA;
+      color: var(--navy);
+    }
+
+    /* ── Header ── */
+    .header-bar {
+      background: linear-gradient(135deg, var(--navy) 0%, var(--slate) 100%);
+    }
+
+    .badge-automated {
+      background: rgba(255,255,255,0.10);
+      border: 1px solid rgba(255,255,255,0.20);
+      backdrop-filter: blur(4px);
+    }
+
+    /* ── RAG Status ── */
+    .rag-card {
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 2px 12px rgba(26,41,66,0.08);
+    }
+
+    .dot-green  { background: #22C55E; box-shadow: 0 0 0 4px rgba(34,197,94,0.18); }
+    .dot-yellow { background: #F59E0B; box-shadow: 0 0 0 4px rgba(245,158,11,0.18); }
+    .dot-red    { background: #EF4444; box-shadow: 0 0 0 4px rgba(239,68,68,0.18); }
+
+    /* ── Highlights ── */
+    .highlight-card {
+      background: linear-gradient(135deg, var(--navy) 0%, var(--slate) 100%);
+      border-radius: 16px;
+      box-shadow: 0 4px 18px rgba(26,41,66,0.15);
+    }
+
+    .bullet-item {
+      border-left: 3px solid var(--meli-yellow);
+    }
+
+    /* ── KPI Cards ── */
+    .kpi-card {
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 2px 14px rgba(26,41,66,0.08);
+      transition: transform .2s, box-shadow .2s;
+    }
+
+    .kpi-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 24px rgba(26,41,66,0.14);
+    }
+
+    .kpi-icon {
+      width: 44px; height: 44px;
+      border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 20px;
+    }
+
+    .progress-track {
+      background: #E9EEF6;
+      border-radius: 999px;
+      height: 8px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      background: linear-gradient(90deg, var(--meli-yellow) 0%, #F0B800 100%);
+      height: 100%;
+      border-radius: 999px;
+      transition: width 1s ease;
+    }
+
+    /* ── Chart Card ── */
+    .chart-card {
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 2px 14px rgba(26,41,66,0.08);
+    }
+
+    /* ── Trend badges ── */
+    .trend-up-green  { color: #16A34A; background: #DCFCE7; }
+    .trend-down-red  { color: #DC2626; background: #FEE2E2; }
+    .trend-down-green{ color: #16A34A; background: #DCFCE7; }
+
+    /* ── Footer ── */
+    .footer-bar {
+      background: var(--navy);
+    }
+
+    /* ── Yellow accent line ── */
+    .accent-line {
+      height: 4px;
+      background: var(--meli-yellow);
+      border-radius: 0 0 4px 4px;
+    }
+
+    /* ── Section divider ── */
+    .section-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: #7A8EAC;
+    }
+  </style>
+</head>
+<body class="min-h-screen">
+
+  <!-- ═══════════════════════════════════════════════
+       HEADER
+  ══════════════════════════════════════════════════ -->
+  <header class="header-bar text-white">
+    <div class="accent-line" style="border-radius:0;"></div>
+    <div class="max-w-7xl mx-auto px-6 py-7">
+      <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+
+        <!-- Logo + Title -->
+        <div class="flex items-center gap-4">
+          <div style="background:var(--meli-yellow);border-radius:12px;width:48px;height:48px;display:flex;align-items:center;justify-content:center;">
+            <span style="font-size:22px;">📦</span>
+          </div>
+          <div>
+            <h1 class="text-2xl font-bold leading-tight tracking-tight">
+              Report Semanal: Integração Logística Meli &amp; Kangu
+            </h1>
+            <p style="color:rgba(255,255,255,.65);font-size:14px;margin-top:2px;">
+              Visão Executiva · <strong style="color:var(--meli-yellow);">Semana 14</strong>
+            </p>
+          </div>
+        </div>
+
+        <!-- Automated badge -->
+        <div class="badge-automated rounded-full px-4 py-2 flex items-center gap-2 text-xs font-semibold self-start md:self-auto" style="color:rgba(255,255,255,.85);">
+          <span class="inline-block w-2 h-2 rounded-full bg-red-400 animate-pulse"></span>
+          DADOS AUTOMATIZADOS — Atualizado hoje às 04:00 AM
+        </div>
+
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-7xl mx-auto px-6 py-8 space-y-8">
+
+    <!-- ═══════════════════════════════════════════════
+         RAG STATUS
+    ══════════════════════════════════════════════════ -->
+    <section>
+      <p class="section-label mb-4">Status do Projeto</p>
+      <div class="rag-card p-6">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+
+          <!-- Escopo -->
+          <div class="flex items-start gap-4 p-4 rounded-xl" style="background:#F8FAFF;">
+            <span class="dot-green mt-1 flex-shrink-0 w-4 h-4 rounded-full"></span>
+            <div>
+              <p class="font-bold text-sm" style="color:var(--navy);">Escopo</p>
+              <p class="text-xs mt-1" style="color:#16A34A;font-weight:600;">🟢 No trilho</p>
+              <p class="text-xs mt-1 text-gray-500">Entregas da sprint alinhadas ao roadmap original.</p>
+            </div>
+          </div>
+
+          <!-- Custo -->
+          <div class="flex items-start gap-4 p-4 rounded-xl" style="background:#F8FAFF;">
+            <span class="dot-green mt-1 flex-shrink-0 w-4 h-4 rounded-full"></span>
+            <div>
+              <p class="font-bold text-sm" style="color:var(--navy);">Custo</p>
+              <p class="text-xs mt-1" style="color:#16A34A;font-weight:600;">🟢 Dentro do budget</p>
+              <p class="text-xs mt-1 text-gray-500">Sem desvios orçamentários reportados nesta semana.</p>
+            </div>
+          </div>
+
+          <!-- Prazo -->
+          <div class="flex items-start gap-4 p-4 rounded-xl" style="background:#FFFBEB;">
+            <span class="dot-yellow mt-1 flex-shrink-0 w-4 h-4 rounded-full"></span>
+            <div>
+              <p class="font-bold text-sm" style="color:var(--navy);">Prazo</p>
+              <p class="text-xs mt-1" style="color:#B45309;font-weight:600;">🟡 Atenção</p>
+              <p class="text-xs mt-1 text-gray-500">
+                Lentidão na homologação das regras de billing Kangu atrasou a
+                <strong>Sprint 4 em 3 dias</strong>.
+              </p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════
+         RESUMO EXECUTIVO
+    ══════════════════════════════════════════════════ -->
+    <section>
+      <p class="section-label mb-4">Resumo Executivo</p>
+      <div class="highlight-card p-6 md:p-8">
+        <div class="flex items-center gap-3 mb-6">
+          <span style="background:var(--meli-yellow);border-radius:8px;padding:4px 10px;font-size:12px;font-weight:700;color:var(--navy);">HIGHLIGHTS DA SEMANA</span>
+        </div>
+        <div class="space-y-4">
+
+          <div class="bullet-item pl-4 py-1">
+            <p class="text-white text-sm leading-relaxed">
+              <strong style="color:var(--meli-yellow);">Adoção:</strong>
+              Adoção do app Meli pelos motoristas Kangu ultrapassou a marca de <strong class="text-white">65%</strong> nesta semana.
+            </p>
+          </div>
+
+          <div class="bullet-item pl-4 py-1">
+            <p class="text-white text-sm leading-relaxed">
+              <strong style="color:var(--meli-yellow);">Eficiência de Custo:</strong>
+              Custo por Pacote (CPS) nas rotas unificadas apresentou <strong class="text-white">queda de 5%</strong> em relação ao mês anterior.
+            </p>
+          </div>
+
+          <div class="bullet-item pl-4 py-1" style="border-left-color:#EF4444;">
+            <p class="text-white text-sm leading-relaxed">
+              <strong style="color:#FCA5A5;">⚠ Bloqueio:</strong>
+              Instabilidade na geração de faturas dos motoristas legados requer <strong class="text-white">atuação urgente da tribo de Finanças</strong>.
+            </p>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════
+         KPI CARDS
+    ══════════════════════════════════════════════════ -->
+    <section>
+      <p class="section-label mb-4">KPIs de Impacto Operacional</p>
+      <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-5">
+
+        <!-- Card 1: Adoção de Motoristas -->
+        <div class="kpi-card p-6">
+          <div class="flex items-center justify-between mb-4">
+            <div class="kpi-icon" style="background:#EFF6FF;">🏍️</div>
+            <span class="trend-up-green text-xs font-bold px-2 py-1 rounded-full">▲ +12%</span>
+          </div>
+          <p class="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-1">Adoção — App Meli</p>
+          <p class="text-3xl font-extrabold" style="color:var(--navy);">1.250</p>
+          <p class="text-sm text-gray-500 mt-1">motoristas ativos</p>
+          <p class="text-xs text-green-600 mt-3 font-medium">↑ +134 vs semana passada</p>
+        </div>
+
+        <!-- Card 2: Volumetria Migrada -->
+        <div class="kpi-card p-6">
+          <div class="flex items-center justify-between mb-4">
+            <div class="kpi-icon" style="background:#FFFBEB;">🔄</div>
+            <span style="background:#FEF9C3;color:#92400E;" class="text-xs font-bold px-2 py-1 rounded-full">Meta: 80%</span>
+          </div>
+          <p class="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-1">Volumetria Migrada</p>
+          <p class="text-3xl font-extrabold" style="color:var(--navy);">65%</p>
+          <p class="text-sm text-gray-500 mt-1">Drivers Kangu → Meli</p>
+          <div class="mt-3">
+            <div class="flex justify-between text-xs text-gray-400 mb-1">
+              <span>Progresso</span><span>65 / 80%</span>
+            </div>
+            <div class="progress-track">
+              <div class="progress-fill" style="width:81.25%;"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 3: Taxa de Sucesso Billing -->
+        <div class="kpi-card p-6" style="border-top:3px solid #EF4444;">
+          <div class="flex items-center justify-between mb-4">
+            <div class="kpi-icon" style="background:#FFF1F2;">💳</div>
+            <span class="trend-down-red text-xs font-bold px-2 py-1 rounded-full">▼ Alerta</span>
+          </div>
+          <p class="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-1">Taxa de Sucesso — Billing</p>
+          <p class="text-3xl font-extrabold text-red-600">92%</p>
+          <p class="text-sm text-gray-500 mt-1">faturamento correto</p>
+          <p class="text-xs text-red-500 mt-3 font-semibold">⚠ Meta: 99% · Desvio de 7 p.p.</p>
+        </div>
+
+        <!-- Card 4: CPS Médio -->
+        <div class="kpi-card p-6">
+          <div class="flex items-center justify-between mb-4">
+            <div class="kpi-icon" style="background:#F0FDF4;">💰</div>
+            <span class="trend-down-green text-xs font-bold px-2 py-1 rounded-full">▼ -R$ 0,25</span>
+          </div>
+          <p class="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-1">Custo por Pacote (CPS)</p>
+          <p class="text-3xl font-extrabold" style="color:var(--navy);">R$ 4,50</p>
+          <p class="text-sm text-gray-500 mt-1">custo médio por entrega</p>
+          <p class="text-xs text-green-600 mt-3 font-medium">↓ Abaixo do baseline de R$ 4,75</p>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════
+         GRÁFICO — Evolução CPR
+    ══════════════════════════════════════════════════ -->
+    <section>
+      <p class="section-label mb-4">Visão Gráfica</p>
+      <div class="chart-card p-6 md:p-8">
+        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-2 mb-6">
+          <div>
+            <h3 class="text-lg font-bold" style="color:var(--navy);">Evolução do Custo por Rota (CPR)</h3>
+            <p class="text-sm text-gray-500 mt-1">Últimas 5 semanas · Rotas unificadas Meli + Kangu</p>
+          </div>
+          <div class="flex items-center gap-2 text-xs text-green-600 font-semibold bg-green-50 px-3 py-2 rounded-full self-start">
+            <span>↓</span> Queda de R$ 25 em 5 semanas (-11,9%)
+          </div>
+        </div>
+        <div style="position:relative;height:320px;">
+          <canvas id="cprChart"></canvas>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ═══════════════════════════════════════════════
+       FOOTER
+  ══════════════════════════════════════════════════ -->
+  <footer class="footer-bar mt-10 py-5">
+    <div class="max-w-7xl mx-auto px-6 flex flex-col md:flex-row md:items-center md:justify-between gap-2">
+      <p class="text-xs" style="color:rgba(255,255,255,.45);">
+        Mercado Libre · Logística &amp; Kangu Integration · Visão Executiva — Semana 14 · 2026
+      </p>
+      <p class="text-xs" style="color:rgba(255,255,255,.30);">
+        Gerado automaticamente · Dados atualizados às 04:00 AM
+      </p>
+    </div>
+  </footer>
+
+  <!-- ═══════════════════════════════════════════════
+       CHART.JS
+  ══════════════════════════════════════════════════ -->
+  <script>
+    const ctx = document.getElementById('cprChart').getContext('2d');
+
+    const gradient = ctx.createLinearGradient(0, 0, 0, 320);
+    gradient.addColorStop(0,   'rgba(255, 230, 0, 0.30)');
+    gradient.addColorStop(1,   'rgba(255, 230, 0, 0.00)');
+
+    new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: ['Semana 10', 'Semana 11', 'Semana 12', 'Semana 13', 'Semana 14'],
+        datasets: [{
+          label: 'CPR (R$)',
+          data: [210, 205, 198, 190, 185],
+          borderColor: '#F0D800',
+          backgroundColor: gradient,
+          borderWidth: 3,
+          pointBackgroundColor: '#fff',
+          pointBorderColor: '#F0D800',
+          pointBorderWidth: 2.5,
+          pointRadius: 6,
+          pointHoverRadius: 8,
+          tension: 0.40,
+          fill: true,
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        interaction: { intersect: false, mode: 'index' },
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            backgroundColor: '#1A2942',
+            titleColor: '#FFE600',
+            bodyColor: '#fff',
+            padding: 12,
+            cornerRadius: 10,
+            callbacks: {
+              label: ctx => ` R$ ${ctx.parsed.y}`,
+            }
+          }
+        },
+        scales: {
+          x: {
+            grid: { display: false },
+            ticks: {
+              color: '#7A8EAC',
+              font: { size: 12, weight: '600' }
+            },
+            border: { display: false }
+          },
+          y: {
+            min: 175,
+            max: 220,
+            grid: { color: '#E9EEF6', lineWidth: 1 },
+            ticks: {
+              color: '#7A8EAC',
+              font: { size: 12 },
+              callback: v => `R$ ${v}`
+            },
+            border: { display: false, dash: [4, 4] }
+          }
+        }
+      }
+    });
+  </script>
+</body>
+</html>
