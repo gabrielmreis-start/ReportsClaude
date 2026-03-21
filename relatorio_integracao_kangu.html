@@ -24,9 +24,7 @@
     }
 
     /* ── Header ── */
-    .header-bar {
-      background: linear-gradient(135deg, var(--navy) 0%, var(--slate) 100%);
-    }
+    .header-bar { background: linear-gradient(135deg, var(--navy) 0%, var(--slate) 100%); }
     .badge-automated {
       background: rgba(255,255,255,0.10);
       border: 1px solid rgba(255,255,255,0.20);
@@ -57,8 +55,7 @@
     .tab-btn::after {
       content: '';
       position: absolute;
-      bottom: -1px;
-      left: 0; right: 0;
+      bottom: -1px; left: 0; right: 0;
       height: 3px;
       border-radius: 3px 3px 0 0;
       background: var(--meli-yellow);
@@ -68,16 +65,11 @@
     .tab-btn:hover { color: var(--navy); }
     .tab-btn.active { color: var(--navy); }
     .tab-btn.active::after { transform: scaleX(1); }
-
     .tab-panel { display: none; }
     .tab-panel.active { display: block; }
 
-    /* ── RAG Status ── */
-    .rag-card {
-      background: #fff;
-      border-radius: 16px;
-      box-shadow: 0 2px 12px rgba(26,41,66,0.08);
-    }
+    /* ── RAG ── */
+    .rag-card { background: #fff; border-radius: 16px; box-shadow: 0 2px 12px rgba(26,41,66,0.08); }
     .dot-green  { background: #22C55E; box-shadow: 0 0 0 4px rgba(34,197,94,0.18); }
     .dot-yellow { background: #F59E0B; box-shadow: 0 0 0 4px rgba(245,158,11,0.18); }
     .dot-red    { background: #EF4444; box-shadow: 0 0 0 4px rgba(239,68,68,0.18); }
@@ -97,129 +89,95 @@
       box-shadow: 0 2px 14px rgba(26,41,66,0.08);
       transition: transform .2s, box-shadow .2s;
     }
-    .kpi-card:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 6px 24px rgba(26,41,66,0.14);
-    }
-    .kpi-icon {
-      width: 44px; height: 44px;
-      border-radius: 12px;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 20px;
-    }
-    .progress-track {
-      background: #E9EEF6;
-      border-radius: 999px;
-      height: 8px;
-      overflow: hidden;
-    }
-    .progress-fill {
-      background: linear-gradient(90deg, var(--meli-yellow) 0%, #F0B800 100%);
-      height: 100%;
-      border-radius: 999px;
-      transition: width 1s ease;
-    }
+    .kpi-card:hover { transform: translateY(-3px); box-shadow: 0 6px 24px rgba(26,41,66,0.14); }
+    .kpi-icon { width:44px; height:44px; border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:20px; }
+    .progress-track { background:#E9EEF6; border-radius:999px; height:8px; overflow:hidden; }
+    .progress-fill  { background:linear-gradient(90deg,var(--meli-yellow) 0%,#F0B800 100%); height:100%; border-radius:999px; transition:width 1s ease; }
 
-    /* ── Chart Card ── */
-    .chart-card {
-      background: #fff;
-      border-radius: 16px;
-      box-shadow: 0 2px 14px rgba(26,41,66,0.08);
-    }
+    /* ── Chart & generic card ── */
+    .chart-card { background:#fff; border-radius:16px; box-shadow:0 2px 14px rgba(26,41,66,0.08); }
 
     /* ── Trend badges ── */
-    .trend-up-green   { color: #16A34A; background: #DCFCE7; }
-    .trend-down-red   { color: #DC2626; background: #FEE2E2; }
-    .trend-down-green { color: #16A34A; background: #DCFCE7; }
+    .trend-up-green   { color:#16A34A; background:#DCFCE7; }
+    .trend-down-red   { color:#DC2626; background:#FEE2E2; }
+    .trend-down-green { color:#16A34A; background:#DCFCE7; }
 
     /* ── Footer ── */
     .footer-bar { background: var(--navy); }
 
-    /* ── Yellow accent line ── */
-    .accent-line {
-      height: 4px;
-      background: var(--meli-yellow);
-      border-radius: 0;
-    }
+    /* ── Accent line ── */
+    .accent-line { height:4px; background:var(--meli-yellow); border-radius:0; }
 
     /* ── Section label ── */
-    .section-label {
-      font-size: 11px;
-      font-weight: 700;
-      letter-spacing: .12em;
-      text-transform: uppercase;
-      color: #7A8EAC;
-    }
+    .section-label { font-size:11px; font-weight:700; letter-spacing:.12em; text-transform:uppercase; color:#7A8EAC; }
 
     /* ── Tables ── */
-    .data-table {
-      width: 100%;
-      border-collapse: separate;
-      border-spacing: 0;
-      font-size: 13px;
-    }
-    .data-table thead tr {
-      background: var(--navy);
-    }
+    .data-table { width:100%; border-collapse:separate; border-spacing:0; font-size:13px; }
+    .data-table thead tr { background:var(--navy); }
     .data-table thead th {
-      color: rgba(255,255,255,.85);
-      font-weight: 600;
-      font-size: 11px;
-      letter-spacing: .06em;
-      text-transform: uppercase;
-      padding: 13px 16px;
-      text-align: left;
+      color:rgba(255,255,255,.85); font-weight:600; font-size:11px;
+      letter-spacing:.06em; text-transform:uppercase; padding:13px 16px; text-align:left;
     }
-    .data-table thead th:first-child { border-radius: 12px 0 0 0; }
-    .data-table thead th:last-child  { border-radius: 0 12px 0 0; }
-    .data-table tbody tr {
-      background: #fff;
-      border-bottom: 1px solid #EEF2F8;
-      transition: background .15s;
-    }
-    .data-table tbody tr:hover { background: #F8FAFF; }
-    .data-table tbody td {
-      padding: 13px 16px;
-      color: var(--navy);
-      vertical-align: middle;
-    }
-    .data-table tbody tr:last-child td:first-child { border-radius: 0 0 0 12px; }
-    .data-table tbody tr:last-child td:last-child  { border-radius: 0 0 12px 0; }
+    .data-table thead th:first-child { border-radius:12px 0 0 0; }
+    .data-table thead th:last-child  { border-radius:0 12px 0 0; }
+    .data-table tbody tr { background:#fff; border-bottom:1px solid #EEF2F8; transition:background .15s; }
+    .data-table tbody tr:hover { background:#F8FAFF; }
+    .data-table tbody td { padding:13px 16px; color:var(--navy); vertical-align:middle; }
+    .data-table tbody tr:last-child td:first-child { border-radius:0 0 0 12px; }
+    .data-table tbody tr:last-child td:last-child  { border-radius:0 0 12px 0; }
+    .table-wrap { background:#fff; border-radius:16px; box-shadow:0 2px 14px rgba(26,41,66,0.08); overflow:hidden; overflow-x:auto; }
 
-    /* ── Risk badges ── */
+    /* ── Badges ── */
     .badge-red    { background:#FEE2E2; color:#B91C1C; font-weight:700; font-size:11px; padding:3px 9px; border-radius:999px; white-space:nowrap; }
     .badge-yellow { background:#FEF3C7; color:#92400E; font-weight:700; font-size:11px; padding:3px 9px; border-radius:999px; white-space:nowrap; }
     .badge-green  { background:#DCFCE7; color:#166534; font-weight:700; font-size:11px; padding:3px 9px; border-radius:999px; white-space:nowrap; }
     .badge-blue   { background:#DBEAFE; color:#1D4ED8; font-weight:700; font-size:11px; padding:3px 9px; border-radius:999px; white-space:nowrap; }
     .badge-gray   { background:#F1F5F9; color:#475569; font-weight:700; font-size:11px; padding:3px 9px; border-radius:999px; white-space:nowrap; }
 
-    /* ── NPS ── */
+    /* ── NPS ring (Tab 2) ── */
     .nps-score-ring {
-      width: 120px; height: 120px;
-      border-radius: 50%;
-      background: conic-gradient(#22C55E 0% 60%, #F59E0B 60% 85%, #EF4444 85% 100%);
-      display: flex; align-items: center; justify-content: center;
-      box-shadow: 0 4px 20px rgba(34,197,94,0.20);
-      flex-shrink: 0;
+      width:120px; height:120px; border-radius:50%;
+      background:conic-gradient(#22C55E 0% 60%, #F59E0B 60% 85%, #EF4444 85% 100%);
+      display:flex; align-items:center; justify-content:center;
+      box-shadow:0 4px 20px rgba(34,197,94,0.20); flex-shrink:0;
     }
     .nps-score-inner {
-      width: 88px; height: 88px;
-      border-radius: 50%;
-      background: #fff;
-      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      width:88px; height:88px; border-radius:50%; background:#fff;
+      display:flex; flex-direction:column; align-items:center; justify-content:center;
     }
 
-    /* ── Chart legend dot ── */
+    /* ── Legend dot ── */
     .legend-dot { width:10px; height:10px; border-radius:50%; display:inline-block; flex-shrink:0; }
 
-    /* ── Table wrapper scrollable ── */
-    .table-wrap {
-      background: #fff;
-      border-radius: 16px;
-      box-shadow: 0 2px 14px rgba(26,41,66,0.08);
-      overflow: hidden;
-      overflow-x: auto;
+    /* ── Inline legend row ── */
+    .chart-legend { display:flex; flex-wrap:wrap; gap:12px; margin-top:14px; }
+    .chart-legend span { display:flex; align-items:center; gap:6px; font-size:12px; color:#4A5568; font-weight:500; }
+
+    /* ── NPS teaser (Tab 1) ── */
+    .nps-teaser {
+      background:#fff;
+      border-radius:16px;
+      box-shadow:0 2px 14px rgba(26,41,66,0.08);
+      border-left:5px solid #22C55E;
     }
+
+    /* ── Funnel ── */
+    .funnel-step {
+      display:flex;
+      align-items:center;
+      gap:12px;
+      padding:10px 16px;
+      border-radius:10px;
+      background:#F8FAFF;
+      margin-bottom:6px;
+      transition:background .15s;
+    }
+    .funnel-step:hover { background:#EFF4FF; }
+    .funnel-bar-wrap { flex:1; background:#E9EEF6; border-radius:999px; height:10px; overflow:hidden; }
+    .funnel-bar-fill { height:100%; border-radius:999px; }
+    .funnel-drop { font-size:11px; font-weight:700; color:#DC2626; background:#FEE2E2; padding:2px 8px; border-radius:999px; white-space:nowrap; }
+    .funnel-label { font-size:12px; font-weight:600; color:var(--navy); min-width:160px; }
+    .funnel-pct { font-size:13px; font-weight:800; color:var(--navy); min-width:38px; text-align:right; }
   </style>
 </head>
 <body class="min-h-screen">
@@ -257,12 +215,8 @@
   ════════════════════════════════════════════════ -->
   <nav class="tab-nav">
     <div class="max-w-7xl mx-auto px-6 flex gap-2">
-      <button class="tab-btn active" onclick="switchTab('exec', this)">
-        📊 Visão Executiva
-      </button>
-      <button class="tab-btn" onclick="switchTab('ops', this)">
-        🔧 Detalhamento Operacional
-      </button>
+      <button class="tab-btn active" onclick="switchTab('exec', this)">📊 Visão Executiva</button>
+      <button class="tab-btn" onclick="switchTab('ops', this)">🔧 Detalhamento Operacional</button>
     </div>
   </nav>
 
@@ -272,9 +226,9 @@
   <div id="tab-exec" class="tab-panel active">
     <main class="max-w-7xl mx-auto px-6 py-8 space-y-8">
 
-      <!-- RAG STATUS -->
+      <!-- 1. RAG STATUS -->
       <section>
-        <p class="section-label mb-4">Status do Projeto</p>
+        <p class="section-label mb-4">1. Status do Projeto</p>
         <div class="rag-card p-6">
           <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div class="flex items-start gap-4 p-4 rounded-xl" style="background:#F8FAFF;">
@@ -305,9 +259,9 @@
         </div>
       </section>
 
-      <!-- RESUMO EXECUTIVO -->
+      <!-- 2. RESUMO EXECUTIVO -->
       <section>
-        <p class="section-label mb-4">Resumo Executivo</p>
+        <p class="section-label mb-4">2. Resumo Executivo</p>
         <div class="highlight-card p-6 md:p-8">
           <div class="flex items-center gap-3 mb-6">
             <span style="background:var(--meli-yellow);border-radius:8px;padding:4px 10px;font-size:12px;font-weight:700;color:var(--navy);">HIGHLIGHTS DA SEMANA</span>
@@ -335,45 +289,38 @@
         </div>
       </section>
 
-      <!-- KPI CARDS -->
+      <!-- 3. KPI CARDS -->
       <section>
-        <p class="section-label mb-4">KPIs de Impacto Operacional</p>
+        <p class="section-label mb-4">3. KPIs de Impacto Operacional</p>
         <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-5">
 
-          <!-- Card 1: Adoção — mini bar chart -->
-          <div class="kpi-card p-5">
-            <div class="flex items-center justify-between mb-3">
-              <p class="text-xs font-semibold text-gray-400 uppercase tracking-wide">Adoção — App Meli</p>
+          <!-- Card 1: Adoção — original simple format -->
+          <div class="kpi-card p-6">
+            <div class="flex items-center justify-between mb-4">
+              <div class="kpi-icon" style="background:#EFF6FF;">🏍️</div>
               <span class="trend-up-green text-xs font-bold px-2 py-1 rounded-full">▲ +12%</span>
             </div>
-            <div style="position:relative;height:160px;">
-              <canvas id="adoptionMiniChart"></canvas>
-            </div>
-            <div class="mt-3 pt-3" style="border-top:1px solid #EEF2F8;">
-              <p class="text-xs text-green-600 font-semibold">↑ +134 drivers vs semana passada</p>
-              <div class="flex flex-wrap gap-2 mt-2">
-                <span class="flex items-center gap-1 text-xs text-gray-500"><span class="legend-dot" style="background:#1A2942;"></span>Totais</span>
-                <span class="flex items-center gap-1 text-xs text-gray-500"><span class="legend-dot" style="background:#3483FA;"></span>Pure Meli</span>
-                <span class="flex items-center gap-1 text-xs text-gray-500"><span class="legend-dot" style="background:#FFE600;border:1px solid #ccc;"></span>Migrados</span>
-              </div>
-            </div>
+            <p class="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-1">Adoção — App Meli</p>
+            <p class="text-3xl font-extrabold" style="color:var(--navy);">1.250</p>
+            <p class="text-sm text-gray-500 mt-1">motoristas ativos</p>
+            <p class="text-xs text-green-600 mt-3 font-medium">↑ +134 vs semana passada</p>
           </div>
 
-          <!-- Card 2: Volumetria Migrada -->
+          <!-- Card 2: Volumetria Migrada — meta 100% -->
           <div class="kpi-card p-6">
             <div class="flex items-center justify-between mb-4">
               <div class="kpi-icon" style="background:#FFFBEB;">🔄</div>
-              <span style="background:#FEF9C3;color:#92400E;" class="text-xs font-bold px-2 py-1 rounded-full">Meta: 80%</span>
+              <span style="background:#FEF9C3;color:#92400E;" class="text-xs font-bold px-2 py-1 rounded-full">Meta: 100%</span>
             </div>
             <p class="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-1">Volumetria Migrada</p>
             <p class="text-3xl font-extrabold" style="color:var(--navy);">65%</p>
             <p class="text-sm text-gray-500 mt-1">Drivers Kangu → Meli</p>
             <div class="mt-3">
               <div class="flex justify-between text-xs text-gray-400 mb-1">
-                <span>Progresso</span><span>65 / 80%</span>
+                <span>Progresso</span><span>65 / 100%</span>
               </div>
               <div class="progress-track">
-                <div class="progress-fill" style="width:81.25%;"></div>
+                <div class="progress-fill" style="width:65%;"></div>
               </div>
             </div>
           </div>
@@ -405,29 +352,70 @@
         </div>
       </section>
 
-      <!-- GRÁFICO DUAL — CPR + CPS -->
+      <!-- 4. GRÁFICOS LADO A LADO -->
       <section>
-        <p class="section-label mb-4">Visão Gráfica</p>
-        <div class="chart-card p-6 md:p-8">
-          <div class="flex flex-col md:flex-row md:items-start md:justify-between gap-4 mb-6">
-            <div>
-              <h3 class="text-lg font-bold" style="color:var(--navy);">Evolução de Custos: CPR &amp; CPS</h3>
-              <p class="text-sm text-gray-500 mt-1">Últimas 5 semanas · Rotas unificadas Meli + Kangu</p>
+        <p class="section-label mb-4">4. Visão Gráfica</p>
+        <div class="grid grid-cols-1 xl:grid-cols-2 gap-6">
+
+          <!-- Coluna 1: Adoção Semanal de Drivers (grouped bar) -->
+          <div class="chart-card p-6">
+            <h3 class="text-base font-bold" style="color:var(--navy);">Adoção Semanal de Drivers</h3>
+            <p class="text-sm text-gray-500 mt-1 mb-4">Semanas 11–14 · Totais, Pure Meli e Migrados</p>
+            <div style="position:relative;height:280px;">
+              <canvas id="adoptionBarChart"></canvas>
             </div>
-            <div class="flex flex-wrap gap-3 text-xs font-semibold self-start">
-              <span class="flex items-center gap-2 bg-yellow-50 text-yellow-700 px-3 py-2 rounded-full">
-                <span class="legend-dot" style="background:#F0D800;"></span>CPR (R$) — eixo esq.
-              </span>
-              <span class="flex items-center gap-2 bg-blue-50 text-blue-700 px-3 py-2 rounded-full">
-                <span class="legend-dot" style="background:#3483FA;"></span>CPS (R$) — eixo dir.
-              </span>
-              <span class="flex items-center gap-2 bg-green-50 text-green-700 px-3 py-2 rounded-full">
-                ↓ CPR −11,9% · CPS −4,3%
-              </span>
+            <div class="chart-legend mt-3">
+              <span><span class="legend-dot" style="background:rgba(26,41,66,0.80);"></span>Drivers Totais</span>
+              <span><span class="legend-dot" style="background:#3483FA;"></span>Pure Meli (Novos)</span>
+              <span><span class="legend-dot" style="background:#F0D800;border:1px solid #ccc;"></span>Migrados (ex-Kangu)</span>
             </div>
           </div>
-          <div style="position:relative;height:320px;">
-            <canvas id="cprCpsChart"></canvas>
+
+          <!-- Coluna 2: CPR + CPS dual-axis line -->
+          <div class="chart-card p-6">
+            <h3 class="text-base font-bold" style="color:var(--navy);">Evolução de Custos: CPR &amp; CPS</h3>
+            <p class="text-sm text-gray-500 mt-1 mb-4">Últimas 5 semanas · Rotas unificadas Meli + Kangu</p>
+            <div style="position:relative;height:280px;">
+              <canvas id="cprCpsChart"></canvas>
+            </div>
+            <div class="chart-legend mt-3">
+              <span><span class="legend-dot" style="background:#F0D800;border:1px solid #ccc;"></span>CPR — Custo por Rota (eixo esq.)</span>
+              <span><span class="legend-dot" style="background:#3483FA;"></span>CPS — Custo por Pacote (eixo dir.)</span>
+              <span style="color:#16A34A;font-weight:600;">↓ CPR −11,9% · CPS −4,3%</span>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- 5. NPS TEASER -->
+      <section>
+        <p class="section-label mb-4">5. Satisfação do Motorista</p>
+        <div class="nps-teaser p-6 flex flex-col sm:flex-row sm:items-center gap-6">
+          <!-- Score bloco -->
+          <div class="flex items-center gap-4 flex-shrink-0">
+            <div style="background:#F0FDF4;border-radius:50%;width:72px;height:72px;display:flex;flex-direction:column;align-items:center;justify-content:center;">
+              <p class="text-2xl font-extrabold" style="color:var(--navy);line-height:1;">+45</p>
+              <p class="text-xs font-bold text-gray-400" style="line-height:1;margin-top:2px;">NPS</p>
+            </div>
+            <div>
+              <span class="badge-green" style="font-size:12px;padding:4px 12px;">Categoria: BOM</span>
+              <p class="text-xs text-green-600 font-semibold mt-2">↑ +5 p.p. acima da meta interna (+40)</p>
+              <p class="text-xs text-gray-400 mt-1">Base: 320 motoristas entrevistados</p>
+            </div>
+          </div>
+          <!-- Divider -->
+          <div class="hidden sm:block" style="width:1px;background:#E9EEF6;align-self:stretch;"></div>
+          <!-- Text -->
+          <div class="flex-1">
+            <p class="text-sm font-semibold" style="color:var(--navy);">NPS Piloto App Meli — Semana 14</p>
+            <p class="text-xs text-gray-500 mt-2 leading-relaxed">
+              <strong class="text-green-700">Pontos fortes:</strong> Facilidade de aceite de rota · Clareza no app · Notificações em tempo real.<br>
+              <strong class="text-red-600">Melhoria:</strong> Lentidão no billing (ver Risco R01 na Aba 2).
+            </p>
+            <p class="text-xs mt-3 font-semibold" style="color:var(--meli-blue);">
+              → Abertura detalhada e distribuição de respostas disponível na aba <em>Detalhamento Operacional</em>.
+            </p>
           </div>
         </div>
       </section>
@@ -443,7 +431,7 @@
 
       <!-- A) CRONOGRAMA DAS SPRINTS -->
       <section>
-        <p class="section-label mb-4">Cronograma das Sprints — Roadmap Técnico</p>
+        <p class="section-label mb-4">A. Cronograma das Sprints — Roadmap Técnico</p>
         <div class="table-wrap">
           <table class="data-table">
             <thead>
@@ -482,9 +470,9 @@
         </div>
       </section>
 
-      <!-- B) QUADRO DE RISCO E MITIGAÇÃO -->
+      <!-- B) QUADRO DE RISCO -->
       <section>
-        <p class="section-label mb-4">Quadro de Risco &amp; Plano de Ações</p>
+        <p class="section-label mb-4">B. Quadro de Risco &amp; Plano de Ações</p>
         <div class="table-wrap">
           <table class="data-table">
             <thead>
@@ -537,37 +525,30 @@
 
       <!-- C) NPS — PESQUISA DE SATISFAÇÃO -->
       <section>
-        <p class="section-label mb-4">Pesquisa de Satisfação do Motorista (NPS — Piloto App Meli)</p>
-
+        <p class="section-label mb-4">C. Pesquisa de Satisfação do Motorista (NPS — Piloto App Meli)</p>
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
 
           <!-- Score card -->
           <div class="chart-card p-8 flex flex-col justify-between">
             <div class="flex items-center gap-8">
-              <!-- Ring -->
               <div class="nps-score-ring">
                 <div class="nps-score-inner">
                   <p class="text-2xl font-extrabold" style="color:var(--navy);">+45</p>
                   <p class="text-xs font-bold text-gray-400">NPS</p>
                 </div>
               </div>
-              <!-- Meta info -->
               <div>
-                <span class="badge-green text-sm" style="font-size:13px;padding:5px 14px;">Categoria: BOM</span>
+                <span class="badge-green" style="font-size:13px;padding:5px 14px;">Categoria: BOM</span>
                 <p class="text-sm text-gray-500 mt-3">Benchmark interno Meli: <strong>+40</strong></p>
                 <p class="text-xs text-green-600 font-semibold mt-1">↑ +5 p.p. acima da meta</p>
                 <p class="text-xs text-gray-400 mt-2">Base: 320 motoristas entrevistados</p>
               </div>
             </div>
-
-            <!-- Ring legend -->
-            <div class="flex flex-wrap gap-4 mt-6 pt-5" style="border-top:1px solid #EEF2F8;">
-              <span class="flex items-center gap-2 text-xs text-gray-600"><span class="legend-dot" style="background:#22C55E;"></span>Promotores (60%)</span>
-              <span class="flex items-center gap-2 text-xs text-gray-600"><span class="legend-dot" style="background:#F59E0B;"></span>Neutros (25%)</span>
-              <span class="flex items-center gap-2 text-xs text-gray-600"><span class="legend-dot" style="background:#EF4444;"></span>Detratores (15%)</span>
+            <div class="chart-legend mt-6 pt-5" style="border-top:1px solid #EEF2F8;">
+              <span><span class="legend-dot" style="background:#22C55E;"></span>Promotores (60%)</span>
+              <span><span class="legend-dot" style="background:#F59E0B;"></span>Neutros (25%)</span>
+              <span><span class="legend-dot" style="background:#EF4444;"></span>Detratores (15%)</span>
             </div>
-
-            <!-- Feedback bullets -->
             <div class="mt-5 pt-5 space-y-3" style="border-top:1px solid #EEF2F8;">
               <div>
                 <p class="text-xs font-bold text-green-700 mb-1">✅ Pontos Fortes</p>
@@ -584,9 +565,121 @@
           <div class="chart-card p-6 md:p-8">
             <h3 class="text-base font-bold mb-1" style="color:var(--navy);">Distribuição das Respostas</h3>
             <p class="text-sm text-gray-500 mb-5">Promotores, Neutros e Detratores — 320 respostas</p>
-            <div style="position:relative;height:250px;">
+            <div style="position:relative;height:230px;">
               <canvas id="npsChart"></canvas>
             </div>
+            <div class="chart-legend mt-3">
+              <span><span class="legend-dot" style="background:#22C55E;"></span>Promotores</span>
+              <span><span class="legend-dot" style="background:#F59E0B;"></span>Neutros</span>
+              <span><span class="legend-dot" style="background:#EF4444;"></span>Detratores</span>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- D) ORIGEM DE NOVOS MOTORISTAS -->
+      <section>
+        <p class="section-label mb-4">D. Origem de Novos Motoristas — Canais de Aquisição</p>
+        <div class="chart-card p-6 md:p-8">
+          <h3 class="text-base font-bold mb-1" style="color:var(--navy);">De onde vieram os novos motoristas Pure Meli?</h3>
+          <p class="text-sm text-gray-500 mb-5">Canais de origem · % do total de novos cadastros W14</p>
+          <div style="position:relative;height:260px;">
+            <canvas id="originChart"></canvas>
+          </div>
+          <div class="chart-legend mt-4">
+            <span><span class="legend-dot" style="background:#3483FA;"></span>Instagram / Facebook (35%)</span>
+            <span><span class="legend-dot" style="background:#1A2942;"></span>Indicação de Amigo (30%)</span>
+            <span><span class="legend-dot" style="background:#5BA4FB;"></span>Google Ads (15%)</span>
+            <span><span class="legend-dot" style="background:#F0D800;border:1px solid #ccc;"></span>TV / Rádio Local (10%)</span>
+            <span><span class="legend-dot" style="background:#A0AEC0;"></span>Outros Canais (10%)</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- E) FUNIL DE CADASTRO -->
+      <section>
+        <p class="section-label mb-4">E. Funil de Cadastro de Drivers — Onboarding</p>
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+          <!-- Card A: Volume por status -->
+          <div class="chart-card p-6">
+            <h3 class="text-base font-bold mb-1" style="color:var(--navy);">Volume de Motoristas em Cadastro &amp; Pontos de Trava</h3>
+            <p class="text-sm text-gray-500 mb-5">Status atual dos drivers em processo de onboarding</p>
+            <div style="position:relative;height:230px;">
+              <canvas id="cadastroStatusChart"></canvas>
+            </div>
+            <div class="chart-legend mt-3">
+              <span><span class="legend-dot" style="background:#F59E0B;"></span>Pendente Doc (250)</span>
+              <span><span class="legend-dot" style="background:#EF4444;"></span>Aguard. Aprovação GR (120)</span>
+              <span><span class="legend-dot" style="background:#3483FA;"></span>Aceite Contrato (80)</span>
+            </div>
+          </div>
+
+          <!-- Card B: Funil de abandono (CSS visual) -->
+          <div class="chart-card p-6">
+            <h3 class="text-base font-bold mb-1" style="color:var(--navy);">Taxa de Abandono no App (Cadastro Incompleto)</h3>
+            <p class="text-sm text-gray-500 mb-5">Onde os motoristas param antes de finalizar o cadastro</p>
+
+            <!-- Etapa 1 -->
+            <div class="funnel-step">
+              <span class="funnel-label">1 · Acessou App Meli</span>
+              <div class="funnel-bar-wrap">
+                <div class="funnel-bar-fill" style="width:100%;background:linear-gradient(90deg,#3483FA,#5BA4FB);"></div>
+              </div>
+              <span class="funnel-pct">100%</span>
+              <span class="funnel-drop" style="background:#DCFCE7;color:#166534;">Baseline</span>
+            </div>
+
+            <!-- Drop 1→2 -->
+            <div class="flex items-center gap-2 px-4 mb-1">
+              <div style="width:160px;"></div>
+              <span style="font-size:11px;color:#DC2626;font-weight:600;">▼ 15% abandonaram</span>
+            </div>
+
+            <!-- Etapa 2 -->
+            <div class="funnel-step">
+              <span class="funnel-label">2 · Iniciou Cadastro</span>
+              <div class="funnel-bar-wrap">
+                <div class="funnel-bar-fill" style="width:85%;background:linear-gradient(90deg,#1A2942,#2D4067);"></div>
+              </div>
+              <span class="funnel-pct">85%</span>
+              <span class="funnel-drop">−15 p.p.</span>
+            </div>
+
+            <!-- Drop 2→3 -->
+            <div class="flex items-center gap-2 px-4 mb-1">
+              <div style="width:160px;"></div>
+              <span style="font-size:11px;color:#DC2626;font-weight:600;">▼ 25% abandonaram</span>
+            </div>
+
+            <!-- Etapa 3 -->
+            <div class="funnel-step">
+              <span class="funnel-label">3 · Enviou Documentos</span>
+              <div class="funnel-bar-wrap">
+                <div class="funnel-bar-fill" style="width:60%;background:linear-gradient(90deg,#F59E0B,#FBBF24);"></div>
+              </div>
+              <span class="funnel-pct">60%</span>
+              <span class="funnel-drop">−25 p.p.</span>
+            </div>
+
+            <!-- Drop 3→4 -->
+            <div class="flex items-center gap-2 px-4 mb-1">
+              <div style="width:160px;"></div>
+              <span style="font-size:11px;color:#DC2626;font-weight:600;">▼ 15% abandonaram</span>
+            </div>
+
+            <!-- Etapa 4 -->
+            <div class="funnel-step" style="background:#F0FDF4;">
+              <span class="funnel-label" style="color:#16A34A;font-weight:700;">4 · Finalizou Cadastro ✅</span>
+              <div class="funnel-bar-wrap">
+                <div class="funnel-bar-fill" style="width:45%;background:linear-gradient(90deg,#22C55E,#4ADE80);"></div>
+              </div>
+              <span class="funnel-pct" style="color:#16A34A;">45%</span>
+              <span class="funnel-drop" style="background:#DCFCE7;color:#166534;">Meta: 60%</span>
+            </div>
+
+            <p class="text-xs text-gray-400 mt-4">⚠ Maior perda ocorre na etapa 2→3 (envio de docs). Ação sugerida: simplificação do upload no app.</p>
           </div>
 
         </div>
@@ -610,10 +703,10 @@
   </footer>
 
   <!-- ════════════════════════════════════════════
-       JAVASCRIPT: Tabs + Charts
+       JAVASCRIPT
   ════════════════════════════════════════════════ -->
   <script>
-    /* ── Tab switching ── */
+    /* ── Tabs ── */
     function switchTab(tabId, btn) {
       document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
       document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
@@ -621,41 +714,42 @@
       btn.classList.add('active');
     }
 
-    /* ── Chart helpers ── */
-    function makeGradient(ctx, height, color, alphaTop, alphaBot) {
-      const g = ctx.createLinearGradient(0, 0, 0, height);
-      g.addColorStop(0, color.replace('1)', alphaTop + ')'));
-      g.addColorStop(1, color.replace('1)', alphaBot + ')'));
-      return g;
-    }
+    /* ── Tooltip base options ── */
+    const tooltipBase = {
+      backgroundColor: '#1A2942',
+      titleColor: '#FFE600',
+      bodyColor: '#fff',
+      padding: 12,
+      cornerRadius: 10,
+    };
 
-    /* ══ Chart 1: Adoption mini bar ══ */
+    /* ══ Chart 1: Adoption grouped bar (Tab 1 col-left) ══ */
     (function() {
-      const ctx = document.getElementById('adoptionMiniChart').getContext('2d');
+      const ctx = document.getElementById('adoptionBarChart').getContext('2d');
       new Chart(ctx, {
         type: 'bar',
         data: {
-          labels: ['W11', 'W12', 'W13', 'W14'],
+          labels: ['Semana 11', 'Semana 12', 'Semana 13', 'Semana 14'],
           datasets: [
             {
               label: 'Drivers Totais',
               data: [1100, 1150, 1210, 1250],
-              backgroundColor: 'rgba(26,41,66,0.75)',
-              borderRadius: 4,
+              backgroundColor: 'rgba(26,41,66,0.78)',
+              borderRadius: 5,
               borderSkipped: false,
             },
             {
-              label: 'Pure Meli',
+              label: 'Pure Meli (Novos)',
               data: [100, 120, 150, 188],
-              backgroundColor: 'rgba(52,131,250,0.85)',
-              borderRadius: 4,
+              backgroundColor: 'rgba(52,131,250,0.88)',
+              borderRadius: 5,
               borderSkipped: false,
             },
             {
-              label: 'Migrados',
+              label: 'Migrados (ex-Kangu)',
               data: [500, 600, 730, 812],
-              backgroundColor: 'rgba(255,230,0,0.90)',
-              borderRadius: 4,
+              backgroundColor: 'rgba(240,216,0,0.92)',
+              borderRadius: 5,
               borderSkipped: false,
             },
           ]
@@ -666,23 +760,17 @@
           interaction: { intersect: false, mode: 'index' },
           plugins: {
             legend: { display: false },
-            tooltip: {
-              backgroundColor: '#1A2942',
-              titleColor: '#FFE600',
-              bodyColor: '#fff',
-              padding: 10,
-              cornerRadius: 8,
-            }
+            tooltip: { ...tooltipBase },
           },
           scales: {
             x: {
               grid: { display: false },
-              ticks: { color: '#7A8EAC', font: { size: 10, weight: '600' } },
+              ticks: { color: '#7A8EAC', font: { size: 11, weight: '600' } },
               border: { display: false },
             },
             y: {
               grid: { color: '#EEF2F8' },
-              ticks: { color: '#7A8EAC', font: { size: 10 }, maxTicksLimit: 4 },
+              ticks: { color: '#7A8EAC', font: { size: 11 }, maxTicksLimit: 5 },
               border: { display: false },
             }
           }
@@ -690,16 +778,15 @@
       });
     })();
 
-    /* ══ Chart 2: CPR + CPS dual-axis line ══ */
+    /* ══ Chart 2: CPR + CPS dual-axis line (Tab 1 col-right) ══ */
     (function() {
       const ctx = document.getElementById('cprCpsChart').getContext('2d');
-      const gradYellow = ctx.createLinearGradient(0, 0, 0, 320);
-      gradYellow.addColorStop(0, 'rgba(240,216,0,0.28)');
-      gradYellow.addColorStop(1, 'rgba(240,216,0,0.00)');
-
-      const gradBlue = ctx.createLinearGradient(0, 0, 0, 320);
-      gradBlue.addColorStop(0, 'rgba(52,131,250,0.18)');
-      gradBlue.addColorStop(1, 'rgba(52,131,250,0.00)');
+      const gradY = ctx.createLinearGradient(0, 0, 0, 280);
+      gradY.addColorStop(0, 'rgba(240,216,0,0.28)');
+      gradY.addColorStop(1, 'rgba(240,216,0,0.00)');
+      const gradB = ctx.createLinearGradient(0, 0, 0, 280);
+      gradB.addColorStop(0, 'rgba(52,131,250,0.18)');
+      gradB.addColorStop(1, 'rgba(52,131,250,0.00)');
 
       new Chart(ctx, {
         type: 'line',
@@ -711,13 +798,13 @@
               data: [210, 205, 198, 190, 185],
               yAxisID: 'yCPR',
               borderColor: '#F0D800',
-              backgroundColor: gradYellow,
+              backgroundColor: gradY,
               borderWidth: 3,
               pointBackgroundColor: '#fff',
               pointBorderColor: '#F0D800',
               pointBorderWidth: 2.5,
-              pointRadius: 6,
-              pointHoverRadius: 8,
+              pointRadius: 5,
+              pointHoverRadius: 7,
               tension: 0.40,
               fill: true,
             },
@@ -726,14 +813,13 @@
               data: [4.70, 4.65, 4.60, 4.55, 4.50],
               yAxisID: 'yCPS',
               borderColor: '#3483FA',
-              backgroundColor: gradBlue,
+              backgroundColor: gradB,
               borderWidth: 2.5,
-              borderDash: [],
               pointBackgroundColor: '#fff',
               pointBorderColor: '#3483FA',
               pointBorderWidth: 2.5,
-              pointRadius: 6,
-              pointHoverRadius: 8,
+              pointRadius: 5,
+              pointHoverRadius: 7,
               tension: 0.40,
               fill: true,
             }
@@ -746,17 +832,11 @@
           plugins: {
             legend: { display: false },
             tooltip: {
-              backgroundColor: '#1A2942',
-              titleColor: '#FFE600',
-              bodyColor: '#fff',
-              padding: 13,
-              cornerRadius: 10,
+              ...tooltipBase,
               callbacks: {
                 label: ctx => {
-                  const val = ctx.parsed.y;
-                  const fmt = ctx.dataset.yAxisID === 'yCPR'
-                    ? `R$ ${val}`
-                    : `R$ ${val.toFixed(2)}`;
+                  const v = ctx.parsed.y;
+                  const fmt = ctx.dataset.yAxisID === 'yCPR' ? `R$ ${v}` : `R$ ${v.toFixed(2)}`;
                   return ` ${ctx.dataset.label.split('—')[0].trim()}: ${fmt}`;
                 }
               }
@@ -765,43 +845,29 @@
           scales: {
             x: {
               grid: { display: false },
-              ticks: { color: '#7A8EAC', font: { size: 12, weight: '600' } },
+              ticks: { color: '#7A8EAC', font: { size: 11, weight: '600' } },
               border: { display: false },
             },
             yCPR: {
-              type: 'linear',
-              position: 'left',
-              min: 175,
-              max: 220,
-              grid: { color: '#E9EEF6', lineWidth: 1 },
-              ticks: {
-                color: '#B8A000',
-                font: { size: 11, weight: '600' },
-                callback: v => `R$ ${v}`
-              },
+              type: 'linear', position: 'left', min: 175, max: 220,
+              grid: { color: '#E9EEF6' },
+              ticks: { color: '#B8A000', font: { size: 10, weight: '600' }, callback: v => `R$ ${v}` },
               border: { display: false },
-              title: { display: true, text: 'CPR (R$)', color: '#B8A000', font: { size: 11, weight: '700' } },
+              title: { display: true, text: 'CPR (R$)', color: '#B8A000', font: { size: 10, weight: '700' } },
             },
             yCPS: {
-              type: 'linear',
-              position: 'right',
-              min: 4.30,
-              max: 4.90,
+              type: 'linear', position: 'right', min: 4.30, max: 4.90,
               grid: { drawOnChartArea: false },
-              ticks: {
-                color: '#3483FA',
-                font: { size: 11, weight: '600' },
-                callback: v => `R$ ${v.toFixed(2)}`
-              },
+              ticks: { color: '#3483FA', font: { size: 10, weight: '600' }, callback: v => `R$ ${v.toFixed(2)}` },
               border: { display: false },
-              title: { display: true, text: 'CPS (R$)', color: '#3483FA', font: { size: 11, weight: '700' } },
+              title: { display: true, text: 'CPS (R$)', color: '#3483FA', font: { size: 10, weight: '700' } },
             }
           }
         }
       });
     })();
 
-    /* ══ Chart 3: NPS bar ══ */
+    /* ══ Chart 3: NPS distribution bar (Tab 2) ══ */
     (function() {
       const ctx = document.getElementById('npsChart').getContext('2d');
       new Chart(ctx, {
@@ -814,24 +880,17 @@
             backgroundColor: ['#22C55E', '#F59E0B', '#EF4444'],
             borderRadius: 8,
             borderSkipped: false,
-            barThickness: 56,
+            barThickness: 52,
           }]
         },
         options: {
           responsive: true,
           maintainAspectRatio: false,
-          interaction: { intersect: false, mode: 'index' },
           plugins: {
             legend: { display: false },
             tooltip: {
-              backgroundColor: '#1A2942',
-              titleColor: '#FFE600',
-              bodyColor: '#fff',
-              padding: 12,
-              cornerRadius: 10,
-              callbacks: {
-                label: ctx => ` ${ctx.parsed.y}% dos entrevistados`
-              }
+              ...tooltipBase,
+              callbacks: { label: ctx => ` ${ctx.parsed.y}% dos entrevistados` }
             }
           },
           scales: {
@@ -841,14 +900,111 @@
               border: { display: false },
             },
             y: {
-              min: 0,
-              max: 80,
+              min: 0, max: 80,
               grid: { color: '#E9EEF6' },
-              ticks: {
-                color: '#7A8EAC',
-                font: { size: 11 },
-                callback: v => `${v}%`
-              },
+              ticks: { color: '#7A8EAC', font: { size: 11 }, callback: v => `${v}%` },
+              border: { display: false },
+            }
+          }
+        }
+      });
+    })();
+
+    /* ══ Chart 4: Origin horizontal bar (Tab 2) ══ */
+    (function() {
+      const ctx = document.getElementById('originChart').getContext('2d');
+      new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: [
+            'Instagram / Facebook',
+            'Indicação de Amigo',
+            'Google Ads',
+            'TV / Rádio Local',
+            'Outros Canais',
+          ],
+          datasets: [{
+            label: '% de Origem',
+            data: [35, 30, 15, 10, 10],
+            backgroundColor: [
+              'rgba(52,131,250,0.90)',
+              'rgba(26,41,66,0.82)',
+              'rgba(91,164,251,0.88)',
+              'rgba(240,216,0,0.92)',
+              'rgba(160,174,192,0.80)',
+            ],
+            borderRadius: 6,
+            borderSkipped: false,
+            barThickness: 26,
+          }]
+        },
+        options: {
+          indexAxis: 'y',
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              ...tooltipBase,
+              callbacks: { label: ctx => ` ${ctx.parsed.x}% dos novos cadastros` }
+            }
+          },
+          scales: {
+            x: {
+              grid: { color: '#EEF2F8' },
+              ticks: { color: '#7A8EAC', font: { size: 11 }, callback: v => `${v}%` },
+              border: { display: false },
+              max: 45,
+            },
+            y: {
+              grid: { display: false },
+              ticks: { color: '#1A2942', font: { size: 12, weight: '600' } },
+              border: { display: false },
+            }
+          }
+        }
+      });
+    })();
+
+    /* ══ Chart 5: Cadastro status bar (Tab 2) ══ */
+    (function() {
+      const ctx = document.getElementById('cadastroStatusChart').getContext('2d');
+      new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: ['Pendente Doc', 'Aguard. Aprovação GR', 'Aceite Contrato'],
+          datasets: [{
+            label: 'Drivers',
+            data: [250, 120, 80],
+            backgroundColor: [
+              'rgba(245,158,11,0.90)',
+              'rgba(239,68,68,0.85)',
+              'rgba(52,131,250,0.90)',
+            ],
+            borderRadius: 8,
+            borderSkipped: false,
+            barThickness: 44,
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              ...tooltipBase,
+              callbacks: { label: ctx => ` ${ctx.parsed.y} motoristas` }
+            }
+          },
+          scales: {
+            x: {
+              grid: { display: false },
+              ticks: { color: '#1A2942', font: { size: 11, weight: '600' } },
+              border: { display: false },
+            },
+            y: {
+              grid: { color: '#EEF2F8' },
+              ticks: { color: '#7A8EAC', font: { size: 11 }, maxTicksLimit: 5 },
               border: { display: false },
             }
           }
