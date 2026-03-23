@@ -3,10 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Relatorio Gerencial DHL – SDD | Meli Last Mile</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Proxima+Nova:wght@400;600;700&display=swap" rel="stylesheet">
+  <title>Relatorio Gerencial DHL - SDD | Meli Last Mile</title>
+  <link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
   <script>
 /*!
  * Chart.js v3.9.1
@@ -35,171 +33,86 @@
 </script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <style>
-    :root {
-      --ml-yellow: #FFE600; --ml-blue: #2D3277; --ml-blue-light: #3483FA; --ml-blue-soft: #E6F0FF;
-      --bg: #F5F5F5; --surface: #FFFFFF; --text: #333333; --text-muted: #666666; --border: #E0E0E0;
-      --er-meta: #348338; --er-verde: #7ED321; --er-amarelo: #F5A623; --er-vermelho: #E60000;
-    }
-    * { box-sizing: border-box; }
-    body { font-family: 'Proxima Nova', -apple-system, BlinkMacSystemFont, sans-serif; margin: 0; background: var(--bg); color: var(--text); line-height: 1.5; }
-    .dashboard { max-width: 1400px; margin: 0 auto; padding: 1.5rem; }
-    header { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; margin-bottom: 1.5rem; padding: 1.25rem 1.5rem; background: var(--surface); border-radius: 8px; border: 1px solid var(--border); }
-    .logo { font-size: 1.35rem; font-weight: 700; color: var(--ml-blue); }
-    .logo span { color: var(--ml-yellow); background: var(--ml-blue); padding: 0 4px; border-radius: 4px; }
-    .meta { font-size: 0.875rem; color: var(--text-muted); }
-    .kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 1rem; margin-bottom: 1.5rem; }
-    .kpi { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 1.25rem; border-left: 4px solid var(--ml-blue); }
-    .kpi-label { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.04em; color: var(--text-muted); margin-bottom: 0.25rem; }
-    .kpi-value { font-size: 1.5rem; font-weight: 700; color: var(--ml-blue); }
-    .kpi.er-meta-kpi { border-left-color: var(--er-meta); } .kpi.er-meta-kpi .kpi-value { color: var(--er-meta); }
-    .kpi.er-verde-kpi { border-left-color: var(--er-verde); } .kpi.er-verde-kpi .kpi-value { color: var(--er-verde); }
-    .kpi.er-amarelo-kpi { border-left-color: var(--er-amarelo); } .kpi.er-amarelo-kpi .kpi-value { color: var(--er-amarelo); }
-    .kpi.er-vermelho-kpi { border-left-color: var(--er-vermelho); } .kpi.er-vermelho-kpi .kpi-value { color: var(--er-vermelho); }
-    .tabs { display: flex; gap: 0; margin-bottom: 1rem; border-bottom: 2px solid var(--border); }
-    .tabs button { padding: 0.75rem 1.25rem; border: none; background: transparent; color: var(--text-muted); font-weight: 600; cursor: pointer; border-bottom: 3px solid transparent; margin-bottom: -2px; font-family: inherit; font-size: 0.9rem; }
-    .tabs button:hover { color: var(--ml-blue); }
-    .tabs button.active { color: var(--ml-blue); border-bottom-color: var(--ml-blue); }
-    .tab-panel { display: none; } .tab-panel.active { display: block; }
-    .block-topic { border: 1px solid var(--border); border-radius: 8px; padding: 1.25rem 1.5rem; margin-bottom: 1.5rem; background: var(--surface); }
-    .block-title { margin: 0 0 1rem 0; font-size: 1.1rem; color: var(--ml-blue); border-bottom: 2px solid var(--ml-yellow); padding-bottom: 0.5rem; font-weight: 700; }
-    .section-title { font-size: 0.9rem; font-weight: 700; margin: 1rem 0 0.75rem 0; color: var(--ml-blue); }
-    .charts-row { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; margin-bottom: 1.5rem; }
-    @media (max-width: 900px) { .charts-row { grid-template-columns: 1fr; } }
-    .chart-wrap { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 1.25rem; }
-    .chart-wrap h3 { font-size: 0.875rem; font-weight: 700; margin: 0 0 1rem 0; color: var(--ml-blue); }
+    :root { --meli-yellow: #FFE600; --meli-black: #000; --meli-gray-dark: #333; --meli-gray: #666; --meli-gray-light: #eee; --meli-gray-bg: #F5F5F5; --meli-blue: #2D3277; --er-meta: #348338; --er-verde: #7ED321; --er-amarelo: #F5A623; --er-vermelho: #E60000; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Source Sans 3', 'Proxima Nova', -apple-system, sans-serif; background: var(--meli-gray-bg); color: var(--meli-black); line-height: 1.4; padding: 24px 32px 48px; max-width: 1200px; margin: 0 auto; }
+    .header { background: var(--meli-black); color: var(--meli-yellow); padding: 20px 24px; margin: 0 -32px 24px -32px; text-align: center; }
+    .header h1 { font-size: 1.5rem; font-weight: 700; }
+    .info-aderencia { background: #fff; border-radius: 8px; padding: 14px 20px; margin-bottom: 24px; box-shadow: 0 1px 4px rgba(0,0,0,.08); border-left: 4px solid var(--meli-yellow); font-size: 0.95rem; }
+    .info-aderencia strong { color: var(--er-vermelho); }
+    .z-charts { display: grid; grid-template-columns: 1fr; gap: 24px; margin-bottom: 24px; }
+    @media (max-width: 700px) { .z-charts { grid-template-columns: 1fr; } }
+    .chart-svc-er { min-height: 520px; }
+    .chart-box { background: #fff; border-radius: 8px; padding: 20px; box-shadow: 0 1px 4px rgba(0,0,0,.08); border-left: 4px solid var(--meli-yellow); }
+    .chart-box-full { grid-column: 1 / -1; }
+    .chart-box h2 { font-size: 1rem; color: var(--meli-gray-dark); margin-bottom: 16px; padding-bottom: 8px; border-bottom: 1px solid var(--meli-gray-light); }
     .chart-container { position: relative; height: 260px; }
-    .table-wrap { overflow-x: auto; }
-    table { width: 100%; border-collapse: collapse; font-size: 0.8125rem; }
-    th { text-align: left; padding: 0.75rem 1rem; font-weight: 700; color: var(--ml-blue); background: var(--ml-blue-soft); border-bottom: 2px solid var(--ml-blue); white-space: nowrap; }
-    th.num, td.num { text-align: right; }
-    td { padding: 0.65rem 1rem; border-bottom: 1px solid var(--border); }
-    tr:hover td { background: #f5f5f5; }
-    .er-meta { font-weight: 700; color: var(--er-meta) !important; }
-    .er-verde { font-weight: 600; color: var(--er-verde) !important; }
-    .er-amarelo { font-weight: 600; color: var(--er-amarelo) !important; }
-    .er-vermelho { font-weight: 600; color: var(--er-vermelho) !important; }
-    .er-null { color: var(--text-muted); }
-    .legenda-er { display: flex; flex-wrap: wrap; gap: 8px 20px; margin: 0.5rem 0 1rem 0; font-size: 0.8rem; color: var(--text-muted); }
-    .legenda-er span { display: inline-flex; align-items: center; gap: 6px; }
-    .dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
-    .gantt-scroll { overflow-x: auto; border: 1px solid var(--border); border-radius: 6px; }
-    .gantt-tabela { font-size: 0.85rem; width: 100%; border-collapse: collapse; }
-    .gantt-tabela th, .gantt-tabela td { padding: 6px 10px; border: 1px solid var(--border); white-space: nowrap; }
-    .gantt-tabela thead th { background: var(--ml-blue-soft); color: var(--ml-blue); font-weight: 700; text-align: center; border-bottom: 2px solid var(--ml-blue); }
+    .gantt-box { margin-bottom: 24px; }
+    .gantt-scroll { max-height: 320px; overflow-y: auto; overflow-x: auto; border: 1px solid var(--meli-gray-light); border-radius: 6px; }
+    .gantt-tabela { font-size: 0.9rem; margin-top: 0; }
+    .gantt-tabela.gantt-compact { font-size: 0.9rem; }
+    .gantt-tabela th, .gantt-tabela td { padding: 4px 8px; border: 1px solid var(--meli-gray-light); white-space: nowrap; }
+    .gantt-tabela thead th { text-align: center; }
     .gantt-tabela thead th:first-child { text-align: left; }
-    .gantt-tabela .gantt-svc { font-weight: 600; background: #f0f0f0; }
-    .gantt-tabela .gantt-pe { font-size: 0.8em; text-align: center; }
-    .gantt-tabela .gantt-sort { cursor: pointer; user-select: none; }
-    .gantt-tabela .gantt-sort:hover { background: rgba(52,131,250,0.2); }
-    .gantt-gap { font-size: 0.75em; color: var(--text-muted); }
+    .gantt-tabela .gantt-svc { font-weight: 600; background: var(--meli-gray-bg); }
+    .gantt-tabela th.gantt-sort { cursor: pointer; user-select: none; }
+    .gantt-tabela th.gantt-sort:hover { text-decoration: underline; }
+    .gantt-tabela .gantt-pe { font-size: 0.85em; }
+    .gantt-leyenda { font-size: 0.7rem; color: var(--meli-gray); margin-top: 8px; }
+    .gantt-subtitulo { font-size: 0.85rem; color: var(--meli-gray); margin: -8px 0 12px 0; font-weight: 400; }
+    .gantt-gap { font-size: 0.75em; color: var(--meli-gray); }
     .gantt-vermelho { background: #ffebee !important; }
     .gantt-verde { background: #e8f5e9 !important; }
     .gantt-cinza { background: #f5f5f5 !important; }
-    .gantt-total-row td { font-weight: 700; border-top: 2px solid var(--ml-blue); background: #f0f0f0 !important; }
-    .gantt-empty { color: var(--text-muted); font-size: 0.9rem; padding: 1rem 0; }
-    .gantt-subtitulo { font-size: 0.8rem; color: var(--text-muted); margin: -0.5rem 0 1rem 0; }
-    .resumo-executivo { background: var(--surface); border-radius: 8px; border: 1px solid var(--border); border-left: 4px solid var(--ml-blue); padding: 1.25rem 1.5rem; margin-bottom: 1.5rem; }
-    .resumo-executivo h2 { font-size: 1rem; color: var(--ml-blue); margin-bottom: 0.75rem; font-weight: 700; }
-    .resumo-titulo { margin: 0.75rem 0 0.25rem 0; font-size: 0.85rem; color: var(--text-muted); font-weight: 600; }
-    .resumo-lista { margin: 0 0 0.5rem 1.25rem; font-size: 0.875rem; }
-    .resumo-critico li { color: var(--er-vermelho); }
-    .resumo-atencao li { color: var(--er-amarelo); }
-    .resumo-positivo li { color: var(--er-meta); }
-    .resumo-vazio { color: var(--text-muted); font-size: 0.875rem; }
-    .section { background: var(--surface); border-radius: 8px; padding: 1.25rem 1.5rem; border: 1px solid var(--border); margin-bottom: 1.5rem; }
-    .section h2 { font-size: 1rem; color: var(--ml-blue); margin-bottom: 0.75rem; font-weight: 700; border-bottom: 2px solid var(--ml-yellow); padding-bottom: 0.5rem; }
-    .top10-box { margin-bottom: 1.5rem; }
-    .top10-tabela { font-size: 0.85rem; } .top10-tabela th, .top10-tabela td { padding: 6px 10px; } .top10-gap { font-weight: 600; color: var(--er-vermelho); }
-    .btn-row { display: flex; gap: 0.75rem; flex-wrap: wrap; margin-bottom: 1rem; }
-    .btn { background: var(--ml-blue); color: #fff; border: none; padding: 0.6rem 1.25rem; font-size: 0.875rem; font-weight: 600; cursor: pointer; border-radius: 6px; font-family: inherit; }
-    .btn:hover { background: #2968c0; }
-    .btn-yellow { background: var(--ml-yellow); color: var(--ml-blue); }
-    .btn-yellow:hover { filter: brightness(0.97); }
-    #msg { font-size: 0.8rem; margin-top: 0.5rem; font-weight: 600; } .ok { color: var(--er-meta); } .erro { color: var(--er-vermelho); }
-    footer { margin-top: 2rem; padding-top: 1rem; font-size: 0.75rem; color: var(--text-muted); border-top: 1px solid var(--border); text-align: center; }
+    .gantt-total-row { font-weight: 700; border-top: 2px solid var(--meli-gray-dark); }
+    .gantt-total-row td { background: var(--meli-gray-bg) !important; }
+    .gantt-empty { color: var(--meli-gray); font-size: 0.9rem; }
+    .top10-box { margin-bottom: 16px; padding: 12px 16px !important; }
+    .top10-tabela { font-size: 0.85rem; } .top10-tabela th, .top10-tabela td { padding: 4px 10px; text-align: center; } .top10-tabela .top10-gap { font-weight: 600; color: var(--er-vermelho); }
+    .z-tables { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+    @media (max-width: 700px) { .z-tables { grid-template-columns: 1fr; } }
+    .section { background: #fff; border-radius: 8px; padding: 20px; box-shadow: 0 1px 4px rgba(0,0,0,.08); }
+    .section h2 { font-size: 1rem; color: var(--meli-gray-dark); margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid var(--meli-gray-light); }
+    table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+    th, td { padding: 10px 12px; text-align: left; border-bottom: 1px solid var(--meli-gray-light); }
+    th { font-weight: 600; color: var(--meli-gray); background: var(--meli-gray-bg); }
+    td.num { text-align: right; font-variant-numeric: tabular-nums; }
+    .er-meta { font-weight: 700; color: var(--er-meta) !important; } .er-verde { font-weight: 600; color: var(--er-verde) !important; }
+    .er-amarelo { font-weight: 600; color: var(--er-amarelo) !important; } .er-vermelho { font-weight: 600; color: var(--er-vermelho) !important; } .er-null { color: var(--meli-gray); }
+    .legenda-er { margin-top: 16px; padding: 12px; background: var(--meli-gray-bg); border-radius: 6px; font-size: 0.8rem; color: var(--meli-gray); display: flex; flex-wrap: wrap; gap: 12px 20px; }
+    .legenda-er span { display: inline-flex; align-items: center; gap: 6px; } .legenda-er .dot { width: 10px; height: 10px; border-radius: 50%; }
+    .btn { background: var(--meli-yellow); color: var(--meli-black); border: none; padding: 10px 20px; font-size: 14px; font-weight: 600; cursor: pointer; border-radius: 6px; margin-bottom: 16px; font-family: inherit; }
+    .btn:hover { filter: brightness(0.97); } #msg { font-size: 13px; margin-top: 8px; font-weight: 600; } .ok { color: var(--er-meta); } .erro { color: var(--er-vermelho); }
+    .btn-wrap { margin-top: 24px; padding-top: 16px; border-top: 1px solid var(--meli-gray-light); }
+    .resumo-executivo { background: #fff; border-radius: 8px; padding: 20px; margin-bottom: 24px; box-shadow: 0 1px 4px rgba(0,0,0,.08); border-left: 4px solid var(--meli-blue); }
+    .resumo-executivo h2 { font-size: 1rem; color: var(--meli-gray-dark); margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid var(--meli-gray-light); }
+    .resumo-executivo .resumo-titulo { margin: 12px 0 4px 0; font-size: 0.9rem; color: var(--meli-gray); }
+    .resumo-executivo .resumo-lista { margin: 0 0 8px 20px; padding: 0; font-size: 0.9rem; }
+    .resumo-executivo .resumo-critico li { color: var(--er-vermelho); }
+    .resumo-executivo .resumo-atencao li { color: var(--er-amarelo); }
+    .resumo-executivo .resumo-positivo li { color: var(--er-meta); }
+    .resumo-executivo .resumo-vazio { color: var(--meli-gray); font-size: 0.9rem; margin: 0; }
   </style>
 </head>
 <body>
-  <div id="relatorioCompleto" class="dashboard">
-    <header>
-      <div>
-        <div class="logo">DHL <span>SDD</span></div>
-        <div class="meta">Relatorio Gerencial · Meli Last Mile · ER = rotas executadas / calendarizadas</div>
-      </div>
-    </header>
-
-    <div class="kpis">
-      <div class="kpi er-vermelho-kpi">
-        <div class="kpi-label">ER – Última semana (W12)</div>
-        <div class="kpi-value">67,2%</div>
-      </div>
-      <div class="kpi">
-        <div class="kpi-label">Veículos negociados</div>
-        <div class="kpi-value">491</div>
-      </div>
-      <div class="kpi">
-        <div class="kpi-label">Veículos executados</div>
-        <div class="kpi-value">329,8</div>
-      </div>
-      <div class="kpi">
-        <div class="kpi-label">Semana</div>
-        <div class="kpi-value">W12</div>
-      </div>
-    </div>
-
-    <nav class="tabs" role="tablist">
-      <button type="button" class="tab-btn active" data-tab="dashboard" aria-selected="true">Dashboard</button>
-      <button type="button" class="tab-btn" data-tab="cronograma" aria-selected="false">Cronograma DHL 2026</button>
-      <button type="button" class="tab-btn" data-tab="exportar" aria-selected="false">Exportar</button>
-    </nav>
-
-    <div id="tab-dashboard" class="tab-panel active">
-<div class='resumo-executivo'><h2>Resumo executivo</h2><p class='resumo-titulo'><strong>Crítico</strong></p><ul class='resumo-lista resumo-critico'><li>ER <strong>abaixo de 80%</strong> em Fev/2026 (75.9%)</li><li>Semana W9 com ER <strong>abaixo de 80%</strong> (71.6%)</li><li>Semana W10 com ER <strong>abaixo de 80%</strong> (66.2%)</li><li>Semana W11 com ER <strong>abaixo de 80%</strong> (67.9%)</li><li>Semana W12 com ER <strong>abaixo de 80%</strong> (67.2%)</li></ul><p class='resumo-titulo'><strong>Destaques</strong></p><ul class='resumo-lista resumo-positivo'><li>ER &gt;= 90% em Nov/2025 (93.7%)</li><li>ER &gt;= 90% em Dez/2025 (94.5%)</li><li>ER &gt;= 90% em Jan/2026 (96.4%)</li></ul></div>
-      <div class="block-topic">
-        <h2 class="block-title">ER – Evolução mensal e semanal</h2>
-        <div class="charts-row">
-          <div class="chart-wrap">
-            <h3>ER x Veículos negociados – Mensal</h3>
-            <div class="chart-container"><canvas id="chartMes"></canvas></div>
-          </div>
-          <div class="chart-wrap">
-            <h3>ER x Veículos negociados – Últimas 4 semanas</h3>
-            <div class="chart-container"><canvas id="chartSem"></canvas></div>
-          </div>
-        </div>
-        <div class="legenda-er">
-          <span><span class="dot" style="background:var(--er-meta)"></span>Meta 95%+</span>
-          <span><span class="dot" style="background:var(--er-verde)"></span>Alto 90–95%</span>
-          <span><span class="dot" style="background:var(--er-amarelo)"></span>Atenção 80–90%</span>
-          <span><span class="dot" style="background:var(--er-vermelho)"></span>Abaixo 80%</span>
-        </div>
-        <div class="section-title">Por mês</div>
-        <div class="table-wrap">
-          <table>
-            <thead><tr><th>Mês</th><th>Ano</th><th class="num">Veíc. negociados</th><th class="num">Veíc. executados</th><th class="num">ER %</th></tr></thead>
-            <tbody>  <tr><td>Nov</td><td>2025</td><td class='num'>892,5</td><td class='num'>836,2</td><td class='num er-verde'>93,7%</td></tr>
-  <tr><td>Dez</td><td>2025</td><td class='num'>1.065,2</td><td class='num'>1.006,3</td><td class='num er-verde'>94,5%</td></tr>
-  <tr><td>Jan</td><td>2026</td><td class='num'>1.010,5</td><td class='num'>973,7</td><td class='num er-meta'>96,4%</td></tr>
-  <tr><td>Fev</td><td>2026</td><td class='num'>1.429</td><td class='num'>1.085</td><td class='num er-vermelho'>75,9%</td></tr></tbody>
-          </table>
-        </div>
-        <div class="section-title" style="margin-top:1.5rem">Por semana (últimas 4)</div>
-        <div class="table-wrap">
-          <table>
-            <thead><tr><th>Semana</th><th class="num">Veíc. negociados</th><th class="num">Veíc. executados</th><th class="num">ER %</th></tr></thead>
-            <tbody>  <tr><td>W9</td><td class='num'>405</td><td class='num'>290,2</td><td class='num er-vermelho'>71,6%</td></tr>
-  <tr><td>W10</td><td class='num'>462</td><td class='num'>306</td><td class='num er-vermelho'>66,2%</td></tr>
-  <tr><td>W11</td><td class='num'>485</td><td class='num'>329,3</td><td class='num er-vermelho'>67,9%</td></tr>
-  <tr><td>W12</td><td class='num'>491</td><td class='num'>329,8</td><td class='num er-vermelho'>67,2%</td></tr></tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-
-    <div id="tab-cronograma" class="tab-panel">
+  <div id="relatorioCompleto">
+  <header class="header">
+    <h1>Relatorio Gerencial DHL – SDD</h1>
+  </header>
+<div class='resumo-executivo'><h2>Resumo executivo</h2><p class='resumo-titulo'><strong>Crítico</strong></p><ul class='resumo-lista resumo-critico'><li>ER <strong>abaixo de 80%</strong> em Fev/2026 (75.9%)</li><li>Semana W8 com ER <strong>abaixo de 80%</strong> (67.1%)</li><li>Semana W9 com ER <strong>abaixo de 80%</strong> (71.6%)</li><li>Semana W10 com ER <strong>abaixo de 80%</strong> (66.2%)</li><li>Semana W11 com ER <strong>abaixo de 80%</strong> (67.9%)</li></ul><p class='resumo-titulo'><strong>Destaques</strong></p><ul class='resumo-lista resumo-positivo'><li>ER &gt;= 90% em Nov/2025 (93.7%)</li><li>ER &gt;= 90% em Dez/2025 (94.5%)</li><li>ER &gt;= 90% em Jan/2026 (96.4%)</li><li>Alta do ER em relacao a semana anterior (66.2% &rarr; 67.9%)</li></ul></div>
+  <p class="info-aderencia">Aderencia ao plano na semana passada: <strong>67,2%</strong></p>
+  <div class="z-charts">
+    <div class="chart-box"><h2>ER x Carros negociados – Semana</h2><div class="chart-container"><canvas id="chartSem"></canvas></div></div>
+  </div>
+  <div class="legenda-er">
+    <span><span class="dot" style="background:var(--er-meta)"></span> Meta 95%+</span>
+    <span><span class="dot" style="background:var(--er-verde)"></span> Alto 90-95%</span>
+    <span><span class="dot" style="background:var(--er-amarelo)"></span> Atencao 80-90%</span>
+    <span><span class="dot" style="background:var(--er-vermelho)"></span> Abaixo 80%</span>
+  </div>
 
   <section class="section top10-box">
-    <h2>Abertura por SVC - W11</h2>
+    <h2>Abertura por SVC - W12</h2>
     <table class="top10-tabela">
       <thead><tr><th>SVC</th><th class="num">Calendarizacao</th><th class="num">Executados SDD</th><th class="num">Gap (rotas)</th><th class="num">%ER EX</th></tr></thead>
       <tbody>
@@ -218,15 +131,15 @@
   <tr><td>SPR1</td><td class='num'>162</td><td class='num'>163</td><td class='num top10-gap'>-1</td><td class='num er-verde'>100,62%</td></tr>
   <tr><td>SCE1</td><td class='num'>120</td><td class='num'>122</td><td class='num top10-gap'>-2</td><td class='num er-verde'>101,67%</td></tr>
   <tr><td>SAL1</td><td class='num'>84</td><td class='num'>89</td><td class='num top10-gap'>-5</td><td class='num er-verde'>105,95%</td></tr>
-  <tr><td>SPE1</td><td class='num'>150</td><td class='num'>160</td><td class='num top10-gap'>-10</td><td class='num er-verde'>106,67%</td></tr>
+  <tr><td>SPE1</td><td class='num'>150</td><td class='num'>161</td><td class='num top10-gap'>-11</td><td class='num er-verde'>107,33%</td></tr>
   <tr><td>SGO1</td><td class='num'>48</td><td class='num'>70</td><td class='num top10-gap'>-22</td><td class='num er-verde'>145,83%</td></tr>
   <tr><td>SSP26</td><td class='num'>60</td><td class='num'>87</td><td class='num top10-gap'>-27</td><td class='num er-verde'>145,00%</td></tr>
       </tbody>
     </table>
   </section>
-      <div class="block-topic">
-        <h2 class="block-title">Proposta DHL 2026</h2>
-        <p class="gantt-subtitulo">Planejado (acum.) / Executado (gap) por semana</p>
+  <div class="chart-box gantt-box" id="ganttBox">
+    <h2 class="gantt-titulo">Proposta DHL 2026</h2>
+    <p class="gantt-subtitulo">Planejado / Executado (gap)</p>
 
   <div class="gantt-scroll">
   <table class="gantt-tabela gantt-compact" id="tabelaGantt">
@@ -236,35 +149,16 @@
     </tbody>
   </table>
   </div>
-      </div>
-    </div>
-
-    <div id="tab-exportar" class="tab-panel">
-      <div class="block-topic">
-        <h2 class="block-title">Exportar dados</h2>
-        <div class="btn-row">
-          <button class="btn btn-yellow" id="btnPlanilha">Copiar para planilha (Excel/Sheets)</button>
-          <button class="btn" id="btnImagem">Exportar como imagem</button>
-          <button class="btn" id="btnPdf">Baixar PDF</button>
-        </div>
-        <p id="msg"></p>
-      </div>
-    </div>
-
-    <footer>Dados: BigQuery (SDDCALENDARICAOHISTORICO_T × BT_BASEROTAS_LASTMILE). Carrier DHL · Plate %SDD%. Meli Last Mile.</footer>
+  </div>
+  </div>
+  <div class="btn-wrap">
+    <button class="btn" id="btnPlanilha">Exportar para planilha</button>
+    <button class="btn" id="btnImagem">Exportar como imagem</button>
+    <button class="btn" id="btnPdf">Baixar PDF</button>
+    <p id="msg"></p>
   </div>
   <script>
     (function init() {
-      document.querySelectorAll(".tab-btn").forEach(function(btn) {
-        btn.addEventListener("click", function() {
-          var tab = btn.getAttribute("data-tab");
-          document.querySelectorAll(".tab-btn").forEach(function(b) { b.classList.remove("active"); b.setAttribute("aria-selected", "false"); });
-          document.querySelectorAll(".tab-panel").forEach(function(p) { p.classList.remove("active"); });
-          btn.classList.add("active"); btn.setAttribute("aria-selected", "true");
-          var panel = document.getElementById("tab-" + tab);
-          if (panel) panel.classList.add("active");
-        });
-      });
       function run() {
         var tsv = `Periodo	Ano	Veiculos negociados	Veiculos executados	ER%
 Nov	2025	892,5	836,2	93,7%
@@ -283,7 +177,7 @@ W12	491	329,8	67,2%`;
           var msgEl = document.getElementById("msg");
           if (!box) { msgEl.textContent = "Conteudo nao encontrado."; msgEl.className = "erro"; return; }
           if (typeof html2canvas === "undefined") { msgEl.textContent = "Recarregue a pagina com internet para exportar imagem."; msgEl.className = "erro"; return; }
-          msgEl.textContent = "Gerando imagem..."; msgEl.className = "";
+          msgEl.textContent = "Gerando imagem da pagina em alta qualidade..."; msgEl.className = "";
           html2canvas(box, { scale: 2, useCORS: true, logging: false }).then(function(canvas) {
             var a = document.createElement("a");
             a.href = canvas.toDataURL("image/png");
@@ -293,51 +187,49 @@ W12	491	329,8	67,2%`;
           }).catch(function(err) { msgEl.textContent = "Erro ao gerar imagem."; msgEl.className = "erro"; });
         };
         document.getElementById("btnPdf").onclick = function () {
-          document.getElementById("msg").textContent = "Use 'Salvar como PDF' na janela de impressao."; document.getElementById("msg").className = "ok";
+          document.getElementById("msg").textContent = "Use a opcao 'Salvar como PDF' na janela de impressao."; document.getElementById("msg").className = "ok";
           window.print();
         };
         if (typeof Chart === "undefined") { console.error("Chart.js nao carregou."); return; }
         if (typeof ChartDataLabels !== "undefined") Chart.register(ChartDataLabels);
-        Chart.defaults.font.family = "'Proxima Nova', -apple-system, sans-serif";
+        Chart.defaults.font.family = "'Source Sans 3', 'Proxima Nova', sans-serif";
         Chart.defaults.color = '#333';
         var fmtErBr = function(v) { return typeof v === "number" ? Math.round(v) + "%" : (v && v.toString ? v.toString().replace(/,\d+/, "") : v) + "%"; };
         var erSemDisplay = ["71,6%", "66,2%", "67,9%", "67,2%"];
-        var carrosNegMes = [206.0, 245.8, 233.2, 357.2];
         var carrosNegSem = [405.0, 462.0, 485.0, 491.0];
-        var optsMes = { responsive: true, maintainAspectRatio: false, layout: { padding: { top: 0 } }, plugins: { legend: { display: true, position: "bottom", align: "center" }, tooltip: { callbacks: { label: function(ctx) { if (ctx.dataset.yAxisID === "yEr") return fmtErBr(ctx.raw); return ctx.raw + " veic."; } } }, datalabels: { display: true, formatter: function(v, ctx) { return ctx.datasetIndex === 0 ? Math.round(v) : Math.round(v) + "%"; }, anchor: "end", align: "top", color: "#333", font: { size: 10 } } }, scales: { x: { grid: { display: false } }, yCarros: { type: "linear", position: "left", min: 0, grid: { color: "#eee" } }, yEr: { type: "linear", position: "right", min: 0, max: 110, ticks: { callback: function(v) { return v + "%"; } }, grid: { display: false } } } };
         var optsSem = { responsive: true, maintainAspectRatio: false, layout: { padding: { top: 0 } }, plugins: { legend: { display: true, position: "bottom", align: "center" }, tooltip: { callbacks: { label: function(ctx) { if (ctx.dataset.yAxisID === "yEr") return erSemDisplay[ctx.dataIndex] || fmtErBr(ctx.raw); return ctx.raw + " veic."; } } }, datalabels: { display: true, formatter: function(v, ctx) { var val = ctx.datasetIndex === 0 ? v : (typeof v === "number" ? v : parseFloat(String(v).replace(",", ".")) || 0); return ctx.datasetIndex === 0 ? Math.round(val) : Math.round(val) + "%"; }, anchor: "end", align: "top", color: "#333", font: { size: 10 } } }, scales: { x: { grid: { display: false } }, yCarros: { type: "linear", position: "left", min: 0, grid: { color: "#eee" } }, yEr: { type: "linear", position: "right", min: 0, max: 100, ticks: { callback: function(v) { return v + "%"; } }, grid: { display: false } } } };
-        new Chart(document.getElementById("chartMes"), { type: "bar", data: { labels: ["Nov/2025", "Dez/2025", "Jan/2026", "Fev/2026"], datasets: [{ label: "Veíc. negociados", data: carrosNegMes, backgroundColor: "rgba(255,230,0,0.8)", borderColor: "#FFE600", borderWidth: 1, yAxisID: "yCarros", order: 1 }, { label: "ER %", data: [93.7, 94.5, 96.4, 75.9], type: "line", borderColor: "#2D3277", backgroundColor: "transparent", borderWidth: 2, fill: false, yAxisID: "yEr", pointBackgroundColor: ["#7ED321", "#7ED321", "#348338", "#E60000"], pointBorderColor: ["#7ED321", "#7ED321", "#348338", "#E60000"], order: 2 }] }, options: optsMes });
-        new Chart(document.getElementById("chartSem"), { type: "bar", data: { labels: ["W9", "W10", "W11", "W12"], datasets: [{ label: "Veíc. negociados", data: carrosNegSem, backgroundColor: "rgba(255,230,0,0.8)", borderColor: "#FFE600", borderWidth: 1, yAxisID: "yCarros", order: 1 }, { label: "ER %", data: [71.6, 66.2, 67.9, 67.2], type: "line", borderColor: "#2D3277", backgroundColor: "transparent", borderWidth: 2, fill: false, yAxisID: "yEr", pointBackgroundColor: ["#E60000", "#E60000", "#E60000", "#E60000"], pointBorderColor: ["#E60000", "#E60000", "#E60000", "#E60000"], order: 2 }] }, options: optsSem });
-        (function() {
-          var tbl = document.getElementById("tabelaGantt");
-          if (tbl) {
-            var ths = tbl.querySelectorAll("thead th.gantt-sort");
-            ths.forEach(function(th) {
-              th.addEventListener("click", function() {
-                var col = parseInt(th.getAttribute("data-col"), 10);
-                var tbody = tbl.querySelector("tbody");
-                var rows = Array.prototype.slice.call(tbody.querySelectorAll("tr:not(.gantt-total-row)"));
-                var asc = th.getAttribute("data-order") !== "asc";
-                th.setAttribute("data-order", asc ? "asc" : "desc");
-                function getVal(cell) {
-                  if (!cell) return "";
-                  var t = cell.textContent.trim();
-                  if (col === 0) return t;
-                  var m = t.match(/\d+/);
-                  return m ? parseInt(m[0], 10) : 0;
-                }
-                rows.sort(function(a, b) {
-                  var av = getVal(a.cells[col]), bv = getVal(b.cells[col]);
-                  if (col === 0) return asc ? (av < bv ? -1 : 1) : (bv < av ? -1 : 1);
-                  return asc ? av - bv : bv - av;
-                });
-                rows.forEach(function(r) { tbody.appendChild(r); });
-                var totalRow = tbody.querySelector("tr.gantt-total-row");
-                if (totalRow) { tbody.appendChild(totalRow); }
-              });
+        new Chart(document.getElementById("chartSem"), { type: "bar", data: { labels: ["W9", "W10", "W11", "W12"], datasets: [{ label: "Carros negociados", data: carrosNegSem, backgroundColor: "rgba(255,230,0,0.8)", borderColor: "#FFE600", borderWidth: 1, yAxisID: "yCarros", order: 1 }, { label: "ER %", data: [71.6, 66.2, 67.9, 67.2], type: "line", borderColor: "#333", backgroundColor: "transparent", borderWidth: 2, fill: false, yAxisID: "yEr", pointBackgroundColor: ["#E60000", "#E60000", "#E60000", "#E60000"], pointBorderColor: ["#E60000", "#E60000", "#E60000", "#E60000"], order: 2 }] }, options: optsSem });
+    (function() {
+      var tbl = document.getElementById("tabelaGantt");
+      if (tbl) {
+        var ths = tbl.querySelectorAll("thead th.gantt-sort");
+        ths.forEach(function(th) {
+          th.addEventListener("click", function() {
+            var col = parseInt(th.getAttribute("data-col"), 10);
+            var tbody = tbl.querySelector("tbody");
+            var rows = Array.prototype.slice.call(tbody.querySelectorAll("tr:not(.gantt-total-row)"));
+            var totalRow = tbody.querySelector("tr.gantt-total-row");
+            var asc = th.getAttribute("data-order") !== "asc";
+            th.setAttribute("data-order", asc ? "asc" : "desc");
+            function getVal(cell) {
+              if (!cell) return "";
+              var t = cell.textContent.trim();
+              if (col === 0) return t;
+              var m = t.match(/\d+/);
+              return m ? parseInt(m[0], 10) : 0;
+            }
+            rows.sort(function(a, b) {
+              var av = getVal(a.cells[col]), bv = getVal(b.cells[col]);
+              if (col === 0) return asc ? (av < bv ? -1 : 1) : (bv < av ? -1 : 1);
+              return asc ? av - bv : bv - av;
             });
-          }
-        })();
+            rows.forEach(function(r) { tbody.appendChild(r); });
+            var totalRow = tbody.querySelector("tr.gantt-total-row");
+            if (totalRow) { tbody.appendChild(totalRow); }
+          });
+        });
+      }
+    })();
       }
       if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", run); else run();
     })();
