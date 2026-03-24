@@ -171,10 +171,10 @@
       <tr><td>Fev/26 — Q1</td><td class="c-sns">− R$ 12.299</td><td class="c-hns">− R$ 17.428</td><td class="c-snu">+ R$ 1.054</td><td class="c-hnu">—</td><td class="c-neg"><strong>− R$ 28.673</strong></td></tr>
       <tr><td>Fev/26 — Q2</td><td class="c-sns">− R$ 691</td><td class="c-hns">− R$ 27.776</td><td class="c-snu">—</td><td class="c-hnu">—</td><td class="c-neg"><strong>− R$ 28.467</strong></td></tr>
       <tr><td>Mar/26 — Q1</td><td class="c-sns">− R$ 5.728</td><td class="c-hns">− R$ 24.461</td><td class="c-snu">—</td><td class="c-hnu">—</td><td class="c-neg"><strong>− R$ 30.189</strong></td></tr>
-      <tr class="proj-row"><td>Mar/26 — Q2 <span class="badge b-proj">PROJ</span></td><td class="c-proj">− R$ 54.060</td><td class="c-proj">− R$ 126.144</td><td class="c-proj">—</td><td class="c-proj">—</td><td class="c-proj"><strong>− R$ 180.204</strong></td></tr>
+      <tr class="proj-row"><td>Mar/26 — Q2 <span class="badge b-proj">PROJ</span></td><td class="c-proj">− R$ 142.668</td><td class="c-proj">− R$ 36.023</td><td class="c-proj">—</td><td class="c-proj">—</td><td class="c-proj"><strong>− R$ 178.691</strong></td></tr>
     </tbody>
     <tfoot>
-      <tr class="grand-total"><td>TOTAL GERAL <span style="font-weight:400;font-size:10px;color:var(--muted)">(incl. proj.)</span></td><td>− R$ 80.511</td><td>− R$ 219.219</td><td>+ R$ 1.054</td><td>+ R$ 2.363</td><td>− R$ 296.311</td></tr>
+      <tr class="grand-total"><td>TOTAL GERAL <span style="font-weight:400;font-size:10px;color:var(--muted)">(incl. proj.)</span></td><td>− R$ 169.119</td><td>− R$ 129.098</td><td>+ R$ 1.054</td><td>+ R$ 2.363</td><td>− R$ 294.800</td></tr>
     </tfoot>
   </table>
 </div>
@@ -219,18 +219,18 @@
   </div>
   <div class="kpi k-proj">
     <div class="kpi-label">SLA 107 carros — Q2 inteira</div>
-    <div class="kpi-val">− R$ 150.204</div>
-    <div class="kpi-sub">ER médio 47,9% · 12 dias × gap × tarifa × 50%</div>
+    <div class="kpi-val">− R$ 148.502</div>
+    <div class="kpi-sub">SNS R$136.940 + HNS R$11.562 · 50% tarifa cada</div>
   </div>
   <div class="kpi k-hns">
     <div class="kpi-label">Acumulado 7 dias (16–22/mar)</div>
-    <div class="kpi-val">− R$ 87.619</div>
+    <div class="kpi-val">− R$ 74.251</div>
     <div class="kpi-sub">Base: aderência real da semana passada</div>
   </div>
   <div class="kpi k-sns">
-    <div class="kpi-label">Projeção restante (5 dias)</div>
-    <div class="kpi-val">− R$ 62.585</div>
-    <div class="kpi-sub">Extrapolando mesmo ER até 31/mar</div>
+    <div class="kpi-label">Projeção restante (6 dias úteis)</div>
+    <div class="kpi-val">− R$ 74.251</div>
+    <div class="kpi-sub">Extrapolando mesmo padrão até 31/mar</div>
   </div>
 </div>
 
@@ -244,7 +244,7 @@
 <!-- SLA por SVC -->
 <div class="chart-wrap">
   <div class="chart-title">SLA Estimado por SVC — 107 Novos Veículos · Quinzena Cheia (12 dias)</div>
-  <div class="chart-sub">Fórmula: Carros × 12 dias × (1 − ER) × Tarifa × 50% &nbsp;·&nbsp; Valores em R$</div>
+  <div class="chart-sub">SNS = Recusados ÷ Solicitado × 12d × Tarifa × 50% &nbsp;·&nbsp; HNS = (Aceites − Exec) ÷ Solicitado × 12d × Tarifa × 50% &nbsp;·&nbsp; Valores em R$</div>
   <canvas id="slaSimChart" height="260"></canvas>
 </div>
 
@@ -255,33 +255,35 @@
       <tr>
         <th>Regional / SVC</th>
         <th>Novos Carros</th>
-        <th>ER Semana (real)</th>
-        <th>Tarifa (R$)</th>
-        <th>Gap 12 dias</th>
-        <th>SLA Quinzena Cheia</th>
-        <th>Acum. 7 dias</th>
+        <th>ER (real)</th>
+        <th>Tarifa</th>
+        <th class="c-sns">Soft NS <span class="badge b-desc">50%</span></th>
+        <th class="c-hns">Hard NS <span class="badge b-desc">50%</span></th>
+        <th>Total Q2 (12d)</th>
+        <th>Acum. 7d</th>
       </tr>
     </thead>
     <tbody>
-      <tr><td>SP2 / SSP48 <span class="badge" style="background:#fee2e2;color:#b91c1c">pior ER</span></td><td>2</td><td class="c-neg"><strong>20,8%</strong></td><td>R$ 452</td><td>19,0</td><td class="c-neg">− R$ 4.294</td><td class="c-neg">− R$ 2,504</td></tr>
-      <tr><td>SUL / SSC4</td><td>10</td><td class="c-neg"><strong>28,6%</strong></td><td>R$ 456</td><td>85,7</td><td class="c-neg">− R$ 19.539</td><td class="c-neg">− R$ 11.397</td></tr>
-      <tr><td>SUL / SSC2</td><td>10</td><td class="c-neg">36,7%</td><td>R$ 456</td><td>75,9</td><td class="c-neg">− R$ 17.305</td><td class="c-neg">− R$ 10.094</td></tr>
-      <tr><td>RIMES / SMG15</td><td>20</td><td class="c-neg">37,7%</td><td>R$ 431</td><td>149,5</td><td class="c-neg">− R$ 32.217</td><td class="c-neg">− R$ 18.793</td></tr>
-      <tr><td>SP2 / SSP30</td><td>23</td><td class="c-neg">38,6%</td><td>R$ 452</td><td>169,5</td><td class="c-neg">− R$ 38.307</td><td class="c-neg">− R$ 22.346</td></tr>
-      <tr><td>SP2 / SSP38</td><td>11</td><td>42,0%</td><td>R$ 452</td><td>76,6</td><td class="c-neg">− R$ 17.312</td><td class="c-neg">− R$ 10.099</td></tr>
-      <tr><td>SUL / SSC3</td><td>6</td><td>62,6%</td><td>R$ 456</td><td>26,9</td><td class="c-neg">− R$ 6.133</td><td class="c-neg">− R$ 3.578</td></tr>
-      <tr><td>SPIO / SSP4</td><td>20</td><td style="color:var(--green)">75,3%</td><td>R$ 468</td><td>59,3</td><td class="c-neg">− R$ 13.876</td><td class="c-neg">− R$ 8.094</td></tr>
-      <tr><td>SP2 / SSP29 <span class="badge" style="background:#dcfce7;color:#15803d">melhor ER</span></td><td>5</td><td style="color:var(--green)"><strong>90,4%</strong></td><td>R$ 421</td><td>5,8</td><td class="c-neg">− R$ 1.221</td><td class="c-neg">− R$ 712</td></tr>
+      <tr><td>SP2 / SSP30</td><td>23</td><td class="c-neg"><strong>38,6%</strong></td><td>R$ 452</td><td class="c-sns">− R$ 39.222</td><td class="c-hns">—</td><td class="c-neg">− R$ 39.222</td><td class="c-neg">− R$ 19.611</td></tr>
+      <tr><td>RIMES / SMG15</td><td>20</td><td class="c-neg">40,0%</td><td>R$ 431</td><td class="c-sns">− R$ 31.032</td><td class="c-hns">—</td><td class="c-neg">− R$ 31.032</td><td class="c-neg">− R$ 15.516</td></tr>
+      <tr><td>SUL / SSC2</td><td>10</td><td class="c-neg">32,9%</td><td>R$ 456</td><td class="c-sns">− R$ 17.183</td><td class="c-hns">− R$ 1.190</td><td class="c-neg">− R$ 18.373</td><td class="c-neg">− R$ 9.187</td></tr>
+      <tr><td>SP2 / SSP38</td><td>11</td><td class="c-neg">42,0%</td><td>R$ 452</td><td class="c-sns">− R$ 17.119</td><td class="c-hns">− R$ 170</td><td class="c-neg">− R$ 17.289</td><td class="c-neg">− R$ 8.645</td></tr>
+      <tr><td>SUL / SSC4</td><td>10</td><td class="c-neg">37,7%</td><td>R$ 456</td><td class="c-sns">− R$ 13.680</td><td class="c-hns">− R$ 3.370</td><td class="c-neg">− R$ 17.050</td><td class="c-neg">− R$ 8.525</td></tr>
+      <tr><td>SPIO / SSP4</td><td>20</td><td style="color:var(--green)">75,1%</td><td>R$ 468</td><td class="c-sns">− R$ 13.074</td><td class="c-hns">− R$ 892</td><td class="c-neg">− R$ 13.966</td><td class="c-neg">− R$ 6.983</td></tr>
+      <tr><td>SUL / SSC3</td><td>6</td><td style="color:#EAB308">63,6%</td><td>R$ 456</td><td class="c-sns">− R$ 995</td><td class="c-hns">− R$ 4.975</td><td class="c-neg">− R$ 5.970</td><td class="c-neg">− R$ 2.985</td></tr>
+      <tr><td>SP2 / SSP48 <span class="badge" style="background:#fee2e2;color:#b91c1c">pior ER</span></td><td>2</td><td class="c-neg"><strong>20,8%</strong></td><td>R$ 452</td><td class="c-sns">− R$ 4.169</td><td class="c-hns">− R$ 126</td><td class="c-neg">− R$ 4.295</td><td class="c-neg">− R$ 2.148</td></tr>
+      <tr><td>SP2 / SSP29 <span class="badge" style="background:#dcfce7;color:#15803d">melhor ER</span></td><td>5</td><td style="color:var(--green)"><strong>89,7%</strong></td><td>R$ 421</td><td class="c-sns">− R$ 466</td><td class="c-hns">− R$ 839</td><td class="c-neg">− R$ 1.305</td><td class="c-neg">− R$ 653</td></tr>
     </tbody>
     <tfoot>
       <tr class="grand-total">
         <td>TOTAL 107 CARROS</td>
         <td style="color:var(--purple);font-weight:700">107</td>
-        <td style="color:var(--red);font-weight:700">47,9% ER médio</td>
+        <td style="color:var(--red);font-weight:700">45,4% ER médio</td>
         <td>R$ 451 médio</td>
-        <td style="color:var(--red);font-weight:700">668 gap-dias</td>
-        <td style="color:var(--red);font-weight:700">− R$ 150.204</td>
-        <td style="color:var(--red);font-weight:700">− R$ 87.619</td>
+        <td style="color:var(--orange);font-weight:700">− R$ 136.940</td>
+        <td style="color:var(--red);font-weight:700">− R$ 11.562</td>
+        <td style="color:var(--red);font-weight:700">− R$ 148.502</td>
+        <td style="color:var(--red);font-weight:700">− R$ 74.251</td>
       </tr>
     </tfoot>
   </table>
@@ -289,7 +291,7 @@
 
 <footer>
   Fonte: meli-bi-data · WHOWNER.DM_SHP_SUPER_DEDICATED · SITE_ID = MLB · DHL<br>
-  Simulação baseada na taxa histórica média de R$132/carro/quinzena (média Jan Q2 + Fev Q1 + Mar Q1) · 107 veículos sem carência a partir de 16/03/2026
+  Simulação Q2 baseada em aderência real 16–22/mar (CSV Tableau) · SNS = Recusados/Solicitado × 12d × tarifa × 50% · HNS = (Aceites−Exec)/Solicitado × 12d × tarifa × 50% · 107 veículos sem carência a partir de 16/03/2026
 </footer>
 
 <script>
@@ -311,14 +313,15 @@ const C = {
 // ─── Chart 1: SLA histórico + projeção ───────────────────────────────────
 const labels = ['Jan/26 Q2', 'Fev/26 Q1', 'Fev/26 Q2', 'Mar/26 Q1', 'Mar/26 Q2 ▸'];
 
-// Q2 Mar projeção: base ~R$30k + 107 novos ~R$150k = ~R$180k
-// (base ~30% SNS, ~70% HNS baseado em histórico)
+// Q2 Mar projeção: base ~R$30k (histórico Mar Q1) + 107 novos R$148.502
+// Fórmula CSV Tableau: SNS = Recusados/Solicitado × 12d × tarifa × 50%
+//                      HNS = max(0,Aceites-Exec)/Solicitado × 12d × tarifa × 50%
 const sla = {
-  sns:  [-7732.80, -12298.50,   -691.20,  -5728.20,  -54060.0],
-  hns:  [-23409.50,-17428.00, -27776.00, -24461.00, -126144.0],
+  sns:  [-7732.80, -12298.50,   -691.20,  -5728.20,  -142668.0],
+  hns:  [-23409.50,-17428.00, -27776.00, -24461.00,  -36023.0],
   snu:  [0,         1054.20,       0,         0,         0   ],
   hnu:  [2363.20,      0,          0,         0,         0   ],
-  net:  [-28778.10,-28672.30, -28467.20, -30189.20, -180204.0],
+  net:  [-28778.10,-28672.30, -28467.20, -30189.20, -178691.0],
 };
 
 const barLbl = {
@@ -368,7 +371,7 @@ new Chart(document.getElementById('slaChart'), {
 
 // ─── Chart 2: SLA x Frota ────────────────────────────────────────────────
 const frota = {
-  sla:   [33505.5, 30780.7, 28467.2, 30189.2, 180204.0],
+  sla:   [33505.5, 30780.7, 28467.2, 30189.2, 178691.0],
   cars:  [230,     230,     191.7,   230,       337    ],
   rotas: [3098,    3284,    3298,    3949,      4600   ],
 };
@@ -431,8 +434,9 @@ new Chart(document.getElementById('frotaChart'), {
 
 // ─── Chart 3: ER por SVC ─────────────────────────────────────────────────
 // Dados reais BT_SHP_SUPER_DEDICATED · Utilitários SDD · DHL · 16–22/mar/2026
-const erSvcs = ['SSP48','SSC4','SSC2','SMG15','SSP30','SSP38','SSC3','SSP4','SPR6','SSP29','SSP18','SPR3','SCE1','SPR1','SSP26','SPE1'];
-const erPct  = [20.8, 28.6, 36.7, 37.7, 38.6, 42.0, 62.6, 75.3, 80.6, 90.4, 92.4, 94.1, 95.2, 98.2, 98.5, 100.0];
+// ER = EXECUTADO_S / SOLICITADO_FN (dados reais CSV Tableau 16–22/mar)
+const erSvcs = ['SSP48','SSC2','SSC4','SSP30','SMG15','SSP38','SSC3','SSP4','SPR6','SSP29','SSP18','SPR3','SCE1','SPR1','SSP26','SPE1'];
+const erPct  = [20.8, 32.9, 37.7, 38.6, 40.0, 42.0, 63.6, 75.1, 80.6, 89.7, 92.4, 94.1, 95.2, 98.2, 98.5, 100.0];
 const erColors = erPct.map(v =>
   v < 35 ? C.red+'DD' : v < 55 ? C.orange+'CC' : v < 80 ? '#EAB308CC' : C.green+'CC'
 );
@@ -473,12 +477,15 @@ new Chart(document.getElementById('erChart'), {
 });
 
 // ─── Chart 4: SLA estimado por SVC (107 novos) ───────────────────────────
-// Fórmula: carros_novos × 12 dias × (1 − ER) × tarifa × 50%
-const simSvcs  = ['SSP30','SMG15','SSC4','SSC2','SSP38','SSP4','SSC3','SSP48','SSP29'];
-const simSla   = [38307, 32217, 19539, 17305, 17312, 13876, 6133, 4294, 1221];
-const simCarros = [23, 20, 10, 10, 11, 20, 6, 2, 5];
+// Fórmula: SNS = Recusados/Solicitado × 12d × tarifa × 50%
+//          HNS = max(0, Aceites-Exec)/Solicitado × 12d × tarifa × 50%
+const simSvcs   = ['SSP30','SMG15','SSC2','SSP38','SSC4','SSP4','SSC3','SSP48','SSP29'];
+const simSns    = [39222,  31032,  17183,  17119,  13680,  13074,   995,   4169,   466];
+const simHns    = [    0,      0,   1190,    170,   3370,    892,  4975,    126,   839];
+const simSla    = simSns.map((s,i) => s + simHns[i]);
+const simCarros = [23, 20, 10, 11, 10, 20, 6, 2, 5];
 const simBgColor = simSla.map((v,i) => {
-  const er = {SSP30:38.6,SMG15:37.7,SSC4:28.6,SSC2:36.7,SSP38:42,SSP4:75.3,SSC3:62.6,SSP48:20.8,SSP29:90.4};
+  const er = {SSP30:38.6,SMG15:40.0,SSC2:32.9,SSP38:42.0,SSC4:37.7,SSP4:75.1,SSC3:63.6,SSP48:20.8,SSP29:89.7};
   const e = er[simSvcs[i]];
   return e < 35 ? C.red+'CC' : e < 55 ? C.orange+'CC' : e < 80 ? '#EAB308CC' : C.green+'CC';
 });
@@ -502,7 +509,11 @@ new Chart(document.getElementById('slaSimChart'), {
       tooltip:{backgroundColor:C.surf,borderColor:'rgba(0,0,0,.1)',borderWidth:1,titleColor:C.text,bodyColor:'#4B5563',padding:12,
         callbacks:{
           title:([ctx])=>`${ctx.label} · ${simCarros[ctx.dataIndex]} carros novos`,
-          label:ctx=>` SLA est.: R$ ${ctx.parsed.y.toLocaleString('pt-BR',{minimumFractionDigits:2})}`
+          label:ctx=>[
+            ` Total: R$ ${ctx.parsed.y.toLocaleString('pt-BR',{minimumFractionDigits:2})}`,
+            ` SNS (50%): R$ ${simSns[ctx.dataIndex].toLocaleString('pt-BR',{minimumFractionDigits:2})}`,
+            ` HNS (50%): R$ ${simHns[ctx.dataIndex].toLocaleString('pt-BR',{minimumFractionDigits:2})}`,
+          ]
         }
       }
     },
