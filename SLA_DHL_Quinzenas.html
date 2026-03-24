@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>SLAs DHL — Últimas 4 Quinzenas</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.min.js"></script>
 <style>
   :root {
     --meli-yellow:  #FFE600;
@@ -354,6 +355,8 @@
 <footer>Fonte: meli-bi-data · WHOWNER.DM_SHP_SUPER_DEDICATED · COMPANY_NAME = DHL · SITE_ID = MLB</footer>
 
 <script>
+Chart.register(ChartDataLabels);
+
 const C = {
   yellow: '#FFE600',
   blue:   '#3483FA',
@@ -377,6 +380,16 @@ const slaData = {
   net:  [-28778.10, -28672.30, -28467.20, -30189.20],
 };
 
+// label helper para barras do gráfico 1
+const barLabel = {
+  display: ctx => Math.abs(ctx.dataset.data[ctx.dataIndex]) >= 500,
+  color: '#fff',
+  font: { size: 11, weight: '700' },
+  anchor: 'center',
+  align: 'center',
+  formatter: v => v === 0 ? null : 'R$' + Math.abs(v / 1000).toFixed(1) + 'k',
+};
+
 new Chart(document.getElementById('slaChart').getContext('2d'), {
   type: 'bar',
   data: {
@@ -386,50 +399,51 @@ new Chart(document.getElementById('slaChart').getContext('2d'), {
         label: 'Soft No Show',
         data: slaData.sns,
         backgroundColor: C.orange + 'CC',
-        borderWidth: 0,
-        borderRadius: 3,
-        stack: 'stack',
+        borderWidth: 0, borderRadius: 3, stack: 'stack',
+        datalabels: barLabel,
       },
       {
         label: 'Hard No Show',
         data: slaData.hns,
         backgroundColor: C.red + 'CC',
-        borderWidth: 0,
-        borderRadius: 3,
-        stack: 'stack',
+        borderWidth: 0, borderRadius: 3, stack: 'stack',
+        datalabels: barLabel,
       },
       {
         label: 'Soft Not Used',
         data: slaData.snu,
         backgroundColor: C.green + 'CC',
-        borderWidth: 0,
-        borderRadius: 3,
-        stack: 'stack',
+        borderWidth: 0, borderRadius: 3, stack: 'stack',
+        datalabels: barLabel,
       },
       {
         label: 'Hard Not Used',
         data: slaData.hnu,
         backgroundColor: C.blue + 'CC',
-        borderWidth: 0,
-        borderRadius: 3,
-        stack: 'stack',
+        borderWidth: 0, borderRadius: 3, stack: 'stack',
+        datalabels: barLabel,
       },
       {
         label: 'Saldo Líquido',
         data: slaData.net,
         type: 'line',
-        borderColor: C.yellow,
+        borderColor: '#B8860B',
         backgroundColor: 'transparent',
-        pointBackgroundColor: C.yellow,
+        pointBackgroundColor: '#B8860B',
         pointBorderColor: C.bg,
         pointBorderWidth: 2,
-        pointRadius: 6,
-        pointHoverRadius: 8,
-        borderWidth: 2.5,
-        borderDash: [6, 3],
-        tension: 0.3,
-        fill: false,
-        stack: undefined,
+        pointRadius: 6, pointHoverRadius: 8,
+        borderWidth: 2.5, borderDash: [6, 3],
+        tension: 0.3, fill: false, stack: undefined,
+        datalabels: {
+          display: true,
+          color: '#7A5C00',
+          font: { size: 11, weight: '700' },
+          anchor: 'end',
+          align: 'bottom',
+          offset: 6,
+          formatter: v => (v < 0 ? '−' : '+') + 'R$' + Math.abs(v / 1000).toFixed(1) + 'k',
+        },
       }
     ]
   },
@@ -461,27 +475,35 @@ new Chart(document.getElementById('frotaChart').getContext('2d'), {
         label: 'Saldo SLA (R$)',
         data: frotaData.sla,
         backgroundColor: C.red + 'AA',
-        borderWidth: 0,
-        borderRadius: 5,
-        yAxisID: 'ySLA',
-        order: 2,
+        borderWidth: 0, borderRadius: 5,
+        yAxisID: 'ySLA', order: 2,
+        datalabels: {
+          display: true,
+          color: '#7A0010',
+          font: { size: 11, weight: '700' },
+          anchor: 'end', align: 'top', offset: 4,
+          formatter: v => 'R$' + (v / 1000).toFixed(1) + 'k',
+        },
       },
       {
         label: 'Carros / dia (negociado ÷ 12)',
         data: frotaData.carros,
         type: 'line',
-        borderColor: C.yellow,
+        borderColor: '#B8860B',
         backgroundColor: 'transparent',
-        pointBackgroundColor: C.yellow,
+        pointBackgroundColor: '#B8860B',
         pointBorderColor: C.bg,
         pointBorderWidth: 2,
-        pointRadius: 6,
-        pointHoverRadius: 8,
-        borderWidth: 2.5,
-        tension: 0.3,
-        fill: false,
-        yAxisID: 'yFrota',
-        order: 1,
+        pointRadius: 6, pointHoverRadius: 8,
+        borderWidth: 2.5, tension: 0.3, fill: false,
+        yAxisID: 'yFrota', order: 1,
+        datalabels: {
+          display: true,
+          color: '#7A5C00',
+          font: { size: 11, weight: '700' },
+          anchor: 'end', align: 'top', offset: 6,
+          formatter: v => v.toFixed(0) + ' carros',
+        },
       },
       {
         label: 'Rotas executadas',
@@ -492,14 +514,17 @@ new Chart(document.getElementById('frotaChart').getContext('2d'), {
         pointBackgroundColor: C.blue,
         pointBorderColor: C.bg,
         pointBorderWidth: 2,
-        pointRadius: 5,
-        pointHoverRadius: 7,
-        borderWidth: 2,
-        borderDash: [5, 3],
-        tension: 0.3,
-        fill: false,
-        yAxisID: 'yFrota',
-        order: 1,
+        pointRadius: 5, pointHoverRadius: 7,
+        borderWidth: 2, borderDash: [5, 3],
+        tension: 0.3, fill: false,
+        yAxisID: 'yFrota', order: 1,
+        datalabels: {
+          display: true,
+          color: C.blue,
+          font: { size: 11, weight: '700' },
+          anchor: 'end', align: 'bottom', offset: 6,
+          formatter: v => v.toLocaleString('pt-BR'),
+        },
       }
     ]
   },
@@ -507,6 +532,7 @@ new Chart(document.getElementById('frotaChart').getContext('2d'), {
     responsive: true,
     interaction: { mode: 'index', intersect: false },
     plugins: {
+      datalabels: { display: false },
       legend: {
         position: 'bottom',
         labels: { color: C.muted, padding: 20, font: { size: 12 }, boxWidth: 14, boxHeight: 14 }
@@ -557,6 +583,7 @@ function chartOpts({ tooltipFmt, yTick, stacked = false }) {
     responsive: true,
     interaction: { mode: 'index', intersect: false },
     plugins: {
+      datalabels: { display: false },
       legend: {
         position: 'bottom',
         labels: { color: C.muted, padding: 20, font: { size: 12 }, boxWidth: 14, boxHeight: 14 }
