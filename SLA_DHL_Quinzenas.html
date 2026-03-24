@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SLAs DHL — Últimas 4 Quinzenas</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+  :root {
+    --meli-yellow:  #FFE600;
+    --meli-blue:    #3483FA;
+    --meli-green:   #00A650;
+    --meli-red:     #F23D4F;
+    --meli-orange:  #FF6200;
+    --bg:           #F0F2F5;
+    --surface:      #FFFFFF;
+    --surface2:     #F5F6F8;
+    --border:       rgba(0,0,0,0.08);
+    --text:         #1A1A2E;
+    --muted:        #6B7280;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    min-height: 100vh;
+    padding: 36px 28px;
+  }
+
+  /* ── Header ── */
+  header {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    max-width: 1120px;
+    margin: 0 auto 36px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .logo-badge {
+    background: var(--meli-yellow);
+    color: #000;
+    font-weight: 900;
+    font-size: 14px;
+    letter-spacing: 1px;
+    padding: 6px 12px;
+    border-radius: 6px;
+    flex-shrink: 0;
+    text-transform: uppercase;
+  }
+
+  header h1 {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1.2;
+  }
+
+  header h1 span { color: var(--meli-yellow); }
+
+  header p {
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  /* ── KPI grid ── */
+  .kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 12px;
+    max-width: 1120px;
+    margin: 0 auto 28px;
+  }
+
+  .kpi-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px 14px;
+    position: relative;
+  }
+
+  .kpi-card::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 3px;
+    border-radius: 0 0 10px 10px;
+  }
+
+  .kpi-card.sns::after { background: var(--meli-orange); }
+  .kpi-card.hns::after { background: var(--meli-red); }
+  .kpi-card.snu::after { background: var(--meli-green); }
+  .kpi-card.hnu::after { background: var(--meli-blue); }
+  .kpi-card.total::after { background: var(--meli-yellow); }
+
+  .kpi-label {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: var(--muted);
+    margin-bottom: 8px;
+    font-weight: 600;
+  }
+
+  .kpi-value {
+    font-size: 20px;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    line-height: 1;
+  }
+
+  .kpi-card.sns  .kpi-value { color: var(--meli-orange); }
+  .kpi-card.hns  .kpi-value { color: var(--meli-red); }
+  .kpi-card.snu  .kpi-value { color: var(--meli-green); }
+  .kpi-card.hnu  .kpi-value { color: var(--meli-blue); }
+  .kpi-card.total .kpi-value { color: var(--meli-yellow); font-size: 22px; }
+
+  .kpi-sublabel {
+    font-size: 10px;
+    color: var(--muted);
+    margin-top: 6px;
+  }
+
+  /* ── Chart container ── */
+  .chart-wrap {
+    max-width: 1120px;
+    margin: 0 auto 24px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px 22px;
+  }
+
+  .chart-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 3px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .chart-subtitle {
+    font-size: 11px;
+    color: var(--muted);
+    margin-bottom: 20px;
+  }
+
+  canvas { width: 100% !important; }
+
+  /* ── Table ── */
+  .table-wrap {
+    max-width: 1120px;
+    margin: 0 auto 24px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+
+  .table-wrap table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+
+  .table-wrap th {
+    background: var(--surface2);
+    color: var(--muted);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-size: 10px;
+    padding: 13px 16px;
+    text-align: right;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .table-wrap th:first-child { text-align: left; }
+
+  .table-wrap td {
+    padding: 12px 16px;
+    text-align: right;
+    border-top: 1px solid var(--border);
+    font-variant-numeric: tabular-nums;
+    color: #BDC3CC;
+  }
+
+  .table-wrap td:first-child {
+    text-align: left;
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  .table-wrap tr.grand-total td {
+    background: var(--surface2);
+    font-weight: 700;
+    color: var(--meli-yellow);
+    font-size: 13px;
+    border-top: 2px solid rgba(255,230,0,0.25);
+  }
+
+  .table-wrap tr:hover td { background: rgba(255,255,255,0.02); }
+
+  .c-sns { color: var(--meli-orange) !important; }
+  .c-hns { color: var(--meli-red)    !important; }
+  .c-snu { color: var(--meli-green)  !important; }
+  .c-hnu { color: var(--meli-blue)   !important; }
+  .c-neg { color: var(--meli-red)    !important; }
+
+  .badge {
+    display: inline-block;
+    font-size: 9px;
+    padding: 2px 5px;
+    border-radius: 4px;
+    margin-left: 5px;
+    font-weight: 700;
+    letter-spacing: 0.4px;
+    vertical-align: middle;
+  }
+  .b-desc { background: rgba(242,61,79,0.15);  color: var(--meli-red);   }
+  .b-cred { background: rgba(0,166,80,0.15);   color: var(--meli-green); }
+
+  footer {
+    text-align: center;
+    max-width: 1120px;
+    margin: 8px auto 0;
+    font-size: 11px;
+    color: #3D4550;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo-badge">MeLi</div>
+  <div>
+    <h1>SLAs <span>DHL</span> — Últimas 4 Quinzenas</h1>
+    <p>MLB · Super Dedicated Delivery · Valores em R$ · Atualizado em 24/03/2026</p>
+  </div>
+</header>
+
+<!-- KPIs -->
+<div class="kpi-grid">
+  <div class="kpi-card sns">
+    <div class="kpi-label">Soft No Show</div>
+    <div class="kpi-value">− R$ 26.451</div>
+    <div class="kpi-sublabel">Desconto do MLP</div>
+  </div>
+  <div class="kpi-card hns">
+    <div class="kpi-label">Hard No Show</div>
+    <div class="kpi-value">− R$ 93.075</div>
+    <div class="kpi-sublabel">Desconto do MLP</div>
+  </div>
+  <div class="kpi-card snu">
+    <div class="kpi-label">Soft Not Used</div>
+    <div class="kpi-value">+ R$ 1.054</div>
+    <div class="kpi-sublabel">Pagamento ao MLP</div>
+  </div>
+  <div class="kpi-card hnu">
+    <div class="kpi-label">Hard Not Used</div>
+    <div class="kpi-value">+ R$ 2.363</div>
+    <div class="kpi-sublabel">Pagamento ao MLP</div>
+  </div>
+  <div class="kpi-card total">
+    <div class="kpi-label">Saldo Líquido</div>
+    <div class="kpi-value">− R$ 116.107</div>
+    <div class="kpi-sublabel">4 quinzenas · líquido</div>
+  </div>
+</div>
+
+<!-- Chart 1: SLA composition -->
+<div class="chart-wrap">
+  <div class="chart-title">Composição por Quinzena — Valores R$</div>
+  <div class="chart-subtitle">Barras abaixo de zero = descontos do MLP &nbsp;·&nbsp; Barras acima = pagamentos ao MLP &nbsp;·&nbsp; Linha = saldo líquido</div>
+  <canvas id="slaChart" height="310"></canvas>
+</div>
+
+<!-- Table -->
+<div class="table-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th>Quinzena</th>
+        <th class="c-sns">Soft No Show <span class="badge b-desc">DESC</span></th>
+        <th class="c-hns">Hard No Show <span class="badge b-desc">DESC</span></th>
+        <th class="c-snu">Soft Not Used <span class="badge b-cred">PAGA</span></th>
+        <th class="c-hnu">Hard Not Used <span class="badge b-cred">PAGA</span></th>
+        <th>Saldo Quinzena</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Jan/26 — Q2</td>
+        <td class="c-sns">− R$ 7.733</td>
+        <td class="c-hns">− R$ 23.410</td>
+        <td class="c-snu">—</td>
+        <td class="c-hnu">+ R$ 2.363</td>
+        <td class="c-neg"><strong>− R$ 28.780</strong></td>
+      </tr>
+      <tr>
+        <td>Fev/26 — Q1</td>
+        <td class="c-sns">− R$ 12.299</td>
+        <td class="c-hns">− R$ 17.428</td>
+        <td class="c-snu">+ R$ 1.054</td>
+        <td class="c-hnu">—</td>
+        <td class="c-neg"><strong>− R$ 28.673</strong></td>
+      </tr>
+      <tr>
+        <td>Fev/26 — Q2</td>
+        <td class="c-sns">− R$ 691</td>
+        <td class="c-hns">− R$ 27.776</td>
+        <td class="c-snu">—</td>
+        <td class="c-hnu">—</td>
+        <td class="c-neg"><strong>− R$ 28.467</strong></td>
+      </tr>
+      <tr>
+        <td>Mar/26 — Q1</td>
+        <td class="c-sns">− R$ 5.728</td>
+        <td class="c-hns">− R$ 24.461</td>
+        <td class="c-snu">—</td>
+        <td class="c-hnu">—</td>
+        <td class="c-neg"><strong>− R$ 30.189</strong></td>
+      </tr>
+    </tbody>
+    <tfoot>
+      <tr class="grand-total">
+        <td>TOTAL GERAL</td>
+        <td>− R$ 26.451</td>
+        <td>− R$ 93.075</td>
+        <td>+ R$ 1.054</td>
+        <td>+ R$ 2.363</td>
+        <td>− R$ 116.107</td>
+      </tr>
+    </tfoot>
+  </table>
+</div>
+
+<!-- Chart 2: SLA x Frota -->
+<div class="chart-wrap">
+  <div class="chart-title">Saldo SLA × Frota Negociada por Quinzena</div>
+  <div class="chart-subtitle">Barras = saldo SLA absoluto (R$) &nbsp;·&nbsp; Linha amarela = carros/dia (negociado ÷ 12) &nbsp;·&nbsp; Linha azul = rotas executadas</div>
+  <canvas id="frotaChart" height="300"></canvas>
+</div>
+
+<footer>Fonte: meli-bi-data · WHOWNER.DM_SHP_SUPER_DEDICATED · COMPANY_NAME = DHL · SITE_ID = MLB</footer>
+
+<script>
+const C = {
+  yellow: '#FFE600',
+  blue:   '#3483FA',
+  green:  '#00A650',
+  red:    '#F23D4F',
+  orange: '#FF6200',
+  white:  '#E6EDF3',
+  muted:  '#7D8590',
+  bg:     '#F0F2F5',
+  surf:   '#FFFFFF',
+};
+
+// ── Chart 1: SLA Composition ────────────────────────────────────────────
+const labels = ['Jan/26 Q2', 'Fev/26 Q1', 'Fev/26 Q2', 'Mar/26 Q1'];
+
+const slaData = {
+  sns:  [-7732.80,  -12298.50,   -691.20,  -5728.20],
+  hns:  [-23409.50, -17428.00, -27776.00, -24461.00],
+  snu:  [0,           1054.20,       0,        0   ],
+  hnu:  [2363.20,        0,          0,        0   ],
+  net:  [-28778.10, -28672.30, -28467.20, -30189.20],
+};
+
+new Chart(document.getElementById('slaChart').getContext('2d'), {
+  type: 'bar',
+  data: {
+    labels,
+    datasets: [
+      {
+        label: 'Soft No Show',
+        data: slaData.sns,
+        backgroundColor: C.orange + 'CC',
+        borderWidth: 0,
+        borderRadius: 3,
+        stack: 'stack',
+      },
+      {
+        label: 'Hard No Show',
+        data: slaData.hns,
+        backgroundColor: C.red + 'CC',
+        borderWidth: 0,
+        borderRadius: 3,
+        stack: 'stack',
+      },
+      {
+        label: 'Soft Not Used',
+        data: slaData.snu,
+        backgroundColor: C.green + 'CC',
+        borderWidth: 0,
+        borderRadius: 3,
+        stack: 'stack',
+      },
+      {
+        label: 'Hard Not Used',
+        data: slaData.hnu,
+        backgroundColor: C.blue + 'CC',
+        borderWidth: 0,
+        borderRadius: 3,
+        stack: 'stack',
+      },
+      {
+        label: 'Saldo Líquido',
+        data: slaData.net,
+        type: 'line',
+        borderColor: C.yellow,
+        backgroundColor: 'transparent',
+        pointBackgroundColor: C.yellow,
+        pointBorderColor: C.bg,
+        pointBorderWidth: 2,
+        pointRadius: 6,
+        pointHoverRadius: 8,
+        borderWidth: 2.5,
+        borderDash: [6, 3],
+        tension: 0.3,
+        fill: false,
+        stack: undefined,
+      }
+    ]
+  },
+  options: chartOpts({
+    tooltipFmt: (ctx) => {
+      const v = ctx.parsed.y;
+      if (v === 0) return null;
+      const pfx = v < 0 ? '− R$ ' : '+ R$ ';
+      return ` ${ctx.dataset.label}: ${pfx}${Math.abs(v).toLocaleString('pt-BR', {minimumFractionDigits:2})}`;
+    },
+    yTick: v => (v < 0 ? '− ' : '+ ') + 'R$ ' + Math.abs(v/1000).toFixed(0) + 'k',
+    stacked: true,
+  })
+});
+
+// ── Chart 2: SLA x Frota ────────────────────────────────────────────────
+const frotaData = {
+  sla:    [33505.5, 30780.7, 28467.2, 30189.2],
+  carros: [230,     230,     191.7,   230    ],
+  rotas:  [3098,    3284,    3298,    3949   ],
+};
+
+new Chart(document.getElementById('frotaChart').getContext('2d'), {
+  type: 'bar',
+  data: {
+    labels,
+    datasets: [
+      {
+        label: 'Saldo SLA (R$)',
+        data: frotaData.sla,
+        backgroundColor: C.red + 'AA',
+        borderWidth: 0,
+        borderRadius: 5,
+        yAxisID: 'ySLA',
+        order: 2,
+      },
+      {
+        label: 'Carros / dia (negociado ÷ 12)',
+        data: frotaData.carros,
+        type: 'line',
+        borderColor: C.yellow,
+        backgroundColor: 'transparent',
+        pointBackgroundColor: C.yellow,
+        pointBorderColor: C.bg,
+        pointBorderWidth: 2,
+        pointRadius: 6,
+        pointHoverRadius: 8,
+        borderWidth: 2.5,
+        tension: 0.3,
+        fill: false,
+        yAxisID: 'yFrota',
+        order: 1,
+      },
+      {
+        label: 'Rotas executadas',
+        data: frotaData.rotas,
+        type: 'line',
+        borderColor: C.blue,
+        backgroundColor: 'transparent',
+        pointBackgroundColor: C.blue,
+        pointBorderColor: C.bg,
+        pointBorderWidth: 2,
+        pointRadius: 5,
+        pointHoverRadius: 7,
+        borderWidth: 2,
+        borderDash: [5, 3],
+        tension: 0.3,
+        fill: false,
+        yAxisID: 'yFrota',
+        order: 1,
+      }
+    ]
+  },
+  options: {
+    responsive: true,
+    interaction: { mode: 'index', intersect: false },
+    plugins: {
+      legend: {
+        position: 'bottom',
+        labels: { color: C.muted, padding: 20, font: { size: 12 }, boxWidth: 14, boxHeight: 14 }
+      },
+      tooltip: {
+        backgroundColor: C.surf,
+        borderColor: 'rgba(0,0,0,0.1)',
+        borderWidth: 1,
+        titleColor: '#1A1A2E',
+        bodyColor: '#4B5563',
+        padding: 12,
+        callbacks: {
+          label: ctx => {
+            if (ctx.dataset.label === 'Saldo SLA (R$)')
+              return ` Saldo SLA: R$ ${ctx.parsed.y.toLocaleString('pt-BR', {minimumFractionDigits:2})}`;
+            return ` ${ctx.dataset.label}: ${ctx.parsed.y.toLocaleString('pt-BR')}`;
+          }
+        }
+      }
+    },
+    scales: {
+      x: {
+        grid: { display: false },
+        ticks: { color: C.muted, font: { size: 12, weight: '600' } },
+        border: { color: 'rgba(0,0,0,0.08)' }
+      },
+      ySLA: {
+        type: 'linear', position: 'left',
+        grid: { color: 'rgba(0,0,0,0.06)' },
+        border: { display: false },
+        title: { display: true, text: 'Saldo SLA (R$)', color: C.red, font: { size: 11 } },
+        ticks: { color: C.muted, font: { size: 11 }, callback: v => 'R$ ' + (v/1000).toFixed(0) + 'k' }
+      },
+      yFrota: {
+        type: 'linear', position: 'right', min: 0,
+        grid: { display: false },
+        border: { display: false },
+        title: { display: true, text: 'Qtd.', color: C.yellow, font: { size: 11 } },
+        ticks: { color: C.muted, font: { size: 11 } }
+      }
+    }
+  }
+});
+
+// ── Shared chart options factory ─────────────────────────────────────────
+function chartOpts({ tooltipFmt, yTick, stacked = false }) {
+  return {
+    responsive: true,
+    interaction: { mode: 'index', intersect: false },
+    plugins: {
+      legend: {
+        position: 'bottom',
+        labels: { color: C.muted, padding: 20, font: { size: 12 }, boxWidth: 14, boxHeight: 14 }
+      },
+      tooltip: {
+        backgroundColor: C.surf,
+        borderColor: 'rgba(0,0,0,0.1)',
+        borderWidth: 1,
+        titleColor: '#1A1A2E',
+        bodyColor: '#4B5563',
+        padding: 12,
+        callbacks: { label: tooltipFmt }
+      }
+    },
+    scales: {
+      x: {
+        stacked,
+        grid: { display: false },
+        ticks: { color: C.muted, font: { size: 12, weight: '600' } },
+        border: { color: 'rgba(0,0,0,0.08)' }
+      },
+      y: {
+        stacked,
+        grid: { color: 'rgba(0,0,0,0.06)' },
+        border: { display: false },
+        ticks: { color: C.muted, font: { size: 11 }, callback: yTick }
+      }
+    }
+  };
+}
+</script>
+</body>
+</html>
