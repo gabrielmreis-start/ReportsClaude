@@ -352,6 +352,49 @@
         </div>
       </section>
 
+      <!-- 3b. GRÁFICO BARRAS — ROTAS POR DIA -->
+      <section>
+        <p class="section-label mb-4">Rotas Executadas por Dia — Semana 14</p>
+        <div class="chart-card p-6">
+          <canvas id="rotasBarChart" height="80"></canvas>
+        </div>
+        <script>
+          (function(){
+            var ctx = document.getElementById('rotasBarChart');
+            if(!ctx) return;
+            new Chart(ctx, {
+              type: 'bar',
+              data: {
+                labels: ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'],
+                datasets: [{
+                  label: 'Rotas Executadas',
+                  data: [312, 287, 334, 298, 356, 178],
+                  backgroundColor: '#3483FA',
+                  borderRadius: 6,
+                  borderSkipped: false
+                },{
+                  label: 'Meta',
+                  data: [300, 300, 300, 300, 300, 200],
+                  backgroundColor: 'rgba(255,230,0,0.35)',
+                  borderRadius: 6,
+                  borderSkipped: false
+                }]
+              },
+              options: {
+                responsive: true,
+                plugins: {
+                  legend: { position: 'top', labels: { font: { size: 12 }, color: '#1A2942' } }
+                },
+                scales: {
+                  x: { grid: { display: false }, ticks: { color: '#7A8EAC' } },
+                  y: { grid: { color: '#EEF2F8' }, ticks: { color: '#7A8EAC' }, beginAtZero: true }
+                }
+              }
+            });
+          })();
+        </script>
+      </section>
+
       <!-- 4. GRÁFICOS LADO A LADO -->
       <section>
         <p class="section-label mb-4">4. Visão Gráfica</p>
