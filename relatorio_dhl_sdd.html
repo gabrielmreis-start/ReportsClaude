@@ -165,13 +165,13 @@ Nov	2025	892,5	836,2	93,7%
 Dez	2025	1.065,2	1.006,3	94,5%
 Jan	2026	1.010,5	973,7	96,4%
 Fev	2026	1.429	1.085	75,9%
-Mar*	2026	1.438	965,2	67,1%
+Mar	2026	8505	5804	68,3%
 
 Semana	Veiculos negociados	Veiculos executados	ER%
-W9	405	290,2	71,6%
-W10	462	306	66,2%
-W11	485	329,3	67,9%
-W12	491	329,8	67,2%`;
+W10	2772	1836	66,2%
+W11	2910	1976	67,9%
+W12	2946	1974	67,0%
+W13	2946	2015	68,4%`;
         document.getElementById("btnPlanilha").onclick = function () { navigator.clipboard.writeText(tsv).then(function () { document.getElementById("msg").textContent = "Copiado! Cole no Excel ou Sheets (Ctrl+V)."; document.getElementById("msg").className = "ok"; }).catch(function () { document.getElementById("msg").textContent = "Erro ao copiar."; document.getElementById("msg").className = "erro"; }); };
         document.getElementById("btnImagem").onclick = function () {
           var box = document.getElementById("relatorioCompleto");
@@ -196,11 +196,11 @@ W12	491	329,8	67,2%`;
         Chart.defaults.font.family = "'Source Sans 3', 'Proxima Nova', sans-serif";
         Chart.defaults.color = '#333';
         var fmtErBr = function(v) { return typeof v === "number" ? Math.round(v) + "%" : (v && v.toString ? v.toString().replace(/,\d+/, "") : v) + "%"; };
-        var erSemDisplay = ["71,6%", "66,2%", "67,9%", "67,2%"];
-        var carrosNegSem = [405.0, 462.0, 485.0, 491.0];
+        var erSemDisplay = ["66,2%", "67,9%", "67,0%", "68,4%"];
+        var carrosNegSem = [2772.0, 2910.0, 2946.0, 2946.0];
         var optsSem = { responsive: true, maintainAspectRatio: false, layout: { padding: { top: 0 } }, plugins: { legend: { display: true, position: "bottom", align: "center" }, tooltip: { callbacks: { label: function(ctx) { if (ctx.dataset.yAxisID === "yEr") return erSemDisplay[ctx.dataIndex] || fmtErBr(ctx.raw); return ctx.raw + " veic."; } } }, datalabels: { display: true, formatter: function(v, ctx) { var val = ctx.datasetIndex === 0 ? v : (typeof v === "number" ? v : parseFloat(String(v).replace(",", ".")) || 0); return ctx.datasetIndex === 0 ? Math.round(val) : Math.round(val) + "%"; }, anchor: "end", align: "top", color: "#333", font: { size: 10 } } }, scales: { x: { grid: { display: false } }, yCarros: { type: "linear", position: "left", min: 0, max: 550, grid: { color: "#eee" } }, yEr: { type: "linear", position: "right", min: 0, max: 100, ticks: { callback: function(v) { return v + "%"; } }, grid: { display: false } } } };
-        new Chart(document.getElementById("chartSem"), { type: "bar", data: { labels: ["W9", "W10", "W11", "W12"], datasets: [{ label: "Carros negociados", data: carrosNegSem, backgroundColor: "rgba(255,230,0,0.8)", borderColor: "#FFE600", borderWidth: 1, yAxisID: "yCarros", order: 1 }, { label: "ER %", data: [71.6, 66.2, 67.9, 67.2], type: "line", borderColor: "#333", backgroundColor: "transparent", borderWidth: 2, fill: false, yAxisID: "yEr", pointBackgroundColor: ["#E60000", "#E60000", "#E60000", "#E60000"], pointBorderColor: ["#E60000", "#E60000", "#E60000", "#E60000"], order: 2 }] }, options: optsSem });
-        var erMesDisplay = ["94,5%", "96,4%", "75,9%", "67,1%"];
+        new Chart(document.getElementById("chartSem"), { type: "bar", data: { labels: ["W10", "W11", "W12", "W13"], datasets: [{ label: "Carros negociados", data: carrosNegSem, backgroundColor: "rgba(255,230,0,0.8)", borderColor: "#FFE600", borderWidth: 1, yAxisID: "yCarros", order: 1 }, { label: "ER %", data: [66.2, 67.9, 67.0, 68.4], type: "line", borderColor: "#333", backgroundColor: "transparent", borderWidth: 2, fill: false, yAxisID: "yEr", pointBackgroundColor: ["#E60000", "#E60000", "#E60000", "#E60000"], pointBorderColor: ["#E60000", "#E60000", "#E60000", "#E60000"], order: 2 }] }, options: optsSem });
+        var erMesDisplay = ["94,5%", "96,4%", "75,9%", "68,3%"];
         var carrosNegMes = [245.8, 233.2, 329.8, 331.8];
         var optsMes = { responsive: true, maintainAspectRatio: false, layout: { padding: { top: 0 } }, plugins: { legend: { display: true, position: "bottom", align: "center" }, tooltip: { callbacks: { label: function(ctx) { if (ctx.dataset.yAxisID === "yEr") return erMesDisplay[ctx.dataIndex] || fmtErBr(ctx.raw); return ctx.raw + " veic."; } } }, datalabels: { display: true, formatter: function(v, ctx) { var val = ctx.datasetIndex === 0 ? v : (typeof v === "number" ? v : parseFloat(String(v).replace(",", ".")) || 0); return ctx.datasetIndex === 0 ? Math.round(val) : Math.round(val) + "%"; }, anchor: "end", align: "top", color: "#333", font: { size: 10 } } }, scales: { x: { grid: { display: false } }, yCarros: { type: "linear", position: "left", min: 0, max: 550, grid: { color: "#eee" } }, yEr: { type: "linear", position: "right", min: 0, max: 120, ticks: { callback: function(v) { return v + "%"; } }, grid: { display: false } } } };
         new Chart(document.getElementById("chartMes"), { type: "bar", data: { labels: ["Dez/25", "Jan/26", "Fev/26", "Mar/26*"], datasets: [{ label: "Carros negociados", data: carrosNegMes, backgroundColor: "rgba(255,230,0,0.8)", borderColor: "#FFE600", borderWidth: 1, yAxisID: "yCarros", order: 1 }, { label: "ER %", data: [94.5, 96.4, 75.9, 67.1], type: "line", borderColor: "#333", backgroundColor: "transparent", borderWidth: 2, fill: false, yAxisID: "yEr", pointBackgroundColor: ["#28a745", "#28a745", "#E60000", "#E60000"], pointBorderColor: ["#28a745", "#28a745", "#E60000", "#E60000"], order: 2 }] }, options: optsMes });
