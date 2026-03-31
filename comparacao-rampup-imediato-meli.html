@@ -1,0 +1,844 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Comparação Ramp-Up: IMEDIATO vs MELI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ml-yellow:    #FFE600;
+    --ml-black:     #000000;
+    --ml-blue:      #2D3277;
+    --ml-blue-lt:   #3483FA;
+    --ml-gray-bg:   #F5F5F5;
+    --ml-gray:      #666666;
+    --ml-gray-dark: #333333;
+    --ml-gray-line: #E0E0E0;
+    --ml-white:     #FFFFFF;
+    --ml-red:       #E60000;
+    --ml-green:     #00A650;
+    --ime-color:    #FF6900;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Source Sans 3', 'Proxima Nova', -apple-system, sans-serif;
+    background: var(--ml-gray-bg);
+    color: var(--ml-gray-dark);
+    line-height: 1.4;
+    padding: 0 0 48px 0;
+    min-width: 1200px;
+  }
+
+  /* ─── HEADER ─── */
+  .page-header {
+    background: var(--ml-black);
+    color: var(--ml-yellow);
+    padding: 24px 40px 20px;
+    text-align: center;
+  }
+  .page-header .eyebrow {
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: #888;
+    margin-bottom: 8px;
+  }
+  .page-header h1 {
+    font-size: 26px;
+    font-weight: 700;
+    margin-bottom: 6px;
+    letter-spacing: -0.3px;
+  }
+  .page-header h1 .vs {
+    color: #555;
+    font-weight: 300;
+    margin: 0 10px;
+  }
+  .page-header h1 .c-meli  { color: var(--ml-blue-lt); }
+  .page-header h1 .c-ime   { color: var(--ml-yellow); }
+  .page-header .meta {
+    font-size: 12px;
+    color: #555;
+    margin-top: 4px;
+  }
+
+  /* ─── CONTENT WRAPPER ─── */
+  .content { max-width: 1400px; margin: 0 auto; padding: 28px 40px; }
+
+  /* ─── SECTION TITLE ─── */
+  .stitle {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    color: var(--ml-gray);
+    margin-bottom: 12px;
+    margin-top: 28px;
+    padding-left: 4px;
+  }
+  .stitle:first-child { margin-top: 0; }
+
+  /* ─── CARD BASE ─── */
+  .card {
+    background: var(--ml-white);
+    border-radius: 8px;
+    box-shadow: 0 1px 4px rgba(0,0,0,.08);
+  }
+
+  /* ─── KPI GRID ─── */
+  .kpi-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin-bottom: 4px; }
+  .kpi-card {
+    background: var(--ml-white);
+    border-radius: 8px;
+    box-shadow: 0 1px 4px rgba(0,0,0,.08);
+    border-left: 4px solid var(--ml-yellow);
+    padding: 16px 14px;
+  }
+  .kpi-label {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: var(--ml-gray);
+    margin-bottom: 10px;
+  }
+  .kpi-nums { display: flex; justify-content: center; align-items: flex-end; gap: 12px; margin-bottom: 8px; }
+  .knum { display: flex; flex-direction: column; align-items: center; }
+  .knum-val { font-size: 28px; font-weight: 700; line-height: 1; color: var(--ml-black); }
+  .knum-lbl { font-size: 9px; font-weight: 600; color: var(--ml-gray); margin-top: 3px; text-transform: uppercase; letter-spacing: 0.5px; }
+  .knum-val.c-meli { color: var(--ml-blue); }
+  .knum-val.c-ime  { color: var(--ime-color); }
+  .kdiv { width: 1px; height: 30px; background: var(--ml-gray-line); }
+  .kbadge { display: inline-block; border-radius: 4px; padding: 2px 9px; font-size: 10px; font-weight: 700; }
+  .k-red   { background: #FFEBEB; color: var(--ml-red); }
+  .k-grn   { background: #E8F5EC; color: var(--ml-green); }
+  .k-ylw   { background: #FFF8CC; color: #8a6f00; }
+  .k-blue  { background: #EAF0FF; color: var(--ml-blue); }
+  .k-neu   { background: #F0F0F0; color: var(--ml-gray); }
+
+  /* ─── INSIGHTS ─── */
+  .insight-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+  .insight-card {
+    background: var(--ml-white);
+    border-radius: 8px;
+    box-shadow: 0 1px 4px rgba(0,0,0,.08);
+    padding: 18px 16px;
+  }
+  .insight-card.b-red  { border-left: 4px solid var(--ml-red); }
+  .insight-card.b-ylw  { border-left: 4px solid var(--ml-yellow); }
+  .insight-card.b-blue { border-left: 4px solid var(--ml-blue); }
+  .insight-icon { font-size: 20px; margin-bottom: 8px; }
+  .insight-title { font-size: 14px; font-weight: 700; color: var(--ml-black); margin-bottom: 7px; }
+  .insight-body { font-size: 13px; color: var(--ml-gray); line-height: 1.6; }
+  .insight-body b { color: var(--ml-gray-dark); }
+
+  /* ─── LEGEND ─── */
+  .legend {
+    display: flex; gap: 20px; align-items: center;
+    margin-bottom: 10px; flex-wrap: wrap;
+  }
+  .leg-item { display: flex; align-items: center; gap: 7px; font-size: 12px; color: var(--ml-gray); }
+  .leg-bar  { width: 28px; height: 9px; border-radius: 3px; }
+  .leg-note { margin-left: auto; font-size: 11px; color: var(--ml-gray); }
+
+  /* ─── GANTT ─── */
+  .gantt-outer {
+    background: var(--ml-white);
+    border-radius: 8px;
+    box-shadow: 0 1px 4px rgba(0,0,0,.08);
+    overflow-x: auto;
+  }
+  .gantt { min-width: 1280px; }
+
+  .gantt-hdr {
+    display: flex;
+    background: var(--ml-black);
+    border-bottom: 2px solid var(--ml-yellow);
+    position: sticky; top: 0; z-index: 5;
+  }
+  .gh-svc {
+    width: 210px; min-width: 210px;
+    padding: 8px 12px;
+    font-size: 10px; font-weight: 700; color: #888;
+    text-transform: uppercase; letter-spacing: 0.7px;
+    border-right: 1px solid #222;
+    display: flex; align-items: center;
+  }
+  .gh-weeks { flex: 1; display: flex; }
+  .gh-w {
+    flex: 1; text-align: center; padding: 5px 2px;
+    font-size: 9px; color: #555;
+    border-right: 1px solid #111;
+  }
+  .gh-w.today  { color: var(--ml-yellow); background: #1a1600; }
+  .gh-w.mnth   { border-left: 1px dashed #333; }
+  .gh-w-week   { font-weight: 700; font-size: 9px; }
+  .gh-w-date   { font-size: 8px; color: #444; margin-top: 1px; }
+  .gh-w.today .gh-w-date { color: #8a7200; }
+  .gh-delta {
+    width: 52px; min-width: 52px;
+    text-align: center; padding: 8px 4px;
+    font-size: 9px; color: #555; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.5px;
+    border-left: 1px solid #222;
+  }
+
+  .gantt-row {
+    display: flex; align-items: stretch;
+    border-bottom: 1px solid var(--ml-gray-line);
+    min-height: 44px;
+  }
+  .gantt-row:hover { background: #fafafa; }
+  .gantt-row.row-new { background: #FFFDE7; }
+  .gantt-row.row-new:hover { background: #FFF9C4; }
+
+  .gr-svc {
+    width: 210px; min-width: 210px;
+    padding: 0 10px;
+    display: flex; flex-direction: column; justify-content: center; gap: 3px;
+    border-right: 1px solid var(--ml-gray-line);
+  }
+  .gr-svc-name { font-size: 12px; font-weight: 600; color: var(--ml-gray-dark); }
+  .gr-svc-meta { display: flex; gap: 7px; align-items: center; }
+  .gr-p   { font-size: 9px; font-weight: 700; color: var(--ml-blue); background: #EAF0FF; border-radius: 3px; padding: 1px 5px; }
+  .gr-new { font-size: 9px; font-weight: 700; color: #7a5c00; background: #FFF8CC; border-radius: 3px; padding: 1px 5px; }
+  .gr-ttd { font-size: 9px; color: var(--ml-red); font-weight: 600; }
+
+  .gr-weeks { flex: 1; display: flex; }
+  .gr-w { flex: 1; position: relative; border-right: 1px solid #f0f0f0; min-height: 44px; }
+  .gr-w.today { background: #FFFDE7; }
+  .gr-w.mnth  { border-left: 1px dashed #ddd; }
+
+  /* Bars: meli on top, imediato on bottom */
+  .bar-m { position: absolute; height: 9px; top: 8px;  left: 3px; right: 3px; border-radius: 3px; background: var(--ml-blue);    opacity: 0.80; }
+  .bar-i { position: absolute; height: 9px; bottom: 8px; left: 3px; right: 3px; border-radius: 3px; background: var(--ime-color); opacity: 0.90; }
+  .bar-s { position: absolute; height: 11px; top: 50%; transform: translateY(-50%); left: 3px; right: 3px; border-radius: 3px;
+            background: linear-gradient(90deg, var(--ml-blue) 50%, var(--ime-color) 50%); opacity: 0.85; }
+  .bar-n { background: #cc8800; } /* new SVC bar */
+
+  .gr-delta {
+    width: 52px; min-width: 52px;
+    display: flex; align-items: center; justify-content: center;
+    border-left: 1px solid var(--ml-gray-line);
+    font-size: 11px; font-weight: 700;
+  }
+  .d-pos  { color: var(--ml-red); }
+  .d-neg  { color: var(--ml-green); }
+  .d-zero { color: #bbb; }
+  .d-new  { color: #8a6f00; font-size: 9px; font-weight: 700; }
+
+  /* ─── TABLE ─── */
+  .tbl-wrap {
+    background: var(--ml-white);
+    border-radius: 8px;
+    box-shadow: 0 1px 4px rgba(0,0,0,.08);
+    overflow: hidden;
+  }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  thead th {
+    background: var(--ml-gray-bg);
+    padding: 9px 12px;
+    text-align: left;
+    font-size: 10px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.6px;
+    color: var(--ml-gray);
+    border-bottom: 2px solid var(--ml-yellow);
+  }
+  tbody tr { border-bottom: 1px solid #f0f0f0; }
+  tbody tr:hover { background: #fafafa; }
+  tbody tr.row-new { background: #FFFDE7; }
+  tbody tr.row-new:hover { background: #FFF9C4; }
+  td { padding: 7px 12px; vertical-align: middle; }
+  .t-svc  { font-weight: 600; color: var(--ml-gray-dark); }
+  .t-meli { color: var(--ml-blue);     font-weight: 600; }
+  .t-ime  { color: var(--ime-color);   font-weight: 600; }
+  .t-pos  { color: var(--ml-red);      font-weight: 700; }
+  .t-neg  { color: var(--ml-green);    font-weight: 700; }
+  .t-zer  { color: #bbb; }
+  .t-new  { color: #8a6f00; font-weight: 700; }
+  .pill { display: inline-block; border-radius: 4px; padding: 2px 8px; font-size: 10px; font-weight: 700; }
+  .p-red  { background: #FFEBEB; color: var(--ml-red);   }
+  .p-grn  { background: #E8F5EC; color: var(--ml-green); }
+  .p-ylw  { background: #FFF8CC; color: #8a6f00; }
+  .p-neu  { background: #F0F0F0; color: var(--ml-gray);  }
+  .p-blue { background: #EAF0FF; color: var(--ml-blue);  }
+
+  /* ─── FOOTER ─── */
+  .footer {
+    text-align: center; font-size: 11px; color: var(--ml-gray);
+    margin-top: 4px; padding-top: 16px;
+    border-top: 1px solid var(--ml-gray-line);
+  }
+</style>
+</head>
+<body>
+
+<!-- ─── HEADER ─── -->
+<div class="page-header">
+  <div class="eyebrow">Logística SDD &nbsp;·&nbsp; Ramp-Up Superdedicado</div>
+  <h1>
+    <span class="c-ime">IMEDIATO</span>
+    <span class="vs">vs</span>
+    <span class="c-meli">MELI</span>
+    <span style="color:#777;font-weight:300;font-size:22px"> — Comparação de Planos</span>
+  </h1>
+  <div class="meta">Análise: 31/mar/2026 &nbsp;·&nbsp; 25 SVCs IMEDIATO &nbsp;·&nbsp; 24 SVCs MELI &nbsp;·&nbsp; Semanas W11–W32</div>
+</div>
+
+<div class="content">
+
+<!-- ─── KPI CARDS ─── -->
+<div class="stitle">Resumo Executivo</div>
+<div class="kpi-grid">
+
+  <div class="kpi-card">
+    <div class="kpi-label">Total de SVCs</div>
+    <div class="kpi-nums">
+      <div class="knum"><div class="knum-val c-meli">24</div><div class="knum-lbl">MELI</div></div>
+      <div class="kdiv"></div>
+      <div class="knum"><div class="knum-val c-ime">25</div><div class="knum-lbl">IMEDIATO</div></div>
+    </div>
+    <span class="kbadge k-ylw">+1 SVC novo (SSP14)</span>
+  </div>
+
+  <div class="kpi-card">
+    <div class="kpi-label">TT Total (Veículos)</div>
+    <div class="kpi-nums">
+      <div class="knum"><div class="knum-val c-meli">600</div><div class="knum-lbl">MELI</div></div>
+      <div class="kdiv"></div>
+      <div class="knum"><div class="knum-val c-ime">605</div><div class="knum-lbl">IMEDIATO</div></div>
+    </div>
+    <span class="kbadge k-ylw">+5 TT via SSP14</span>
+  </div>
+
+  <div class="kpi-card">
+    <div class="kpi-label">Atraso Médio (sem)</div>
+    <div class="kpi-nums">
+      <div class="knum"><div class="knum-val" style="color:var(--ml-red);font-size:30px;">+5,5</div><div class="knum-lbl">IMEDIATO vs MELI</div></div>
+    </div>
+    <span class="kbadge k-red">21 SVCs mais tarde</span>
+  </div>
+
+  <div class="kpi-card">
+    <div class="kpi-label">TT Reduzido (IME)</div>
+    <div class="kpi-nums">
+      <div class="knum"><div class="knum-val c-ime">2</div><div class="knum-lbl">SVCs afetados</div></div>
+    </div>
+    <span class="kbadge k-red">SSP15 e SSP48: 25→15</span>
+  </div>
+
+  <div class="kpi-card">
+    <div class="kpi-label">Conclusão do Ramp-Up</div>
+    <div class="kpi-nums">
+      <div class="knum"><div class="knum-val c-meli" style="font-size:22px;">W29</div><div class="knum-lbl">MELI</div></div>
+      <div class="kdiv"></div>
+      <div class="knum"><div class="knum-val c-ime" style="font-size:22px;">W32</div><div class="knum-lbl">IMEDIATO</div></div>
+    </div>
+    <span class="kbadge k-red">+3 semanas de extensão</span>
+  </div>
+
+</div>
+
+<!-- ─── INSIGHTS ─── -->
+<div class="stitle">Principais Diferenças</div>
+<div class="insight-grid">
+
+  <div class="insight-card b-red">
+    <div class="insight-icon">📅</div>
+    <div class="insight-title">Cronograma Muito Mais Escalonado</div>
+    <div class="insight-body">
+      MELI propôs iniciar <b>15 SVCs simultaneamente na W15</b> (6/abr).
+      IMEDIATO distribui os inícios ao longo de <b>18 semanas</b> (W11–W28),
+      com atrasos que chegam a <b>+13 semanas</b> em SSC3 - Gaspar
+      e +11 semanas em SBA1 - Simões Filho.
+    </div>
+  </div>
+
+  <div class="insight-card b-ylw">
+    <div class="insight-icon">🆕</div>
+    <div class="insight-title">SSP14 - Bauru: SVC Novo</div>
+    <div class="insight-body">
+      IMEDIATO incluiu <b>SSP14 - Bauru</b>, ausente no plano MELI.
+      Início previsto <b>W20 (11/mai)</b>, TT = 25, ramp-up padrão de 5 semanas
+      (5 / 10 / 15 / 20 / 25). Total IMEDIATO sobe para <b>605 TT</b>.
+    </div>
+  </div>
+
+  <div class="insight-card b-blue">
+    <div class="insight-icon">🔢</div>
+    <div class="insight-title">Redução de Capacidade: SSP15 e SSP48</div>
+    <div class="insight-body">
+      Para <b>SSP15 - São Vicente</b> e <b>SSP48 - SP</b>,
+      IMEDIATO reduziu a meta de <b>25 → 15 TT</b>.
+      Escala ajustada: 3 / 6 / 9 / 12 / 15 ao invés de 5 / 10 / 15 / 20 / 25.
+    </div>
+  </div>
+
+</div>
+
+<!-- ─── GANTT ─── -->
+<div class="stitle">Cronograma Visual — Gantt Comparativo (W11–W32)</div>
+<div class="legend">
+  <div class="leg-item">
+    <div class="leg-bar" style="background:var(--ml-blue);opacity:0.8;"></div>
+    Plano MELI (barra superior)
+  </div>
+  <div class="leg-item">
+    <div class="leg-bar" style="background:var(--ime-color);"></div>
+    Plano IMEDIATO (barra inferior)
+  </div>
+  <div class="leg-item">
+    <div class="leg-bar" style="background:linear-gradient(90deg,var(--ml-blue) 50%,var(--ime-color) 50%);"></div>
+    Datas iguais
+  </div>
+  <div class="leg-note">▼ Barra laranja mais à direita = SVC adiado pela IMEDIATO</div>
+</div>
+
+<div class="gantt-outer"><div class="gantt">
+
+  <!-- HEADER -->
+  <div class="gantt-hdr">
+    <div class="gh-svc">SVC</div>
+    <div class="gh-weeks">
+      <div class="gh-w"><div class="gh-w-week">W11</div><div class="gh-w-date">9-mar</div></div>
+      <div class="gh-w"><div class="gh-w-week">W12</div><div class="gh-w-date">16-mar</div></div>
+      <div class="gh-w"><div class="gh-w-week">W13</div><div class="gh-w-date">23-mar</div></div>
+      <div class="gh-w today"><div class="gh-w-week">W14</div><div class="gh-w-date">30-mar</div></div>
+      <div class="gh-w mnth"><div class="gh-w-week">W15</div><div class="gh-w-date">6-abr</div></div>
+      <div class="gh-w"><div class="gh-w-week">W16</div><div class="gh-w-date">13-abr</div></div>
+      <div class="gh-w"><div class="gh-w-week">W17</div><div class="gh-w-date">20-abr</div></div>
+      <div class="gh-w"><div class="gh-w-week">W18</div><div class="gh-w-date">27-abr</div></div>
+      <div class="gh-w mnth"><div class="gh-w-week">W19</div><div class="gh-w-date">4-mai</div></div>
+      <div class="gh-w"><div class="gh-w-week">W20</div><div class="gh-w-date">11-mai</div></div>
+      <div class="gh-w"><div class="gh-w-week">W21</div><div class="gh-w-date">18-mai</div></div>
+      <div class="gh-w"><div class="gh-w-week">W22</div><div class="gh-w-date">25-mai</div></div>
+      <div class="gh-w mnth"><div class="gh-w-week">W23</div><div class="gh-w-date">1-jun</div></div>
+      <div class="gh-w"><div class="gh-w-week">W24</div><div class="gh-w-date">8-jun</div></div>
+      <div class="gh-w"><div class="gh-w-week">W25</div><div class="gh-w-date">15-jun</div></div>
+      <div class="gh-w"><div class="gh-w-week">W26</div><div class="gh-w-date">22-jun</div></div>
+      <div class="gh-w mnth"><div class="gh-w-week">W27</div><div class="gh-w-date">29-jun</div></div>
+      <div class="gh-w"><div class="gh-w-week">W28</div><div class="gh-w-date">6-jul</div></div>
+      <div class="gh-w"><div class="gh-w-week">W29</div><div class="gh-w-date">13-jul</div></div>
+      <div class="gh-w"><div class="gh-w-week">W30</div><div class="gh-w-date">20-jul</div></div>
+      <div class="gh-w"><div class="gh-w-week">W31</div><div class="gh-w-date">27-jul</div></div>
+      <div class="gh-w mnth"><div class="gh-w-week">W32</div><div class="gh-w-date">3-ago</div></div>
+    </div>
+    <div class="gh-delta">Δ sem</div>
+  </div>
+
+  <!-- SSC3 Gaspar +13 -->
+  <div class="gantt-row">
+    <div class="gr-svc"><div class="gr-svc-name">SSC3 - Gaspar</div><div class="gr-svc-meta"><span class="gr-p">P23</span></div></div>
+    <div class="gr-weeks">
+      <div class="gr-w"></div><div class="gr-w"></div><div class="gr-w"></div><div class="gr-w today"></div>
+      <div class="gr-w mnth"><div class="bar-m"></div></div><div class="gr-w"><div class="bar-m"></div></div><div class="gr-w"><div class="bar-m"></div></div><div class="gr-w"><div class="bar-m"></div></div>
+      <div class="gr-w mnth"><div class="bar-m"></div></div><div class="gr-w"></div><div class="gr-w"></div><div class="gr-w"></div>
+      <div class="gr-w mnth"></div><div class="gr-w"></div><div class="gr-w"></div><div class="gr-w"></div>
+      <div class="gr-w mnth"><div class="bar-i"></div></div><div class="gr-w"><div class="bar-i"></div></div><div class="gr-w"><div class="bar-i"></div></div><div class="gr-w"><div class="bar-i"></div></div><div class="gr-w"><div class="bar-i"></div></div><div class="gr-w mnth"><div class="bar-i"></div></div>
+    </div>
+    <div class="gr-delta d-pos">+13w</div>
+  </div>
+
+  <!-- SBA1 Simões Filho +11 -->
+  <div class="gantt-row">
+    <div class="gr-svc"><div class="gr-svc-name">SBA1 - Simões Filho</div><div class="gr-svc-meta"><span class="gr-p">P20</span></div></div>
+    <div class="gr-weeks">
+      <div class="gr-w"></div><div class="gr-w"></div><div class="gr-w"></div><div class="gr-w today"></div>
+      <div class="gr-w mnth"><div class="bar-m"></div></div><div class="gr-w"><div class="bar-m"></div></div><div class="gr-w"><div class="bar-m"></div></div><div class="gr-w"><div class="bar-m"></div></div>
+      <div class="gr-w mnth"><div class="bar-m"></div></div><div class="gr-w"></div><div class="gr-w"></div><div class="gr-w"></div>
+      <div class="gr-w mnth"></div><div class="gr-w"></div><div class="gr-w"></div>
+      <div class="gr-w"><div class="bar-i"></div></div>
+      <div class="gr-w mnth"><div class="bar-i"></div></div><div class="gr-w"><div class="bar-i"></div></div><div class="gr-w"><div class="bar-i"></div></div><div class="gr-w"><div class="bar-i"></div></div><div class="gr-w"><div class="bar-i"></div></div><div class="gr-w mnth"></div>
+    </div>
+    <div class="gr-delta d-pos">+11w</div>
+  </div>
+
+  <!-- SSC1 Joinville +10 -->
+  <div class="gantt-row">
+    <div class="gr-svc"><div class="gr-svc-name">SSC1 - Joinville</div><div class="gr-svc-meta"><span class="gr-p">P19</span></div></div>
+    <div class="gr-weeks">
+      <div class="gr-w"></div><div class="gr-w"></div><div class="gr-w"></div><div class="gr-w today"></div>
+      <div class="gr-w mnth"><div class="bar-m"></div></div><div class="gr-w"><div class="bar-m"></div></div><div class="gr-w"><div class="bar-m"></div></div><div class="gr-w"><div class="bar-m"></div></div>
+      <div class="gr-w mnth"><div class="bar-m"></div></div><div class="gr-w"></div><div class="gr-w"></div><div class="gr-w"></div>
+      <div class="gr-w mnth"></div><div class="gr-w"></div>
+      <div class="gr-w"><div class="bar-i"></div></div><div class="gr-w"><div class="bar-i"></div></div>
+      <div class="gr-w mnth"><div class="bar-i"></div></div><div class="gr-w"><div class="bar-i"></div></div><div class="gr-w"><div class="bar-i"></div></div><div class="gr-w"><div class="bar-i"></div></div><div class="gr-w"><div class="bar-i"></div></div><div class="gr-w mnth"></div>
+    </div>
+    <div class="gr-delta d-pos">+10w</div>
+  </div>
+
+  <!-- SMN1 São Luís +8 -->
+  <div class="gantt-row">
+    <div class="gr-svc"><div class="gr-svc-name">SMN1 - São Luís</div><div class="gr-svc-meta"><span class="gr-p">P16</span></div></div>
+    <div class="gr-weeks">
+      <div class="gr-w"></div><div class="gr-w"></div><div class="gr-w"></div><div class="gr-w today"></div>
+      <div class="gr-w mnth"></div>
+      <div class="gr-w"><div class="bar-m"></div></div><div class="gr-w"><div class="bar-m"></div></div><div class="gr-w"><div class="bar-m"></div></div>
+      <div class="gr-w mnth"><div class="bar-m"></div></div><div class="gr-w"><div class="bar-m"></div></div>
+      <div class="gr-w"></div><div class="gr-w"></div>
+      <div class="gr-w mnth"></div>
+      <div class="gr-w"><div class="bar-i"></div></div><div class="gr-w"><div class="bar-i"></div></div><div class="gr-w"><div class="bar-i"></div></div>
+      <div class="gr-w mnth"><div class="bar-i"></div></div><div class="gr-w"><div class="bar-i"></div></div>
+      <div class="gr-w"></div><div class="gr-w"></div><div class="gr-w"></div><div class="gr-w mnth"></div>
+    </div>
+    <div class="gr-delta d-pos">+8w</div>
+  </div>
+
+  <!-- SSP48 SP +8 TT reduced -->
+  <div class="gantt-row">
+    <div class="gr-svc"><div class="gr-svc-name">SSP48 - SP</div><div class="gr-svc-meta"><span class="gr-p">P14</span><span class="gr-ttd">TT 25→15</span></div></div>
+    <div class="gr-weeks">
+      <div class="gr-w"></div><div class="gr-w"></div><div class="gr-w"></div><div class="gr-w today"></div>
+      <div class="gr-w mnth"><div class="bar-m"></div></div><div class="gr-w"><div class="bar-m"></div></div><div class="gr-w"><div class="bar-m"></div></div><div class="gr-w"><div class="bar-m"></div></div>
+      <div class="gr-w mnth"><div class="bar-m"></div></div><div class="gr-w"></div><div class="gr-w"></div><div class="gr-w"></div>
+      <div class="gr-w mnth"><div class="bar-i"></div></div><div class="gr-w"><div class="bar-i"></div></div><div class="gr-w"><div class="bar-i"></div></div><div class="gr-w"><div class="bar-i"></div></div>
+      <div class="gr-w mnth"><div class="bar-i"></div></div><div class="gr-w"></div><div class="gr-w"></div><div class="gr-w"></div><div class="gr-w"></div><div class="gr-w mnth"></div>
+    </div>
+    <div class="gr-delta d-pos">+8w</div>
+  </div>
+
+  <!-- SSP20 Sorocaba +7 -->
+  <div class="gantt-row">
+    <div class="gr-svc"><div class="gr-svc-name">SSP20 - Sorocaba</div><div class="gr-svc-meta"><span class="gr-p">P11</span></div></div>
+    <div class="gr-weeks">
+      <div class="gr-w"></div><div class="gr-w"></div><div class="gr-w"></div><div class="gr-w today"></div>
+      <div class="gr-w mnth"><div class="bar-m"></div></div><div class="gr-w"><div class="bar-m"></div></div><div class="gr-w"><div class="bar-m"></div></div><div class="gr-w"><div class="bar-m"></div></div>
+      <div class="gr-w mnth"><div class="bar-m"></div></div><div class="gr-w"></div><div class="gr-w"></div>
+      <div class="gr-w"><div class="bar-i"></div></div>
+      <div class="gr-w mnth"><div class="bar-i"></div></div><div class="gr-w"><div class="bar-i"></div></div><div class="gr-w"><div class="bar-i"></div></div><div class="gr-w"><div class="bar-i"></div></div>
+      <div class="gr-w mnth"></div><div class="gr-w"></div><div class="gr-w"></div><div class="gr-w"></div><div class="gr-w"></div><div class="gr-w mnth"></div>
+    </div>
+    <div class="gr-delta d-pos">+7w</div>
+  </div>
+
+  <!-- SSP38 Itupeva +6 -->
+  <div class="gantt-row">
+    <div class="gr-svc"><div class="gr-svc-name">SSP38 - Itupeva</div><div class="gr-svc-meta"><span class="gr-p">P8</span></div></div>
+    <div class="gr-weeks">
+      <div class="gr-w"></div><div class="gr-w"></div><div class="gr-w"></div><div class="gr-w today"></div>
+      <div class="gr-w mnth"><div class="bar-m"></div></div><div class="gr-w"><div class="bar-m"></div></div><div class="gr-w"><div class="bar-m"></div></div><div class="gr-w"><div class="bar-m"></div></div>
+      <div class="gr-w mnth"><div class="bar-m"></div></div><div class="gr-w"></div>
+      <div class="gr-w"><div class="bar-i"></div></div><div class="gr-w"><div class="bar-i"></div></div>
+      <div class="gr-w mnth"><div class="bar-i"></div></div><div class="gr-w"><div class="bar-i"></div></div><div class="gr-w"><div class="bar-i"></div></div><div class="gr-w"><div class="bar-i"></div></div>
+      <div class="gr-w mnth"></div><div class="gr-w"></div><div class="gr-w"></div><div class="gr-w"></div><div class="gr-w"></div><div class="gr-w mnth"></div>
+    </div>
+    <div class="gr-delta d-pos">+6w</div>
+  </div>
+
+  <!-- SPR3 Cascável +6 -->
+  <div class="gantt-row">
+    <div class="gr-svc"><div class="gr-svc-name">SPR3 - Cascável</div><div class="gr-svc-meta"><span class="gr-p">P9</span></div></div>
+    <div class="gr-weeks">
+      <div class="gr-w"></div><div class="gr-w"></div><div class="gr-w"></div><div class="gr-w today"></div>
+      <div class="gr-w mnth"><div class="bar-m"></div></div><div class="gr-w"><div class="bar-m"></div></div><div class="gr-w"><div class="bar-m"></div></div><div class="gr-w"><div class="bar-m"></div></div>
+      <div class="gr-w mnth"><div class="bar-m"></div></div><div class="gr-w"></div>
+      <div class="gr-w"><div class="bar-i"></div></div><div class="gr-w"><div class="bar-i"></div></div>
+      <div class="gr-w mnth"><div class="bar-i"></div></div><div class="gr-w"><div class="bar-i"></div></div><div class="gr-w"><div class="bar-i"></div></div><div class="gr-w"><div class="bar-i"></div></div>
+      <div class="gr-w mnth"></div><div class="gr-w"></div><div class="gr-w"></div><div class="gr-w"></div><div class="gr-w"></div><div class="gr-w mnth"></div>
+    </div>
+    <div class="gr-delta d-pos">+6w</div>
+  </div>
+
+  <!-- SMG3 Pouso Alegre +6 -->
+  <div class="gantt-row">
+    <div class="gr-svc"><div class="gr-svc-name">SMG3 - Pouso Alegre</div><div class="gr-svc-meta"><span class="gr-p">P22</span></div></div>
+    <div class="gr-weeks">
+      <div class="gr-w"></div><div class="gr-w"></div><div class="gr-w"></div><div class="gr-w today"></div>
+      <div class="gr-w mnth"></div><div class="gr-w"></div><div class="gr-w"></div><div class="gr-w"></div>
+      <div class="gr-w mnth"></div><div class="gr-w"></div>
+      <div class="gr-w"><div class="bar-m"></div></div><div class="gr-w"><div class="bar-m"></div></div>
+      <div class="gr-w mnth"><div class="bar-m"></div></div><div class="gr-w"><div class="bar-m"></div></div><div class="gr-w"><div class="bar-m"></div></div><div class="gr-w"><div class="bar-m"></div></div>
+      <div class="gr-w mnth"><div class="bar-i"></div></div><div class="gr-w"><div class="bar-i"></div></div><div class="gr-w"><div class="bar-i"></div></div><div class="gr-w"><div class="bar-i"></div></div><div class="gr-w"><div class="bar-i"></div></div><div class="gr-w mnth"><div class="bar-i"></div></div>
+    </div>
+    <div class="gr-delta d-pos">+6w</div>
+  </div>
+
+  <!-- SSC9 Gov Celso Ramos +6 -->
+  <div class="gantt-row">
+    <div class="gr-svc"><div class="gr-svc-name">SSC9 - Gov. Celso Ramos</div><div class="gr-svc-meta"><span class="gr-p">P24</span></div></div>
+    <div class="gr-weeks">
+      <div class="gr-w"></div><div class="gr-w"></div><div class="gr-w"></div><div class="gr-w today"></div>
+      <div class="gr-w mnth"></div><div class="gr-w"></div><div class="gr-w"></div><div class="gr-w"></div>
+      <div class="gr-w mnth"></div><div class="gr-w"></div><div class="gr-w"></div>
+      <div class="gr-w"><div class="bar-m"></div></div>
+      <div class="gr-w mnth"><div class="bar-m"></div></div><div class="gr-w"><div class="bar-m"></div></div><div class="gr-w"><div class="bar-m"></div></div><div class="gr-w"><div class="bar-m"></div></div>
+      <div class="gr-w mnth"><div class="bar-m"></div></div>
+      <div class="gr-w"><div class="bar-i"></div></div><div class="gr-w"><div class="bar-i"></div></div><div class="gr-w"><div class="bar-i"></div></div><div class="gr-w"><div class="bar-i"></div></div><div class="gr-w mnth"><div class="bar-i"></div></div>
+    </div>
+    <div class="gr-delta d-pos">+6w</div>
+  </div>
+
+  <!-- SSP25 Atibaía +5 -->
+  <div class="gantt-row">
+    <div class="gr-svc"><div class="gr-svc-name">SSP25 - Atibaía</div><div class="gr-svc-meta"><span class="gr-p">P7</span></div></div>
+    <div class="gr-weeks">
+      <div class="gr-w"></div><div class="gr-w"></div><div class="gr-w"></div><div class="gr-w today"></div>
+      <div class="gr-w mnth"><div class="bar-m"></div></div><div class="gr-w"><div class="bar-m"></div></div><div class="gr-w"><div class="bar-m"></div></div><div class="gr-w"><div class="bar-m"></div></div>
+      <div class="gr-w mnth"><div class="bar-m"></div></div>
+      <div class="gr-w"><div class="bar-i"></div></div><div class="gr-w"><div class="bar-i"></div></div><div class="gr-w"><div class="bar-i"></div></div>
+      <div class="gr-w mnth"><div class="bar-i"></div></div><div class="gr-w"><div class="bar-i"></div></div><div class="gr-w"><div class="bar-i"></div></div><div class="gr-w"></div>
+      <div class="gr-w mnth"></div><div class="gr-w"></div><div class="gr-w"></div><div class="gr-w"></div><div class="gr-w"></div><div class="gr-w mnth"></div>
+    </div>
+    <div class="gr-delta d-pos">+5w</div>
+  </div>
+
+  <!-- SSC2 Biguaçu +4 -->
+  <div class="gantt-row">
+    <div class="gr-svc"><div class="gr-svc-name">SSC2 - Biguaçu (Fpolis)</div><div class="gr-svc-meta"><span class="gr-p">P5</span></div></div>
+    <div class="gr-weeks">
+      <div class="gr-w"></div><div class="gr-w"></div><div class="gr-w"></div><div class="gr-w today"></div>
+      <div class="gr-w mnth"><div class="bar-m"></div></div><div class="gr-w"><div class="bar-m"></div></div><div class="gr-w"><div class="bar-m"></div></div><div class="gr-w"><div class="bar-m"></div></div>
+      <div class="gr-w mnth"><div class="bar-m"></div></div><div class="gr-w"></div><div class="gr-w"></div><div class="gr-w"></div>
+      <div class="gr-w mnth"><div class="bar-i"></div></div><div class="gr-w"><div class="bar-i"></div></div><div class="gr-w"><div class="bar-i"></div></div><div class="gr-w"><div class="bar-i"></div></div>
+      <div class="gr-w mnth"><div class="bar-i"></div></div><div class="gr-w"></div><div class="gr-w"></div><div class="gr-w"></div><div class="gr-w"></div><div class="gr-w mnth"></div>
+    </div>
+    <div class="gr-delta d-pos">+4w</div>
+  </div>
+
+  <!-- SSP15 São Vicente +4 TT reduced -->
+  <div class="gantt-row">
+    <div class="gr-svc"><div class="gr-svc-name">SSP15 - São Vicente</div><div class="gr-svc-meta"><span class="gr-p">P4</span><span class="gr-ttd">TT 25→15</span></div></div>
+    <div class="gr-weeks">
+      <div class="gr-w"></div><div class="gr-w"></div><div class="gr-w"></div><div class="gr-w today"></div>
+      <div class="gr-w mnth"><div class="bar-m"></div></div><div class="gr-w"><div class="bar-m"></div></div><div class="gr-w"><div class="bar-m"></div></div><div class="gr-w"><div class="bar-m"></div></div>
+      <div class="gr-w mnth"><div class="bar-m"></div></div><div class="gr-w"></div><div class="gr-w"></div><div class="gr-w"></div>
+      <div class="gr-w mnth"><div class="bar-i"></div></div><div class="gr-w"><div class="bar-i"></div></div><div class="gr-w"><div class="bar-i"></div></div><div class="gr-w"><div class="bar-i"></div></div>
+      <div class="gr-w mnth"><div class="bar-i"></div></div><div class="gr-w"></div><div class="gr-w"></div><div class="gr-w"></div><div class="gr-w"></div><div class="gr-w mnth"></div>
+    </div>
+    <div class="gr-delta d-pos">+4w</div>
+  </div>
+
+  <!-- SPR1 Curitiba +4 -->
+  <div class="gantt-row">
+    <div class="gr-svc"><div class="gr-svc-name">SPR1 - Curitiba</div><div class="gr-svc-meta"><span class="gr-p">P21</span></div></div>
+    <div class="gr-weeks">
+      <div class="gr-w"></div><div class="gr-w"></div><div class="gr-w"></div><div class="gr-w today"></div>
+      <div class="gr-w mnth"></div><div class="gr-w"></div><div class="gr-w"></div><div class="gr-w"></div>
+      <div class="gr-w mnth"></div><div class="gr-w"></div><div class="gr-w"></div>
+      <div class="gr-w"><div class="bar-m"></div></div>
+      <div class="gr-w mnth"><div class="bar-m"></div></div><div class="gr-w"><div class="bar-m"></div></div><div class="gr-w"><div class="bar-m"></div></div><div class="gr-w"><div class="bar-m"></div></div>
+      <div class="gr-w mnth"><div class="bar-i"></div></div><div class="gr-w"><div class="bar-i"></div></div><div class="gr-w"><div class="bar-i"></div></div><div class="gr-w"><div class="bar-i"></div></div><div class="gr-w"><div class="bar-i"></div></div><div class="gr-w mnth"></div>
+    </div>
+    <div class="gr-delta d-pos">+4w</div>
+  </div>
+
+  <!-- SMG2 Juiz de Fora +3 -->
+  <div class="gantt-row">
+    <div class="gr-svc"><div class="gr-svc-name">SMG2 - Juiz de Fora</div><div class="gr-svc-meta"><span class="gr-p">P3</span></div></div>
+    <div class="gr-weeks">
+      <div class="gr-w"></div><div class="gr-w"></div><div class="gr-w"></div><div class="gr-w today"></div>
+      <div class="gr-w mnth"><div class="bar-m"></div></div><div class="gr-w"><div class="bar-m"></div></div><div class="gr-w"><div class="bar-m"></div></div><div class="gr-w"><div class="bar-m"></div></div>
+      <div class="gr-w mnth"><div class="bar-m"></div></div><div class="gr-w"></div><div class="gr-w"></div><div class="gr-w"></div>
+      <div class="gr-w mnth"></div><div class="gr-w"></div><div class="gr-w"></div><div class="gr-w"></div>
+      <div class="gr-w mnth"></div><div class="gr-w"></div><div class="gr-w"></div><div class="gr-w"></div><div class="gr-w"></div><div class="gr-w mnth"></div>
+    </div>
+    <div class="gr-delta d-pos">+3w</div>
+  </div>
+
+  <!-- SPR8 C Grande do Sul +3 -->
+  <div class="gantt-row">
+    <div class="gr-svc"><div class="gr-svc-name">SPR8 - C. Grande do Sul</div><div class="gr-svc-meta"><span class="gr-p">P10</span></div></div>
+    <div class="gr-weeks">
+      <div class="gr-w"></div><div class="gr-w"></div><div class="gr-w"></div><div class="gr-w today"></div>
+      <div class="gr-w mnth"><div class="bar-m"></div></div><div class="gr-w"><div class="bar-m"></div></div><div class="gr-w"><div class="bar-m"></div></div><div class="gr-w"><div class="bar-m"></div></div>
+      <div class="gr-w mnth"><div class="bar-m"></div></div><div class="gr-w"></div><div class="gr-w"></div><div class="gr-w"></div>
+      <div class="gr-w mnth"></div><div class="gr-w"></div><div class="gr-w"></div><div class="gr-w"></div>
+      <div class="gr-w mnth"></div><div class="gr-w"></div><div class="gr-w"></div><div class="gr-w"></div><div class="gr-w"></div><div class="gr-w mnth"></div>
+    </div>
+    <div class="gr-delta d-pos">+3w</div>
+  </div>
+
+  <!-- SMG10 Divinópolis +3 -->
+  <div class="gantt-row">
+    <div class="gr-svc"><div class="gr-svc-name">SMG10 - Divinópolis</div><div class="gr-svc-meta"><span class="gr-p">P18</span></div></div>
+    <div class="gr-weeks">
+      <div class="gr-w"></div><div class="gr-w"></div><div class="gr-w"></div><div class="gr-w today"></div>
+      <div class="gr-w mnth"></div><div class="gr-w"></div><div class="gr-w"></div><div class="gr-w"></div>
+      <div class="gr-w mnth"></div><div class="gr-w"></div><div class="gr-w"></div>
+      <div class="gr-w"><div class="bar-m"></div></div>
+      <div class="gr-w mnth"><div class="bar-m"></div></div><div class="gr-w"><div class="bar-m"></div></div><div class="gr-w"><div class="bar-m"></div></div><div class="gr-w"><div class="bar-m"></div></div>
+      <div class="gr-w mnth"><div class="bar-m"></div></div><div class="gr-w"></div>
+      <div class="gr-w"><div class="bar-i"></div></div><div class="gr-w"><div class="bar-i"></div></div><div class="gr-w"><div class="bar-i"></div></div><div class="gr-w mnth"><div class="bar-i"></div></div>
+    </div>
+    <div class="gr-delta d-pos">+3w</div>
+  </div>
+
+  <!-- SDF1 Brasília +2 -->
+  <div class="gantt-row">
+    <div class="gr-svc"><div class="gr-svc-name">SDF1 - Brasília</div><div class="gr-svc-meta"><span class="gr-p">P2</span></div></div>
+    <div class="gr-weeks">
+      <div class="gr-w"></div><div class="gr-w"></div><div class="gr-w"></div><div class="gr-w today"></div>
+      <div class="gr-w mnth"><div class="bar-m"></div></div><div class="gr-w"><div class="bar-m"></div></div><div class="gr-w"><div class="bar-m"></div></div><div class="gr-w"><div class="bar-m"></div></div>
+      <div class="gr-w mnth"><div class="bar-m"></div></div><div class="gr-w"></div><div class="gr-w"></div><div class="gr-w"></div>
+      <div class="gr-w mnth"></div><div class="gr-w"></div><div class="gr-w"></div><div class="gr-w"></div>
+      <div class="gr-w mnth"></div><div class="gr-w"></div><div class="gr-w"></div><div class="gr-w"></div><div class="gr-w"></div><div class="gr-w mnth"></div>
+    </div>
+    <div class="gr-delta d-pos">+2w</div>
+  </div>
+
+  <!-- SRS4 Caxias do Sul +2 -->
+  <div class="gantt-row">
+    <div class="gr-svc"><div class="gr-svc-name">SRS4 - Caxias do Sul</div><div class="gr-svc-meta"><span class="gr-p">P17</span></div></div>
+    <div class="gr-weeks">
+      <div class="gr-w"></div><div class="gr-w"></div><div class="gr-w"></div><div class="gr-w today"></div>
+      <div class="gr-w mnth"></div><div class="gr-w"></div><div class="gr-w"></div><div class="gr-w"></div>
+      <div class="gr-w mnth"></div><div class="gr-w"></div><div class="gr-w"></div>
+      <div class="gr-w"><div class="bar-m"></div></div>
+      <div class="gr-w mnth"><div class="bar-m"></div></div><div class="gr-w"><div class="bar-m"></div></div><div class="gr-w"><div class="bar-m"></div></div><div class="gr-w"><div class="bar-m"></div></div>
+      <div class="gr-w mnth"><div class="bar-m"></div></div><div class="gr-w"></div>
+      <div class="gr-w"><div class="bar-i"></div></div><div class="gr-w"><div class="bar-i"></div></div><div class="gr-w"><div class="bar-i"></div></div><div class="gr-w mnth"><div class="bar-i"></div></div>
+    </div>
+    <div class="gr-delta d-pos">+2w</div>
+  </div>
+
+  <!-- SMG1 Contagem +1 -->
+  <div class="gantt-row">
+    <div class="gr-svc"><div class="gr-svc-name">SMG1 - Contagem 1</div><div class="gr-svc-meta"><span class="gr-p">P1</span></div></div>
+    <div class="gr-weeks">
+      <div class="gr-w"></div><div class="gr-w"></div><div class="gr-w"></div><div class="gr-w today"></div>
+      <div class="gr-w mnth"><div class="bar-m"></div></div>
+      <div class="gr-w"><div class="bar-m"></div><div class="bar-i"></div></div>
+      <div class="gr-w"><div class="bar-m"></div><div class="bar-i"></div></div>
+      <div class="gr-w"><div class="bar-m"></div><div class="bar-i"></div></div>
+      <div class="gr-w mnth"><div class="bar-m"></div><div class="bar-i"></div></div>
+      <div class="gr-w"><div class="bar-i"></div></div>
+      <div class="gr-w"></div><div class="gr-w"></div>
+      <div class="gr-w mnth"></div><div class="gr-w"></div><div class="gr-w"></div><div class="gr-w"></div>
+      <div class="gr-w mnth"></div><div class="gr-w"></div><div class="gr-w"></div><div class="gr-w"></div><div class="gr-w"></div><div class="gr-w mnth"></div>
+    </div>
+    <div class="gr-delta d-pos">+1w</div>
+  </div>
+
+  <!-- SSP22 São Carlos — IGUAL -->
+  <div class="gantt-row">
+    <div class="gr-svc"><div class="gr-svc-name">SSP22 - São Carlos</div><div class="gr-svc-meta"><span class="gr-p">P6</span></div></div>
+    <div class="gr-weeks">
+      <div class="gr-w"></div><div class="gr-w"></div><div class="gr-w"></div><div class="gr-w today"></div>
+      <div class="gr-w mnth"><div class="bar-s"></div></div><div class="gr-w"><div class="bar-s"></div></div><div class="gr-w"><div class="bar-s"></div></div><div class="gr-w"><div class="bar-s"></div></div>
+      <div class="gr-w mnth"><div class="bar-s"></div></div><div class="gr-w"></div><div class="gr-w"></div><div class="gr-w"></div>
+      <div class="gr-w mnth"></div><div class="gr-w"></div><div class="gr-w"></div><div class="gr-w"></div>
+      <div class="gr-w mnth"></div><div class="gr-w"></div><div class="gr-w"></div><div class="gr-w"></div><div class="gr-w"></div><div class="gr-w mnth"></div>
+    </div>
+    <div class="gr-delta d-zero">—</div>
+  </div>
+
+  <!-- SSP26 Franca — IGUAL -->
+  <div class="gantt-row">
+    <div class="gr-svc"><div class="gr-svc-name">SSP26 - Franca</div><div class="gr-svc-meta"><span class="gr-p">P15</span></div></div>
+    <div class="gr-weeks">
+      <div class="gr-w"></div><div class="gr-w"></div><div class="gr-w"></div><div class="gr-w today"></div>
+      <div class="gr-w mnth"></div>
+      <div class="gr-w"><div class="bar-s"></div></div><div class="gr-w"><div class="bar-s"></div></div><div class="gr-w"><div class="bar-s"></div></div>
+      <div class="gr-w mnth"><div class="bar-s"></div></div><div class="gr-w"><div class="bar-s"></div></div>
+      <div class="gr-w"></div><div class="gr-w"></div>
+      <div class="gr-w mnth"></div><div class="gr-w"></div><div class="gr-w"></div><div class="gr-w"></div>
+      <div class="gr-w mnth"></div><div class="gr-w"></div><div class="gr-w"></div><div class="gr-w"></div><div class="gr-w"></div><div class="gr-w mnth"></div>
+    </div>
+    <div class="gr-delta d-zero">—</div>
+  </div>
+
+  <!-- SSP4 Cravinhos — IGUAL -->
+  <div class="gantt-row">
+    <div class="gr-svc"><div class="gr-svc-name">SSP4 - Cravinhos</div><div class="gr-svc-meta"><span class="gr-p">P13</span></div></div>
+    <div class="gr-weeks">
+      <div class="gr-w"><div class="bar-s"></div></div><div class="gr-w"><div class="bar-s"></div></div><div class="gr-w"><div class="bar-s"></div></div><div class="gr-w today"><div class="bar-s"></div></div>
+      <div class="gr-w mnth"><div class="bar-s"></div></div><div class="gr-w"></div><div class="gr-w"></div><div class="gr-w"></div>
+      <div class="gr-w mnth"></div><div class="gr-w"></div><div class="gr-w"></div><div class="gr-w"></div>
+      <div class="gr-w mnth"></div><div class="gr-w"></div><div class="gr-w"></div><div class="gr-w"></div>
+      <div class="gr-w mnth"></div><div class="gr-w"></div><div class="gr-w"></div><div class="gr-w"></div><div class="gr-w"></div><div class="gr-w mnth"></div>
+    </div>
+    <div class="gr-delta d-zero">—</div>
+  </div>
+
+  <!-- SSC8 Itajaí -2 ANTECIPADO -->
+  <div class="gantt-row">
+    <div class="gr-svc"><div class="gr-svc-name">SSC8 - Itajaí</div><div class="gr-svc-meta"><span class="gr-p">P12</span><span style="font-size:9px;color:var(--ml-green);font-weight:700;">Antecipado</span></div></div>
+    <div class="gr-weeks">
+      <div class="gr-w"></div><div class="gr-w"></div><div class="gr-w"></div><div class="gr-w today"></div>
+      <div class="gr-w mnth"></div><div class="gr-w"></div><div class="gr-w"></div><div class="gr-w"></div>
+      <div class="gr-w mnth"></div><div class="gr-w"></div><div class="gr-w"></div><div class="gr-w"></div>
+      <div class="gr-w mnth"><div class="bar-i"></div></div><div class="gr-w"><div class="bar-i"></div></div><div class="gr-w"><div class="bar-i"></div></div>
+      <div class="gr-w"><div class="bar-i"></div><div class="bar-m"></div></div>
+      <div class="gr-w mnth"><div class="bar-i"></div><div class="bar-m"></div></div>
+      <div class="gr-w"><div class="bar-m"></div></div><div class="gr-w"><div class="bar-m"></div></div><div class="gr-w"><div class="bar-m"></div></div><div class="gr-w"><div class="bar-m"></div></div><div class="gr-w mnth"></div>
+    </div>
+    <div class="gr-delta d-neg">−2w</div>
+  </div>
+
+  <!-- SSP14 Bauru NOVO -->
+  <div class="gantt-row row-new">
+    <div class="gr-svc"><div class="gr-svc-name" style="color:#8a6f00;">SSP14 - Bauru</div><div class="gr-svc-meta"><span class="gr-p" style="background:#FFF8CC;color:#8a6f00;">P25</span><span class="gr-new">NOVO</span></div></div>
+    <div class="gr-weeks">
+      <div class="gr-w"></div><div class="gr-w"></div><div class="gr-w"></div><div class="gr-w today"></div>
+      <div class="gr-w mnth"></div><div class="gr-w"></div><div class="gr-w"></div><div class="gr-w"></div>
+      <div class="gr-w mnth"></div>
+      <div class="gr-w"><div class="bar-i bar-n"></div></div><div class="gr-w"><div class="bar-i bar-n"></div></div><div class="gr-w"><div class="bar-i bar-n"></div></div>
+      <div class="gr-w mnth"><div class="bar-i bar-n"></div></div><div class="gr-w"><div class="bar-i bar-n"></div></div>
+      <div class="gr-w"></div><div class="gr-w"></div>
+      <div class="gr-w mnth"></div><div class="gr-w"></div><div class="gr-w"></div><div class="gr-w"></div><div class="gr-w"></div><div class="gr-w mnth"></div>
+    </div>
+    <div class="gr-delta d-new">NOVO</div>
+  </div>
+
+</div></div><!-- /gantt -->
+
+<!-- ─── COMPARISON TABLE ─── -->
+<div class="stitle">Detalhamento por SVC</div>
+<div class="tbl-wrap">
+<table>
+  <thead>
+    <tr>
+      <th>#</th>
+      <th>SVC</th>
+      <th>MELI — Início</th>
+      <th>MELI TT</th>
+      <th>IMEDIATO — Início</th>
+      <th>IME TT</th>
+      <th>Δ Semanas</th>
+      <th>Δ TT</th>
+      <th>Status</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr><td class="t-zer">1</td><td class="t-svc">SSC3 - Gaspar (Blumenau)</td><td class="t-meli">W15 (6-abr)</td><td class="t-meli">25</td><td class="t-ime">W28 (6-jul)</td><td class="t-ime">25</td><td class="t-pos">+13 sem</td><td class="t-zer">—</td><td><span class="pill p-red">Atraso +13w</span></td></tr>
+    <tr><td class="t-zer">2</td><td class="t-svc">SBA1 - Simões Filho</td><td class="t-meli">W15 (6-abr)</td><td class="t-meli">25</td><td class="t-ime">W26 (22-jun)</td><td class="t-ime">25</td><td class="t-pos">+11 sem</td><td class="t-zer">—</td><td><span class="pill p-red">Atraso +11w</span></td></tr>
+    <tr><td class="t-zer">3</td><td class="t-svc">SSC1 - Joinville</td><td class="t-meli">W15 (6-abr)</td><td class="t-meli">25</td><td class="t-ime">W25 (15-jun)</td><td class="t-ime">25</td><td class="t-pos">+10 sem</td><td class="t-zer">—</td><td><span class="pill p-red">Atraso +10w</span></td></tr>
+    <tr><td class="t-zer">4</td><td class="t-svc">SMN1 - São Luís</td><td class="t-meli">W16 (13-abr)</td><td class="t-meli">25</td><td class="t-ime">W24 (8-jun)</td><td class="t-ime">25</td><td class="t-pos">+8 sem</td><td class="t-zer">—</td><td><span class="pill p-red">Atraso +8w</span></td></tr>
+    <tr><td class="t-zer">5</td><td class="t-svc">SSP48 - SP</td><td class="t-meli">W15 (6-abr)</td><td class="t-meli">25</td><td class="t-ime">W23 (1-jun)</td><td class="t-ime">15</td><td class="t-pos">+8 sem</td><td class="t-pos">−10</td><td><span class="pill p-red">Atraso +8w + TT↓</span></td></tr>
+    <tr><td class="t-zer">6</td><td class="t-svc">SSP20 - Sorocaba</td><td class="t-meli">W15 (6-abr)</td><td class="t-meli">25</td><td class="t-ime">W22 (25-mai)</td><td class="t-ime">25</td><td class="t-pos">+7 sem</td><td class="t-zer">—</td><td><span class="pill p-red">Atraso +7w</span></td></tr>
+    <tr><td class="t-zer">7</td><td class="t-svc">SSP38 - Itupeva</td><td class="t-meli">W15 (6-abr)</td><td class="t-meli">25</td><td class="t-ime">W21 (18-mai)</td><td class="t-ime">25</td><td class="t-pos">+6 sem</td><td class="t-zer">—</td><td><span class="pill p-red">Atraso +6w</span></td></tr>
+    <tr><td class="t-zer">8</td><td class="t-svc">SPR3 - Cascável</td><td class="t-meli">W15 (6-abr)</td><td class="t-meli">25</td><td class="t-ime">W21 (18-mai)</td><td class="t-ime">25</td><td class="t-pos">+6 sem</td><td class="t-zer">—</td><td><span class="pill p-red">Atraso +6w</span></td></tr>
+    <tr><td class="t-zer">9</td><td class="t-svc">SMG3 - Pouso Alegre</td><td class="t-meli">W21 (18-mai)</td><td class="t-meli">25</td><td class="t-ime">W27 (29-jun)</td><td class="t-ime">25</td><td class="t-pos">+6 sem</td><td class="t-zer">—</td><td><span class="pill p-red">Atraso +6w</span></td></tr>
+    <tr><td class="t-zer">10</td><td class="t-svc">SSC9 - Gov. Celso Ramos</td><td class="t-meli">W22 (25-mai)</td><td class="t-meli">25</td><td class="t-ime">W28 (6-jul)</td><td class="t-ime">25</td><td class="t-pos">+6 sem</td><td class="t-zer">—</td><td><span class="pill p-red">Atraso +6w</span></td></tr>
+    <tr><td class="t-zer">11</td><td class="t-svc">SSP25 - Atibaía</td><td class="t-meli">W15 (6-abr)</td><td class="t-meli">25</td><td class="t-ime">W20 (11-mai)</td><td class="t-ime">25</td><td class="t-pos">+5 sem</td><td class="t-zer">—</td><td><span class="pill p-red">Atraso +5w</span></td></tr>
+    <tr><td class="t-zer">12</td><td class="t-svc">SSC2 - Biguaçu (Fpolis)</td><td class="t-meli">W15 (6-abr)</td><td class="t-meli">25</td><td class="t-ime">W19 (4-mai)</td><td class="t-ime">25</td><td class="t-pos">+4 sem</td><td class="t-zer">—</td><td><span class="pill p-red">Atraso +4w</span></td></tr>
+    <tr><td class="t-zer">13</td><td class="t-svc">SSP15 - São Vicente</td><td class="t-meli">W15 (6-abr)</td><td class="t-meli">25</td><td class="t-ime">W19 (4-mai)</td><td class="t-ime">15</td><td class="t-pos">+4 sem</td><td class="t-pos">−10</td><td><span class="pill p-red">Atraso +4w + TT↓</span></td></tr>
+    <tr><td class="t-zer">14</td><td class="t-svc">SPR1 - Curitiba</td><td class="t-meli">W22 (25-mai)</td><td class="t-meli">25</td><td class="t-ime">W26 (22-jun)</td><td class="t-ime">25</td><td class="t-pos">+4 sem</td><td class="t-zer">—</td><td><span class="pill p-red">Atraso +4w</span></td></tr>
+    <tr><td class="t-zer">15</td><td class="t-svc">SMG2 - Juiz de Fora</td><td class="t-meli">W15 (6-abr)</td><td class="t-meli">25</td><td class="t-ime">W18 (27-abr)</td><td class="t-ime">25</td><td class="t-pos">+3 sem</td><td class="t-zer">—</td><td><span class="pill p-red">Atraso +3w</span></td></tr>
+    <tr><td class="t-zer">16</td><td class="t-svc">SPR8 - C. Grande do Sul</td><td class="t-meli">W15 (6-abr)</td><td class="t-meli">25</td><td class="t-ime">W18 (27-abr)</td><td class="t-ime">25</td><td class="t-pos">+3 sem</td><td class="t-zer">—</td><td><span class="pill p-red">Atraso +3w</span></td></tr>
+    <tr><td class="t-zer">17</td><td class="t-svc">SMG10 - Divinópolis</td><td class="t-meli">W22 (25-mai)</td><td class="t-meli">25</td><td class="t-ime">W25 (15-jun)</td><td class="t-ime">25</td><td class="t-pos">+3 sem</td><td class="t-zer">—</td><td><span class="pill p-red">Atraso +3w</span></td></tr>
+    <tr><td class="t-zer">18</td><td class="t-svc">SDF1 - Brasília</td><td class="t-meli">W15 (6-abr)</td><td class="t-meli">25</td><td class="t-ime">W17 (20-abr)</td><td class="t-ime">25</td><td class="t-pos">+2 sem</td><td class="t-zer">—</td><td><span class="pill p-red">Atraso +2w</span></td></tr>
+    <tr><td class="t-zer">19</td><td class="t-svc">SRS4 - Caxias do Sul</td><td class="t-meli">W22 (25-mai)</td><td class="t-meli">25</td><td class="t-ime">W24 (8-jun)</td><td class="t-ime">25</td><td class="t-pos">+2 sem</td><td class="t-zer">—</td><td><span class="pill p-red">Atraso +2w</span></td></tr>
+    <tr><td class="t-zer">20</td><td class="t-svc">SMG1 - Contagem 1</td><td class="t-meli">W15 (6-abr)</td><td class="t-meli">25</td><td class="t-ime">W16 (13-abr)</td><td class="t-ime">25</td><td class="t-pos">+1 sem</td><td class="t-zer">—</td><td><span class="pill p-red">Atraso +1w</span></td></tr>
+    <tr><td class="t-zer">21</td><td class="t-svc">SSP22 - São Carlos</td><td class="t-meli">W15 (6-abr)</td><td class="t-meli">25</td><td class="t-ime">W15 (6-abr)</td><td class="t-ime">25</td><td class="t-zer">0</td><td class="t-zer">—</td><td><span class="pill p-neu">Igual</span></td></tr>
+    <tr><td class="t-zer">22</td><td class="t-svc">SSP26 - Franca</td><td class="t-meli">W16 (13-abr)</td><td class="t-meli">25</td><td class="t-ime">W16 (13-abr)</td><td class="t-ime">25</td><td class="t-zer">0</td><td class="t-zer">—</td><td><span class="pill p-neu">Igual</span></td></tr>
+    <tr><td class="t-zer">23</td><td class="t-svc">SSP4 - Cravinhos</td><td class="t-meli">W11 (9-mar)</td><td class="t-meli">25</td><td class="t-ime">W11 (9-mar)</td><td class="t-ime">25</td><td class="t-zer">0</td><td class="t-zer">—</td><td><span class="pill p-neu">Igual</span></td></tr>
+    <tr><td class="t-zer">24</td><td class="t-svc">SSC8 - Itajaí</td><td class="t-meli">W25 (15-jun)</td><td class="t-meli">25</td><td class="t-ime">W23 (1-jun)</td><td class="t-ime">25</td><td class="t-neg">−2 sem</td><td class="t-zer">—</td><td><span class="pill p-grn">Antecipado</span></td></tr>
+    <tr class="row-new"><td class="t-zer">25</td><td class="t-svc" style="color:#8a6f00;font-weight:700;">SSP14 - Bauru</td><td class="t-zer">—</td><td class="t-zer">—</td><td class="t-ime">W20 (11-mai)</td><td class="t-ime">25</td><td class="t-new">Novo</td><td class="t-new">+25</td><td><span class="pill p-ylw">Novo SVC</span></td></tr>
+  </tbody>
+</table>
+</div>
+
+<div class="footer">
+  Fonte: Planos IMEDIATO e MELI — Ramp-Up Superdedicado &nbsp;·&nbsp; W11–W32 &nbsp;·&nbsp; 31/mar/2026
+</div>
+
+</div><!-- /content -->
+</body>
+</html>
