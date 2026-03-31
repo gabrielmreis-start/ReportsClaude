@@ -1,0 +1,898 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Monitoramento D0 – SDD & FF</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<style>
+  :root {
+    --ml-yellow:#FFE600; --ml-blue:#2D3277; --ml-blue-l:#3483FA;
+    --green:#00a650; --green-l:#e6f7ee; --green-b:#00a650;
+    --yellow-s:#FFF3CD; --yellow-b:#E6A817;
+    --gray-s:#f4f5f7; --gray-b:#9E9E9E;
+    --red-s:#fdecea; --red-b:#e53935;
+    --radius:8px; --shadow:0 2px 8px rgba(0,0,0,.10);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Inter',system-ui,sans-serif;background:#f0f2f5;color:#1a1a2e;font-size:14px}
+
+  /* HEADER */
+  header{background:var(--ml-blue);color:#fff;padding:18px 28px;display:flex;align-items:center;justify-content:space-between}
+  header h1{font-size:20px;font-weight:700;letter-spacing:-.3px}
+  header .meta{font-size:12px;opacity:.75;text-align:right;line-height:1.6}
+  .badge-live{background:var(--ml-yellow);color:var(--ml-blue);font-size:11px;font-weight:700;padding:2px 8px;border-radius:20px;margin-left:10px;vertical-align:middle}
+
+  /* TABS */
+  .tabs{background:#fff;border-bottom:2px solid #e0e0e0;padding:0 28px;display:flex;gap:4px}
+  .tab{padding:13px 20px;cursor:pointer;font-weight:600;font-size:13px;color:#666;border-bottom:3px solid transparent;margin-bottom:-2px;transition:.15s}
+  .tab:hover{color:var(--ml-blue)}
+  .tab.active{color:var(--ml-blue);border-bottom-color:var(--ml-blue)}
+
+  /* CONTENT */
+  .panel{display:none;padding:24px 28px}
+  .panel.active{display:block}
+
+  /* KPI CARDS */
+  .kpi-row{display:flex;gap:16px;margin-bottom:24px;flex-wrap:wrap}
+  .kpi{background:#fff;border-radius:var(--radius);padding:16px 20px;flex:1;min-width:150px;box-shadow:var(--shadow);border-left:4px solid var(--ml-blue-l)}
+  .kpi .label{font-size:11px;font-weight:600;text-transform:uppercase;color:#888;letter-spacing:.5px}
+  .kpi .value{font-size:28px;font-weight:700;color:var(--ml-blue);margin-top:4px}
+  .kpi.green{border-left-color:var(--green)} .kpi.green .value{color:var(--green)}
+  .kpi.yellow{border-left-color:var(--yellow-b)} .kpi.yellow .value{color:var(--yellow-b)}
+  .kpi.red{border-left-color:var(--red-b)} .kpi.red .value{color:var(--red-b)}
+
+  /* SECTION TITLE */
+  .section-title{font-size:15px;font-weight:700;color:var(--ml-blue);margin-bottom:12px;margin-top:8px}
+
+  /* TABLES */
+  .table-wrap{background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;margin-bottom:24px}
+  .table-wrap .table-header{padding:14px 18px;background:#fff;border-bottom:1px solid #eee;display:flex;align-items:center;justify-content:space-between}
+  .table-wrap .table-header span{font-weight:600;font-size:13px;color:#444}
+  table{width:100%;border-collapse:collapse}
+  th{background:#f8f9fc;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:#666;padding:10px 14px;text-align:left;border-bottom:2px solid #eee}
+  td{padding:10px 14px;border-bottom:1px solid #f0f0f0;vertical-align:middle}
+  tr:last-child td{border-bottom:none}
+  tr:hover td{background:#fafbff}
+  .num{text-align:right}
+
+  /* STATUS BADGES */
+  .status{display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700;white-space:nowrap}
+  .status.finalizada{background:var(--green-l);color:var(--green-b)}
+  .status.em_andamento{background:#e3f2fd;color:#1565C0}
+  .status.nao_iniciou{background:var(--gray-s);color:var(--gray-b)}
+  .status.cedo{background:var(--yellow-s);color:var(--yellow-b)}
+
+  /* PROGRESS BAR */
+  .progress-cell{min-width:160px}
+  .progress-bg{background:#eee;border-radius:4px;height:8px;width:100%;position:relative}
+  .progress-fill{height:8px;border-radius:4px;transition:width .4s ease}
+  .progress-fill.full{background:var(--green)}
+  .progress-fill.partial{background:var(--ml-blue-l)}
+  .progress-fill.none{background:#ddd}
+  .progress-label{font-size:11px;color:#888;margin-top:3px}
+
+  /* ROW COLORS por status SDD */
+  tr.row-full td{background:var(--green-l)}
+  tr.row-full:hover td{background:#d4f0e2}
+  tr.row-partial td{background:#fffde7}
+  tr.row-partial:hover td{background:#fff9c4}
+  tr.row-none td{background:#fff}
+
+  /* SEARCH */
+  .search-box{padding:7px 12px;border:1px solid #ddd;border-radius:6px;font-size:13px;width:240px;outline:none}
+  .search-box:focus{border-color:var(--ml-blue-l)}
+
+  /* FILTER ROW */
+  .filter-row th{background:#eef0f8;padding:5px 8px}
+  .filter-row input,.filter-row select{width:100%;padding:4px 8px;border:1px solid #d0d4e8;border-radius:4px;font-size:11px;background:#fff;outline:none;color:#333;min-width:60px}
+  .filter-row input:focus,.filter-row select:focus{border-color:var(--ml-blue-l);box-shadow:0 0 0 2px rgba(52,131,250,.15)}
+  .filter-row input::placeholder{color:#bbb}
+
+  /* ALERT CARD */
+  .alert-card{background:var(--yellow-s);border:1px solid var(--yellow-b);border-radius:var(--radius);padding:12px 16px;margin-bottom:16px;font-size:13px;color:#5a3e00}
+  .alert-card strong{display:block;font-size:14px;margin-bottom:4px}
+
+  /* FOOTER */
+  footer{text-align:center;padding:20px;font-size:11px;color:#aaa}
+
+  /* RESUMO */
+  .resumo-hero{background:var(--ml-blue);color:#fff;border-radius:var(--radius);padding:28px 32px;display:flex;align-items:center;justify-content:space-between;box-shadow:var(--shadow)}
+  .resumo-hero .score-label{font-size:13px;font-weight:600;opacity:.7;text-transform:uppercase;letter-spacing:.5px}
+  .resumo-hero .score-value{font-size:56px;font-weight:800;line-height:1;margin:4px 0}
+  .resumo-hero .score-sub{font-size:13px;opacity:.65}
+  .resumo-hero .score-badges{display:flex;gap:12px;flex-wrap:wrap}
+  .score-badge{background:rgba(255,255,255,.15);border-radius:8px;padding:10px 16px;text-align:center;min-width:110px}
+  .score-badge .sb-val{font-size:22px;font-weight:700}
+  .score-badge .sb-lbl{font-size:11px;opacity:.75;margin-top:2px}
+  .two-col{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:24px}
+  @media(max-width:900px){.two-col{grid-template-columns:1fr}}
+  .chart-card{background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);padding:20px}
+  .chart-card h3{font-size:13px;font-weight:700;color:var(--ml-blue);margin-bottom:16px;text-transform:uppercase;letter-spacing:.4px}
+  .chart-wrap{position:relative;height:320px}
+  .alert-list{display:flex;flex-direction:column;gap:10px}
+  .alert-item{display:flex;align-items:center;gap:14px;background:#fff;border-radius:var(--radius);padding:12px 16px;box-shadow:var(--shadow);border-left:4px solid #ddd}
+  .alert-item.danger{border-left-color:var(--red-b)}
+  .alert-item.warn{border-left-color:var(--yellow-b)}
+  .alert-item.ok{border-left-color:var(--green)}
+  .alert-icon{font-size:22px;width:30px;text-align:center}
+  .alert-body .alert-title{font-weight:700;font-size:13px}
+  .alert-body .alert-desc{font-size:12px;color:#777;margin-top:2px}
+  .svc-bar-list{display:flex;flex-direction:column;gap:6px;max-height:310px;overflow-y:auto}
+  .svc-bar-row{display:flex;align-items:center;gap:10px;font-size:12px}
+  .svc-bar-name{width:58px;font-weight:600;color:#444;flex-shrink:0}
+  .svc-bar-bg{flex:1;background:#eee;border-radius:4px;height:14px;position:relative;overflow:hidden}
+  .svc-bar-fill{height:14px;border-radius:4px;transition:width .5s ease}
+  .svc-bar-val{width:42px;text-align:right;font-weight:700;flex-shrink:0}
+
+  @media(max-width:700px){
+    header{flex-direction:column;gap:8px;text-align:center}
+    .kpi-row{flex-direction:column}
+    .tabs{overflow-x:auto}
+    .resumo-hero{flex-direction:column;gap:20px}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Monitoramento D0 <span class="badge-live">AO VIVO</span></h1>
+  <div class="meta">
+    <div id="data-hoje"></div>
+    <div>Atualizado: <span id="hora-atualizacao"></span></div>
+  </div>
+</header>
+
+<div class="tabs">
+  <div class="tab active" onclick="switchTab('sdd',this)">SDD</div>
+  <div class="tab" onclick="switchTab('ff',this)">FF – LM + FM</div>
+  <div class="tab" onclick="switchTab('realocacao',this)">Realocação ⚡</div>
+  <div class="tab" onclick="switchTab('resumo',this)">Resumo 📊</div>
+</div>
+
+<!-- ══════════════════════════════════════════════ SDD ══════════════════════ -->
+<div id="panel-sdd" class="panel active">
+  <div class="kpi-row" id="kpi-sdd"></div>
+  <div class="section-title">Progresso por SVC</div>
+  <div class="table-wrap">
+    <table id="tbl-sdd">
+      <thead>
+        <tr>
+          <th>SVC</th>
+          <th class="num">Calendarizadas</th>
+          <th class="num">Iniciadas</th>
+          <th class="num">Em andamento</th>
+          <th class="num">Finalizadas</th>
+          <th class="num">% Iniciadas</th>
+          <th>Progresso</th>
+          <th>1º Saída</th>
+          <th>Último Início</th>
+        </tr>
+        <tr class="filter-row">
+          <th><input id="f-sdd-svc" placeholder="SVC…" oninput="filterSDD()"/></th>
+          <th></th>
+          <th></th>
+          <th></th>
+          <th></th>
+          <th><input id="f-sdd-pct" type="number" placeholder="% mín" min="0" max="999" style="width:70px" oninput="filterSDD()"/></th>
+          <th></th>
+          <th></th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody id="tbody-sdd"></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════ FF ═══════════════════════ -->
+<div id="panel-ff" class="panel">
+  <div class="kpi-row" id="kpi-ff"></div>
+  <div class="table-wrap">
+    <div class="table-header">
+      <span>Placas calendarizadas hoje</span>
+      <button onclick="clearFFFilters()" style="background:#f0f2f5;border:1px solid #ddd;border-radius:6px;padding:6px 14px;font-size:12px;font-weight:600;cursor:pointer;color:#555">✕ Limpar filtros</button>
+    </div>
+    <table id="tbl-ff">
+      <thead>
+        <tr>
+          <th>MLP</th>
+          <th>SVC Cal.</th>
+          <th>Placa</th>
+          <th>Cadastro</th>
+          <th>LM – Status</th>
+          <th>LM Início</th>
+          <th>LM Fim</th>
+          <th class="num">ORH Real</th>
+          <th class="num">ORH Plan</th>
+          <th>FM – Status</th>
+          <th class="num">FM Coletados</th>
+          <th class="num">FM A coletar</th>
+          <th>Operador</th>
+        </tr>
+        <tr class="filter-row">
+          <th><input id="f-ff-mlp"   placeholder="MLP…"      oninput="filterFF()"/></th>
+          <th><input id="f-ff-svc"   placeholder="SVC…"      oninput="filterFF()"/></th>
+          <th><input id="f-ff-placa" placeholder="Placa…"    oninput="filterFF()"/></th>
+          <th><input id="f-ff-cad"   placeholder="Cadastro…" oninput="filterFF()"/></th>
+          <th>
+            <select id="f-ff-lm" onchange="filterFF()">
+              <option value="">Todos</option>
+              <option value="finalizada">Finalizada</option>
+              <option value="em_andamento">Em andamento</option>
+              <option value="nao_iniciou">Não iniciou</option>
+            </select>
+          </th>
+          <th></th>
+          <th></th>
+          <th></th>
+          <th></th>
+          <th>
+            <select id="f-ff-fm" onchange="filterFF()">
+              <option value="">Todos</option>
+              <option value="finalizada">Finalizada</option>
+              <option value="em_andamento">Em andamento</option>
+              <option value="nao_iniciou">Não iniciou</option>
+            </select>
+          </th>
+          <th></th>
+          <th></th>
+          <th><input id="f-ff-op" placeholder="Operador…" oninput="filterFF()"/></th>
+        </tr>
+      </thead>
+      <tbody id="tbody-ff"></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════ REALOCAÇÃO ═══════════════ -->
+<div id="panel-realocacao" class="panel">
+  <div class="alert-card">
+    <strong>Veículos disponíveis para nova rota hoje</strong>
+    Rotas FF já finalizadas que terminaram cedo (menos de {{RATIO}}% do ORH planejado ou finalizaram antes das 13h).
+    Contate o operador para verificar disponibilidade.
+  </div>
+  <div class="kpi-row" id="kpi-real"></div>
+  <div class="table-wrap">
+    <table id="tbl-real">
+      <thead>
+        <tr>
+          <th>Placa</th>
+          <th>SVC</th>
+          <th>Tipo Veículo</th>
+          <th>Operador</th>
+          <th>Início</th>
+          <th>Fim</th>
+          <th class="num">ORH Real</th>
+          <th class="num">ORH Plan</th>
+          <th class="num">% ORH</th>
+          <th class="num">Entregas</th>
+        </tr>
+        <tr class="filter-row">
+          <th><input id="f-real-placa" placeholder="Placa…"    oninput="filterReal()"/></th>
+          <th><input id="f-real-svc"   placeholder="SVC…"      oninput="filterReal()"/></th>
+          <th><input id="f-real-tipo"  placeholder="Tipo…"     oninput="filterReal()"/></th>
+          <th><input id="f-real-op"    placeholder="Operador…" oninput="filterReal()"/></th>
+          <th></th>
+          <th></th>
+          <th></th>
+          <th></th>
+          <th><input id="f-real-pct" type="number" placeholder="% máx" min="0" max="100" style="width:65px" oninput="filterReal()"/></th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody id="tbody-real"></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════ RESUMO ════════════════════ -->
+<div id="panel-resumo" class="panel">
+
+  <!-- HEROES SDD + FF lado a lado -->
+  <div class="two-col" style="margin-bottom:20px">
+    <div class="resumo-hero">
+      <div style="flex:1">
+        <div class="score-label">SDD – Last Mile</div>
+        <div class="score-value" id="sdd-score">–</div>
+        <div class="score-sub" id="sdd-score-sub"></div>
+      </div>
+      <div class="score-badges" id="sdd-badges"></div>
+    </div>
+    <div class="resumo-hero" style="background:#1a4a3a">
+      <div style="flex:1">
+        <div class="score-label">FF – Last Mile</div>
+        <div class="score-value" id="ff-score">–</div>
+        <div class="score-sub" id="ff-score-sub"></div>
+      </div>
+      <div class="score-badges" id="ff-badges"></div>
+    </div>
+  </div>
+
+  <!-- FM CARD (full width) -->
+  <div class="chart-card" style="margin-bottom:20px">
+    <h3>FM (First Mile) – Rotas de Coleta hoje</h3>
+    <div id="fm-summary" style="display:flex;gap:32px;flex-wrap:wrap;align-items:center;padding:4px 0"></div>
+  </div>
+
+  <!-- DOIS GRÁFICOS -->
+  <div class="two-col">
+    <div class="chart-card">
+      <h3>SDD – Aderência por SVC</h3>
+      <div id="svc-bar-list" class="svc-bar-list"></div>
+    </div>
+    <div class="chart-card">
+      <h3>FF – Status das Placas (LM + FM)</h3>
+      <div class="chart-wrap"><canvas id="chart-ff-donut"></canvas></div>
+    </div>
+  </div>
+
+  <!-- DOIS GRÁFICOS 2 -->
+  <div class="two-col">
+    <div class="chart-card">
+      <h3>FF – Aderência por MLP (top 15)</h3>
+      <div class="chart-wrap"><canvas id="chart-mlp-bar"></canvas></div>
+    </div>
+    <div class="chart-card">
+      <h3>Alertas &amp; Destaques</h3>
+      <div id="resumo-alertas" class="alert-list"></div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  Dados: BigQuery meli-bi-data · SDDCALENDARICAOHISTORICO_T × DM_SHP_ROUTES_LAST_MILE × CALENDARIZACAO_FF_HISTORICA ·
+  Meli Last Mile Analytics
+</footer>
+
+<script>
+// ── DADOS INJETADOS PELO PYTHON ──────────────────────────────────────────────
+const DATA_SDD_CAL  = [{"svc": "EPE2", "cal": 10}, {"svc": "SAL1", "cal": 21}, {"svc": "SBA1", "cal": 112}, {"svc": "SBA2", "cal": 31}, {"svc": "SBA3", "cal": 18}, {"svc": "SBA6", "cal": 129}, {"svc": "SCE1", "cal": 163}, {"svc": "SC_ZS", "cal": 33}, {"svc": "SDF1", "cal": 49}, {"svc": "SDF2", "cal": 12}, {"svc": "SES1", "cal": 58}, {"svc": "SGO1", "cal": 109}, {"svc": "SGO2", "cal": 9}, {"svc": "SJP1", "cal": 26}, {"svc": "SMG1", "cal": 28}, {"svc": "SMG10", "cal": 26}, {"svc": "SMG11", "cal": 43}, {"svc": "SMG14", "cal": 42}, {"svc": "SMG15", "cal": 42}, {"svc": "SMG2", "cal": 22}, {"svc": "SMG3", "cal": 20}, {"svc": "SMG4", "cal": 32}, {"svc": "SMG5", "cal": 10}, {"svc": "SMG6", "cal": 11}, {"svc": "SMG8", "cal": 59}, {"svc": "SMG9", "cal": 55}, {"svc": "SMN1", "cal": 10}, {"svc": "SMR1", "cal": 22}, {"svc": "SMS1", "cal": 10}, {"svc": "SPA1", "cal": 40}, {"svc": "SPE1", "cal": 104}, {"svc": "SPI1", "cal": 22}, {"svc": "SPR1", "cal": 75}, {"svc": "SPR2", "cal": 14}, {"svc": "SPR3", "cal": 9}, {"svc": "SPR4", "cal": 11}, {"svc": "SPR5", "cal": 22}, {"svc": "SPR6", "cal": 76}, {"svc": "SPR7", "cal": 28}, {"svc": "SPR8", "cal": 24}, {"svc": "SRJ1", "cal": 26}, {"svc": "SRJ10", "cal": 45}, {"svc": "SRJ12", "cal": 20}, {"svc": "SRJ2", "cal": 8}, {"svc": "SRJ3", "cal": 27}, {"svc": "SRJ4", "cal": 36}, {"svc": "SRJ5", "cal": 17}, {"svc": "SRJ6", "cal": 15}, {"svc": "SRJ8", "cal": 21}, {"svc": "SRJ9", "cal": 9}, {"svc": "SRN1", "cal": 36}, {"svc": "SRS1", "cal": 10}, {"svc": "SRS3", "cal": 14}, {"svc": "SRS4", "cal": 29}, {"svc": "SRS5", "cal": 16}, {"svc": "SRS7", "cal": 21}, {"svc": "SRS8", "cal": 59}, {"svc": "SRS9", "cal": 14}, {"svc": "SSC1", "cal": 38}, {"svc": "SSC2", "cal": 82}, {"svc": "SSC3", "cal": 69}, {"svc": "SSC4", "cal": 44}, {"svc": "SSC5", "cal": 60}, {"svc": "SSC8", "cal": 25}, {"svc": "SSC9", "cal": 35}, {"svc": "SSE1", "cal": 18}, {"svc": "SSP11", "cal": 8}, {"svc": "SSP12", "cal": 27}, {"svc": "SSP13", "cal": 6}, {"svc": "SSP15", "cal": 50}, {"svc": "SSP17", "cal": 37}, {"svc": "SSP18", "cal": 46}, {"svc": "SSP20", "cal": 61}, {"svc": "SSP21", "cal": 12}, {"svc": "SSP22", "cal": 15}, {"svc": "SSP23", "cal": 117}, {"svc": "SSP24", "cal": 17}, {"svc": "SSP25", "cal": 44}, {"svc": "SSP26", "cal": 5}, {"svc": "SSP27", "cal": 23}, {"svc": "SSP28", "cal": 3}, {"svc": "SSP29", "cal": 69}, {"svc": "SSP3", "cal": 13}, {"svc": "SSP30", "cal": 36}, {"svc": "SSP34", "cal": 87}, {"svc": "SSP36", "cal": 32}, {"svc": "SSP38", "cal": 92}, {"svc": "SSP39", "cal": 39}, {"svc": "SSP4", "cal": 71}, {"svc": "SSP45", "cal": 64}, {"svc": "SSP46", "cal": 13}, {"svc": "SSP48", "cal": 63}, {"svc": "SSP49", "cal": 19}, {"svc": "SSP5", "cal": 69}, {"svc": "SSP6", "cal": 50}, {"svc": "SSP7", "cal": 38}, {"svc": "SSP8", "cal": 92}, {"svc": "SSP9", "cal": 58}];
+const DATA_SDD_EXEC = [{"svc": "SAG1", "total": 46, "em_andamento": 15, "finalizadas": 31, "primeiro_inicio": "11:50", "ultimo_inicio": "13:59"}, {"svc": "SAL1", "total": 26, "em_andamento": 1, "finalizadas": 25, "primeiro_inicio": "06:04", "ultimo_inicio": "17:32"}, {"svc": "SAN1", "total": 6, "em_andamento": 0, "finalizadas": 6, "primeiro_inicio": "12:44", "ultimo_inicio": "13:35"}, {"svc": "SBA1", "total": 96, "em_andamento": 2, "finalizadas": 94, "primeiro_inicio": "07:19", "ultimo_inicio": "16:45"}, {"svc": "SBA2", "total": 23, "em_andamento": 2, "finalizadas": 21, "primeiro_inicio": "06:29", "ultimo_inicio": "09:37"}, {"svc": "SBA3", "total": 22, "em_andamento": 0, "finalizadas": 22, "primeiro_inicio": "05:23", "ultimo_inicio": "08:24"}, {"svc": "SBA6", "total": 106, "em_andamento": 1, "finalizadas": 105, "primeiro_inicio": "07:13", "ultimo_inicio": "16:49"}, {"svc": "SBA7", "total": 2, "em_andamento": 1, "finalizadas": 1, "primeiro_inicio": "07:16", "ultimo_inicio": "09:08"}, {"svc": "SBB2", "total": 1, "em_andamento": 0, "finalizadas": 1, "primeiro_inicio": "10:46", "ultimo_inicio": "10:46"}, {"svc": "SBJ1", "total": 75, "em_andamento": 11, "finalizadas": 64, "primeiro_inicio": "11:21", "ultimo_inicio": "13:50"}, {"svc": "SBU1", "total": 11, "em_andamento": 0, "finalizadas": 11, "primeiro_inicio": "11:06", "ultimo_inicio": "11:33"}, {"svc": "SBU2", "total": 14, "em_andamento": 0, "finalizadas": 14, "primeiro_inicio": "08:23", "ultimo_inicio": "10:21"}, {"svc": "SBU3", "total": 12, "em_andamento": 0, "finalizadas": 12, "primeiro_inicio": "07:44", "ultimo_inicio": "11:59"}, {"svc": "SCC1", "total": 9, "em_andamento": 0, "finalizadas": 9, "primeiro_inicio": "08:51", "ultimo_inicio": "13:15"}, {"svc": "SCD1", "total": 5, "em_andamento": 0, "finalizadas": 5, "primeiro_inicio": "06:57", "ultimo_inicio": "10:25"}, {"svc": "SCE1", "total": 157, "em_andamento": 3, "finalizadas": 154, "primeiro_inicio": "06:22", "ultimo_inicio": "17:06"}, {"svc": "SCF2", "total": 11, "em_andamento": 0, "finalizadas": 11, "primeiro_inicio": "09:29", "ultimo_inicio": "09:38"}, {"svc": "SCG1", "total": 9, "em_andamento": 0, "finalizadas": 9, "primeiro_inicio": "10:57", "ultimo_inicio": "11:41"}, {"svc": "SCH1", "total": 17, "em_andamento": 4, "finalizadas": 13, "primeiro_inicio": "11:17", "ultimo_inicio": "14:30"}, {"svc": "SCJ1", "total": 29, "em_andamento": 11, "finalizadas": 18, "primeiro_inicio": "07:16", "ultimo_inicio": "14:30"}, {"svc": "SCL1", "total": 1, "em_andamento": 0, "finalizadas": 1, "primeiro_inicio": "11:57", "ultimo_inicio": "11:57"}, {"svc": "SCM1", "total": 11, "em_andamento": 0, "finalizadas": 11, "primeiro_inicio": "06:59", "ultimo_inicio": "12:52"}, {"svc": "SCN1", "total": 37, "em_andamento": 26, "finalizadas": 11, "primeiro_inicio": "10:18", "ultimo_inicio": "15:36"}, {"svc": "SCO1", "total": 33, "em_andamento": 0, "finalizadas": 33, "primeiro_inicio": "13:48", "ultimo_inicio": "14:03"}, {"svc": "SCP1", "total": 28, "em_andamento": 8, "finalizadas": 20, "primeiro_inicio": "09:24", "ultimo_inicio": "13:50"}, {"svc": "SCQ1", "total": 25, "em_andamento": 6, "finalizadas": 19, "primeiro_inicio": "10:05", "ultimo_inicio": "12:47"}, {"svc": "SCT1", "total": 20, "em_andamento": 0, "finalizadas": 20, "primeiro_inicio": "05:49", "ultimo_inicio": "08:09"}, {"svc": "SCU1", "total": 14, "em_andamento": 0, "finalizadas": 14, "primeiro_inicio": "06:52", "ultimo_inicio": "11:16"}, {"svc": "SCV1", "total": 98, "em_andamento": 1, "finalizadas": 97, "primeiro_inicio": "07:16", "ultimo_inicio": "13:14"}, {"svc": "SCX1", "total": 13, "em_andamento": 0, "finalizadas": 13, "primeiro_inicio": "06:03", "ultimo_inicio": "07:12"}, {"svc": "SCY1", "total": 35, "em_andamento": 5, "finalizadas": 30, "primeiro_inicio": "09:02", "ultimo_inicio": "14:00"}, {"svc": "SCZ1", "total": 1, "em_andamento": 0, "finalizadas": 1, "primeiro_inicio": "08:57", "ultimo_inicio": "08:57"}, {"svc": "SC_ZS", "total": 36, "em_andamento": 4, "finalizadas": 32, "primeiro_inicio": "08:31", "ultimo_inicio": "16:51"}, {"svc": "SDC1", "total": 44, "em_andamento": 11, "finalizadas": 33, "primeiro_inicio": "11:49", "ultimo_inicio": "13:43"}, {"svc": "SDF1", "total": 50, "em_andamento": 1, "finalizadas": 49, "primeiro_inicio": "06:14", "ultimo_inicio": "17:15"}, {"svc": "SDF2", "total": 14, "em_andamento": 0, "finalizadas": 14, "primeiro_inicio": "13:42", "ultimo_inicio": "14:56"}, {"svc": "SDG1", "total": 18, "em_andamento": 5, "finalizadas": 13, "primeiro_inicio": "07:19", "ultimo_inicio": "14:42"}, {"svc": "SEN1", "total": 1, "em_andamento": 0, "finalizadas": 1, "primeiro_inicio": "10:28", "ultimo_inicio": "10:28"}, {"svc": "SES1", "total": 56, "em_andamento": 1, "finalizadas": 55, "primeiro_inicio": "09:20", "ultimo_inicio": "17:06"}, {"svc": "SES2", "total": 1, "em_andamento": 0, "finalizadas": 1, "primeiro_inicio": "07:12", "ultimo_inicio": "07:12"}, {"svc": "SGD1", "total": 106, "em_andamento": 6, "finalizadas": 100, "primeiro_inicio": "07:27", "ultimo_inicio": "13:51"}, {"svc": "SGD2", "total": 52, "em_andamento": 9, "finalizadas": 43, "primeiro_inicio": "08:56", "ultimo_inicio": "13:53"}, {"svc": "SGD3", "total": 92, "em_andamento": 59, "finalizadas": 33, "primeiro_inicio": "08:02", "ultimo_inicio": "14:42"}, {"svc": "SGO1", "total": 115, "em_andamento": 0, "finalizadas": 115, "primeiro_inicio": "08:21", "ultimo_inicio": "16:57"}, {"svc": "SGO2", "total": 11, "em_andamento": 0, "finalizadas": 11, "primeiro_inicio": "06:29", "ultimo_inicio": "14:13"}, {"svc": "SHM1", "total": 14, "em_andamento": 1, "finalizadas": 13, "primeiro_inicio": "08:31", "ultimo_inicio": "12:49"}, {"svc": "SHP1", "total": 86, "em_andamento": 18, "finalizadas": 68, "primeiro_inicio": "05:55", "ultimo_inicio": "13:47"}, {"svc": "SJA1", "total": 40, "em_andamento": 0, "finalizadas": 40, "primeiro_inicio": "05:15", "ultimo_inicio": "10:53"}, {"svc": "SJD1", "total": 14, "em_andamento": 2, "finalizadas": 12, "primeiro_inicio": "07:29", "ultimo_inicio": "08:00"}, {"svc": "SJP1", "total": 23, "em_andamento": 0, "finalizadas": 23, "primeiro_inicio": "06:25", "ultimo_inicio": "15:13"}, {"svc": "SLE1", "total": 53, "em_andamento": 2, "finalizadas": 51, "primeiro_inicio": "09:36", "ultimo_inicio": "13:50"}, {"svc": "SLP1", "total": 15, "em_andamento": 8, "finalizadas": 7, "primeiro_inicio": "07:02", "ultimo_inicio": "13:26"}, {"svc": "SLV1", "total": 21, "em_andamento": 0, "finalizadas": 21, "primeiro_inicio": "10:36", "ultimo_inicio": "11:40"}, {"svc": "SLW1", "total": 45, "em_andamento": 25, "finalizadas": 20, "primeiro_inicio": "10:16", "ultimo_inicio": "14:40"}, {"svc": "SLZ1", "total": 10, "em_andamento": 0, "finalizadas": 10, "primeiro_inicio": "07:20", "ultimo_inicio": "10:19"}, {"svc": "SMA1", "total": 14, "em_andamento": 0, "finalizadas": 14, "primeiro_inicio": "12:02", "ultimo_inicio": "12:27"}, {"svc": "SMD1", "total": 40, "em_andamento": 0, "finalizadas": 40, "primeiro_inicio": "04:33", "ultimo_inicio": "12:22"}, {"svc": "SME1", "total": 5, "em_andamento": 0, "finalizadas": 5, "primeiro_inicio": "14:03", "ultimo_inicio": "14:05"}, {"svc": "SMG1", "total": 34, "em_andamento": 3, "finalizadas": 31, "primeiro_inicio": "06:12", "ultimo_inicio": "15:48"}, {"svc": "SMG10", "total": 31, "em_andamento": 0, "finalizadas": 31, "primeiro_inicio": "11:50", "ultimo_inicio": "13:26"}, {"svc": "SMG11", "total": 28, "em_andamento": 0, "finalizadas": 28, "primeiro_inicio": "05:34", "ultimo_inicio": "10:00"}, {"svc": "SMG14", "total": 51, "em_andamento": 0, "finalizadas": 51, "primeiro_inicio": "06:31", "ultimo_inicio": "15:58"}, {"svc": "SMG15", "total": 33, "em_andamento": 0, "finalizadas": 33, "primeiro_inicio": "08:28", "ultimo_inicio": "17:05"}, {"svc": "SMG2", "total": 29, "em_andamento": 0, "finalizadas": 29, "primeiro_inicio": "08:52", "ultimo_inicio": "13:49"}, {"svc": "SMG3", "total": 14, "em_andamento": 0, "finalizadas": 14, "primeiro_inicio": "10:03", "ultimo_inicio": "17:30"}, {"svc": "SMG4", "total": 29, "em_andamento": 0, "finalizadas": 29, "primeiro_inicio": "08:13", "ultimo_inicio": "10:56"}, {"svc": "SMG5", "total": 10, "em_andamento": 0, "finalizadas": 10, "primeiro_inicio": "09:02", "ultimo_inicio": "15:44"}, {"svc": "SMG6", "total": 19, "em_andamento": 0, "finalizadas": 19, "primeiro_inicio": "07:47", "ultimo_inicio": "08:49"}, {"svc": "SMG8", "total": 66, "em_andamento": 2, "finalizadas": 64, "primeiro_inicio": "05:58", "ultimo_inicio": "16:00"}, {"svc": "SMG9", "total": 53, "em_andamento": 0, "finalizadas": 53, "primeiro_inicio": "08:21", "ultimo_inicio": "15:52"}, {"svc": "SML1", "total": 24, "em_andamento": 0, "finalizadas": 24, "primeiro_inicio": "08:54", "ultimo_inicio": "11:53"}, {"svc": "SMN1", "total": 12, "em_andamento": 0, "finalizadas": 12, "primeiro_inicio": "06:43", "ultimo_inicio": "16:08"}, {"svc": "SMO1", "total": 14, "em_andamento": 0, "finalizadas": 14, "primeiro_inicio": "06:25", "ultimo_inicio": "08:13"}, {"svc": "SMR1", "total": 15, "em_andamento": 0, "finalizadas": 15, "primeiro_inicio": "06:13", "ultimo_inicio": "15:01"}, {"svc": "SMS1", "total": 11, "em_andamento": 0, "finalizadas": 11, "primeiro_inicio": "05:49", "ultimo_inicio": "06:32"}, {"svc": "SMT1", "total": 72, "em_andamento": 41, "finalizadas": 31, "primeiro_inicio": "05:45", "ultimo_inicio": "14:40"}, {"svc": "SMT2", "total": 44, "em_andamento": 25, "finalizadas": 19, "primeiro_inicio": "10:36", "ultimo_inicio": "14:43"}, {"svc": "SMV1", "total": 7, "em_andamento": 0, "finalizadas": 7, "primeiro_inicio": "08:50", "ultimo_inicio": "10:48"}, {"svc": "SMX10", "total": 20, "em_andamento": 0, "finalizadas": 20, "primeiro_inicio": "07:05", "ultimo_inicio": "11:55"}, {"svc": "SMX11", "total": 52, "em_andamento": 24, "finalizadas": 28, "primeiro_inicio": "07:05", "ultimo_inicio": "14:40"}, {"svc": "SMX2", "total": 49, "em_andamento": 14, "finalizadas": 35, "primeiro_inicio": "06:32", "ultimo_inicio": "14:00"}, {"svc": "SMX3", "total": 22, "em_andamento": 0, "finalizadas": 22, "primeiro_inicio": "10:50", "ultimo_inicio": "13:17"}, {"svc": "SMX4", "total": 65, "em_andamento": 21, "finalizadas": 44, "primeiro_inicio": "06:46", "ultimo_inicio": "14:28"}, {"svc": "SMX5", "total": 75, "em_andamento": 29, "finalizadas": 46, "primeiro_inicio": "07:17", "ultimo_inicio": "13:58"}, {"svc": "SMX7", "total": 37, "em_andamento": 12, "finalizadas": 25, "primeiro_inicio": "06:17", "ultimo_inicio": "14:16"}, {"svc": "SMX8", "total": 50, "em_andamento": 3, "finalizadas": 47, "primeiro_inicio": "07:38", "ultimo_inicio": "12:51"}, {"svc": "SMX9", "total": 96, "em_andamento": 35, "finalizadas": 61, "primeiro_inicio": "06:58", "ultimo_inicio": "14:17"}, {"svc": "SNG1", "total": 3, "em_andamento": 0, "finalizadas": 3, "primeiro_inicio": "11:04", "ultimo_inicio": "11:08"}, {"svc": "SOX1", "total": 29, "em_andamento": 3, "finalizadas": 26, "primeiro_inicio": "06:12", "ultimo_inicio": "14:22"}, {"svc": "SPA1", "total": 41, "em_andamento": 0, "finalizadas": 41, "primeiro_inicio": "05:22", "ultimo_inicio": "08:34"}, {"svc": "SPB1", "total": 66, "em_andamento": 12, "finalizadas": 54, "primeiro_inicio": "06:32", "ultimo_inicio": "13:29"}, {"svc": "SPD1", "total": 12, "em_andamento": 0, "finalizadas": 12, "primeiro_inicio": "10:34", "ultimo_inicio": "11:42"}, {"svc": "SPE1", "total": 115, "em_andamento": 5, "finalizadas": 110, "primeiro_inicio": "07:08", "ultimo_inicio": "17:20"}, {"svc": "SPI1", "total": 23, "em_andamento": 0, "finalizadas": 23, "primeiro_inicio": "06:15", "ultimo_inicio": "14:50"}, {"svc": "SPR1", "total": 66, "em_andamento": 0, "finalizadas": 66, "primeiro_inicio": "06:35", "ultimo_inicio": "16:55"}, {"svc": "SPR2", "total": 28, "em_andamento": 0, "finalizadas": 28, "primeiro_inicio": "08:12", "ultimo_inicio": "14:43"}, {"svc": "SPR3", "total": 11, "em_andamento": 0, "finalizadas": 11, "primeiro_inicio": "06:51", "ultimo_inicio": "09:14"}, {"svc": "SPR4", "total": 11, "em_andamento": 0, "finalizadas": 11, "primeiro_inicio": "06:46", "ultimo_inicio": "08:21"}, {"svc": "SPR5", "total": 17, "em_andamento": 0, "finalizadas": 17, "primeiro_inicio": "08:48", "ultimo_inicio": "14:02"}, {"svc": "SPR6", "total": 55, "em_andamento": 1, "finalizadas": 54, "primeiro_inicio": "06:02", "ultimo_inicio": "14:06"}, {"svc": "SPR7", "total": 20, "em_andamento": 0, "finalizadas": 20, "primeiro_inicio": "08:33", "ultimo_inicio": "15:48"}, {"svc": "SPR8", "total": 64, "em_andamento": 0, "finalizadas": 64, "primeiro_inicio": "08:02", "ultimo_inicio": "16:30"}, {"svc": "SPV1", "total": 9, "em_andamento": 0, "finalizadas": 9, "primeiro_inicio": "10:53", "ultimo_inicio": "11:05"}, {"svc": "SPY1", "total": 19, "em_andamento": 7, "finalizadas": 12, "primeiro_inicio": "10:16", "ultimo_inicio": "14:46"}, {"svc": "SPZ1", "total": 50, "em_andamento": 47, "finalizadas": 3, "primeiro_inicio": "12:46", "ultimo_inicio": "14:30"}, {"svc": "SQR1", "total": 35, "em_andamento": 15, "finalizadas": 20, "primeiro_inicio": "09:51", "ultimo_inicio": "14:34"}, {"svc": "SQR2", "total": 27, "em_andamento": 0, "finalizadas": 27, "primeiro_inicio": "09:29", "ultimo_inicio": "11:17"}, {"svc": "SRC1", "total": 2, "em_andamento": 0, "finalizadas": 2, "primeiro_inicio": "12:38", "ultimo_inicio": "12:54"}, {"svc": "SRJ1", "total": 16, "em_andamento": 2, "finalizadas": 14, "primeiro_inicio": "13:17", "ultimo_inicio": "15:09"}, {"svc": "SRJ10", "total": 44, "em_andamento": 1, "finalizadas": 43, "primeiro_inicio": "06:36", "ultimo_inicio": "17:22"}, {"svc": "SRJ12", "total": 21, "em_andamento": 0, "finalizadas": 21, "primeiro_inicio": "05:54", "ultimo_inicio": "15:06"}, {"svc": "SRJ13", "total": 1, "em_andamento": 0, "finalizadas": 1, "primeiro_inicio": "15:21", "ultimo_inicio": "15:21"}, {"svc": "SRJ2", "total": 10, "em_andamento": 0, "finalizadas": 10, "primeiro_inicio": "08:24", "ultimo_inicio": "14:04"}, {"svc": "SRJ3", "total": 22, "em_andamento": 1, "finalizadas": 21, "primeiro_inicio": "08:23", "ultimo_inicio": "14:12"}, {"svc": "SRJ4", "total": 43, "em_andamento": 0, "finalizadas": 43, "primeiro_inicio": "05:59", "ultimo_inicio": "15:22"}, {"svc": "SRJ5", "total": 17, "em_andamento": 1, "finalizadas": 16, "primeiro_inicio": "09:02", "ultimo_inicio": "16:58"}, {"svc": "SRJ6", "total": 14, "em_andamento": 0, "finalizadas": 14, "primeiro_inicio": "06:33", "ultimo_inicio": "14:40"}, {"svc": "SRJ8", "total": 42, "em_andamento": 0, "finalizadas": 42, "primeiro_inicio": "06:56", "ultimo_inicio": "14:41"}, {"svc": "SRJ9", "total": 9, "em_andamento": 0, "finalizadas": 9, "primeiro_inicio": "07:47", "ultimo_inicio": "16:56"}, {"svc": "SRM1", "total": 2, "em_andamento": 1, "finalizadas": 1, "primeiro_inicio": "13:19", "ultimo_inicio": "17:17"}, {"svc": "SRN1", "total": 33, "em_andamento": 0, "finalizadas": 33, "primeiro_inicio": "05:44", "ultimo_inicio": "12:16"}, {"svc": "SRO1", "total": 40, "em_andamento": 0, "finalizadas": 40, "primeiro_inicio": "11:19", "ultimo_inicio": "11:51"}, {"svc": "SRS1", "total": 9, "em_andamento": 2, "finalizadas": 7, "primeiro_inicio": "05:29", "ultimo_inicio": "17:31"}, {"svc": "SRS3", "total": 14, "em_andamento": 0, "finalizadas": 14, "primeiro_inicio": "09:26", "ultimo_inicio": "11:31"}, {"svc": "SRS4", "total": 20, "em_andamento": 0, "finalizadas": 20, "primeiro_inicio": "07:34", "ultimo_inicio": "14:42"}, {"svc": "SRS5", "total": 12, "em_andamento": 0, "finalizadas": 12, "primeiro_inicio": "07:33", "ultimo_inicio": "17:18"}, {"svc": "SRS7", "total": 18, "em_andamento": 0, "finalizadas": 18, "primeiro_inicio": "06:23", "ultimo_inicio": "06:56"}, {"svc": "SRS8", "total": 63, "em_andamento": 1, "finalizadas": 62, "primeiro_inicio": "06:58", "ultimo_inicio": "16:57"}, {"svc": "SRS9", "total": 1, "em_andamento": 0, "finalizadas": 1, "primeiro_inicio": "14:43", "ultimo_inicio": "14:43"}, {"svc": "SRU1", "total": 1, "em_andamento": 0, "finalizadas": 1, "primeiro_inicio": "08:28", "ultimo_inicio": "08:28"}, {"svc": "SRX1", "total": 34, "em_andamento": 4, "finalizadas": 30, "primeiro_inicio": "11:50", "ultimo_inicio": "14:52"}, {"svc": "SSC1", "total": 49, "em_andamento": 1, "finalizadas": 48, "primeiro_inicio": "07:02", "ultimo_inicio": "17:00"}, {"svc": "SSC2", "total": 67, "em_andamento": 0, "finalizadas": 67, "primeiro_inicio": "06:02", "ultimo_inicio": "15:39"}, {"svc": "SSC3", "total": 71, "em_andamento": 4, "finalizadas": 67, "primeiro_inicio": "07:34", "ultimo_inicio": "17:01"}, {"svc": "SSC4", "total": 24, "em_andamento": 0, "finalizadas": 24, "primeiro_inicio": "06:21", "ultimo_inicio": "15:16"}, {"svc": "SSC5", "total": 46, "em_andamento": 0, "finalizadas": 46, "primeiro_inicio": "07:59", "ultimo_inicio": "16:33"}, {"svc": "SSC8", "total": 26, "em_andamento": 0, "finalizadas": 26, "primeiro_inicio": "06:05", "ultimo_inicio": "15:47"}, {"svc": "SSC9", "total": 35, "em_andamento": 0, "finalizadas": 35, "primeiro_inicio": "08:59", "ultimo_inicio": "16:04"}, {"svc": "SSE1", "total": 15, "em_andamento": 0, "finalizadas": 15, "primeiro_inicio": "05:59", "ultimo_inicio": "09:12"}, {"svc": "SSL1", "total": 16, "em_andamento": 13, "finalizadas": 3, "primeiro_inicio": "09:26", "ultimo_inicio": "13:50"}, {"svc": "SSP11", "total": 11, "em_andamento": 0, "finalizadas": 11, "primeiro_inicio": "10:19", "ultimo_inicio": "11:10"}, {"svc": "SSP12", "total": 28, "em_andamento": 0, "finalizadas": 28, "primeiro_inicio": "08:10", "ultimo_inicio": "14:36"}, {"svc": "SSP13", "total": 7, "em_andamento": 0, "finalizadas": 7, "primeiro_inicio": "08:37", "ultimo_inicio": "12:45"}, {"svc": "SSP15", "total": 48, "em_andamento": 2, "finalizadas": 46, "primeiro_inicio": "06:03", "ultimo_inicio": "17:18"}, {"svc": "SSP17", "total": 29, "em_andamento": 1, "finalizadas": 28, "primeiro_inicio": "07:04", "ultimo_inicio": "16:50"}, {"svc": "SSP18", "total": 38, "em_andamento": 6, "finalizadas": 32, "primeiro_inicio": "09:25", "ultimo_inicio": "17:05"}, {"svc": "SSP20", "total": 56, "em_andamento": 2, "finalizadas": 54, "primeiro_inicio": "09:13", "ultimo_inicio": "17:03"}, {"svc": "SSP21", "total": 8, "em_andamento": 1, "finalizadas": 7, "primeiro_inicio": "08:53", "ultimo_inicio": "17:10"}, {"svc": "SSP22", "total": 17, "em_andamento": 0, "finalizadas": 17, "primeiro_inicio": "09:12", "ultimo_inicio": "16:28"}, {"svc": "SSP23", "total": 141, "em_andamento": 31, "finalizadas": 110, "primeiro_inicio": "08:57", "ultimo_inicio": "17:38"}, {"svc": "SSP24", "total": 18, "em_andamento": 2, "finalizadas": 16, "primeiro_inicio": "09:04", "ultimo_inicio": "16:12"}, {"svc": "SSP25", "total": 40, "em_andamento": 10, "finalizadas": 30, "primeiro_inicio": "08:17", "ultimo_inicio": "17:30"}, {"svc": "SSP26", "total": 5, "em_andamento": 0, "finalizadas": 5, "primeiro_inicio": "15:27", "ultimo_inicio": "15:45"}, {"svc": "SSP27", "total": 25, "em_andamento": 3, "finalizadas": 22, "primeiro_inicio": "12:56", "ultimo_inicio": "17:31"}, {"svc": "SSP28", "total": 3, "em_andamento": 0, "finalizadas": 3, "primeiro_inicio": "08:54", "ultimo_inicio": "09:20"}, {"svc": "SSP29", "total": 48, "em_andamento": 7, "finalizadas": 41, "primeiro_inicio": "13:20", "ultimo_inicio": "16:44"}, {"svc": "SSP3", "total": 16, "em_andamento": 5, "finalizadas": 11, "primeiro_inicio": "14:57", "ultimo_inicio": "17:07"}, {"svc": "SSP30", "total": 20, "em_andamento": 0, "finalizadas": 20, "primeiro_inicio": "08:50", "ultimo_inicio": "16:48"}, {"svc": "SSP34", "total": 81, "em_andamento": 26, "finalizadas": 55, "primeiro_inicio": "08:06", "ultimo_inicio": "17:25"}, {"svc": "SSP36", "total": 32, "em_andamento": 0, "finalizadas": 32, "primeiro_inicio": "08:14", "ultimo_inicio": "16:06"}, {"svc": "SSP37", "total": 6, "em_andamento": 1, "finalizadas": 5, "primeiro_inicio": "09:24", "ultimo_inicio": "17:00"}, {"svc": "SSP38", "total": 80, "em_andamento": 27, "finalizadas": 53, "primeiro_inicio": "08:00", "ultimo_inicio": "17:10"}, {"svc": "SSP39", "total": 41, "em_andamento": 8, "finalizadas": 33, "primeiro_inicio": "09:08", "ultimo_inicio": "17:29"}, {"svc": "SSP4", "total": 71, "em_andamento": 19, "finalizadas": 52, "primeiro_inicio": "09:04", "ultimo_inicio": "17:23"}, {"svc": "SSP40", "total": 2, "em_andamento": 0, "finalizadas": 2, "primeiro_inicio": "09:49", "ultimo_inicio": "09:54"}, {"svc": "SSP45", "total": 48, "em_andamento": 0, "finalizadas": 48, "primeiro_inicio": "08:15", "ultimo_inicio": "16:37"}, {"svc": "SSP46", "total": 5, "em_andamento": 0, "finalizadas": 5, "primeiro_inicio": "09:12", "ultimo_inicio": "12:51"}, {"svc": "SSP48", "total": 42, "em_andamento": 5, "finalizadas": 37, "primeiro_inicio": "08:20", "ultimo_inicio": "16:42"}, {"svc": "SSP49", "total": 10, "em_andamento": 0, "finalizadas": 10, "primeiro_inicio": "09:22", "ultimo_inicio": "16:06"}, {"svc": "SSP5", "total": 88, "em_andamento": 6, "finalizadas": 82, "primeiro_inicio": "08:29", "ultimo_inicio": "17:39"}, {"svc": "SSP6", "total": 33, "em_andamento": 0, "finalizadas": 33, "primeiro_inicio": "04:39", "ultimo_inicio": "16:14"}, {"svc": "SSP7", "total": 37, "em_andamento": 0, "finalizadas": 37, "primeiro_inicio": "08:26", "ultimo_inicio": "14:18"}, {"svc": "SSP8", "total": 88, "em_andamento": 9, "finalizadas": 79, "primeiro_inicio": "08:31", "ultimo_inicio": "17:37"}, {"svc": "SSP9", "total": 46, "em_andamento": 4, "finalizadas": 42, "primeiro_inicio": "09:51", "ultimo_inicio": "16:57"}, {"svc": "STA1", "total": 33, "em_andamento": 17, "finalizadas": 16, "primeiro_inicio": "10:24", "ultimo_inicio": "14:37"}, {"svc": "STG1", "total": 101, "em_andamento": 24, "finalizadas": 77, "primeiro_inicio": "05:56", "ultimo_inicio": "14:20"}, {"svc": "STJ1", "total": 6, "em_andamento": 0, "finalizadas": 6, "primeiro_inicio": "08:58", "ultimo_inicio": "09:22"}, {"svc": "STL1", "total": 83, "em_andamento": 0, "finalizadas": 83, "primeiro_inicio": "06:58", "ultimo_inicio": "11:53"}, {"svc": "STL2", "total": 4, "em_andamento": 0, "finalizadas": 4, "primeiro_inicio": "07:03", "ultimo_inicio": "07:05"}, {"svc": "STN1", "total": 11, "em_andamento": 1, "finalizadas": 10, "primeiro_inicio": "07:17", "ultimo_inicio": "12:52"}, {"svc": "STP1", "total": 8, "em_andamento": 0, "finalizadas": 8, "primeiro_inicio": "09:01", "ultimo_inicio": "10:23"}, {"svc": "STR1", "total": 28, "em_andamento": 11, "finalizadas": 17, "primeiro_inicio": "10:35", "ultimo_inicio": "14:40"}, {"svc": "STT1", "total": 21, "em_andamento": 0, "finalizadas": 21, "primeiro_inicio": "07:19", "ultimo_inicio": "11:59"}, {"svc": "STX1", "total": 34, "em_andamento": 0, "finalizadas": 34, "primeiro_inicio": "09:44", "ultimo_inicio": "11:21"}, {"svc": "SUR1", "total": 9, "em_andamento": 2, "finalizadas": 7, "primeiro_inicio": "07:04", "ultimo_inicio": "12:10"}, {"svc": "SVH1", "total": 99, "em_andamento": 29, "finalizadas": 70, "primeiro_inicio": "06:05", "ultimo_inicio": "14:16"}, {"svc": "SVM1", "total": 3, "em_andamento": 0, "finalizadas": 3, "primeiro_inicio": "09:44", "ultimo_inicio": "11:28"}, {"svc": "SVP3", "total": 1, "em_andamento": 0, "finalizadas": 1, "primeiro_inicio": "13:08", "ultimo_inicio": "13:08"}, {"svc": "SVR1", "total": 29, "em_andamento": 0, "finalizadas": 29, "primeiro_inicio": "11:04", "ultimo_inicio": "11:48"}, {"svc": "SXL1", "total": 18, "em_andamento": 6, "finalizadas": 12, "primeiro_inicio": "08:47", "ultimo_inicio": "13:43"}, {"svc": "SZC1", "total": 13, "em_andamento": 13, "finalizadas": 0, "primeiro_inicio": "14:12", "ultimo_inicio": "14:41"}, {"svc": "SZL1", "total": 21, "em_andamento": 3, "finalizadas": 18, "primeiro_inicio": "12:48", "ultimo_inicio": "13:44"}, {"svc": "SZM1", "total": 7, "em_andamento": 0, "finalizadas": 7, "primeiro_inicio": "09:32", "ultimo_inicio": "12:05"}];
+const DATA_FF       = [];
+const DATA_REAL     = [];
+const DATA_FM       = [{"placa": "SDD-NQO2563", "tipo_cal": "sdd", "svc": "BRXCE1", "operador": "AC2 LOGISTICA", "placa_orig": "SDD-NQO2563", "inicio": "14:03", "fim": null, "em_andamento": true, "coletados": 342, "a_coletar": 360, "planejado": true}, {"placa": "SDD-KPH5F15", "tipo_cal": "sdd", "svc": "CAMPINAS", "operador": "Kangu Logistics", "placa_orig": "SDD-KPH5F15", "inicio": "14:22", "fim": null, "em_andamento": true, "coletados": 167, "a_coletar": 182, "planejado": true}];
+const EARLY_RATIO   = 0.8;
+const GERADO_EM     = "19:30 – 31/03/2026";
+
+// ── SETUP INICIAL ─────────────────────────────────────────────────────────────
+document.getElementById('hora-atualizacao').textContent = GERADO_EM;
+document.getElementById('data-hoje').textContent =
+  new Date().toLocaleDateString('pt-BR', {weekday:'long', day:'2-digit', month:'long', year:'numeric'});
+
+// ── TABS ──────────────────────────────────────────────────────────────────────
+function switchTab(id, el) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('panel-' + id).classList.add('active');
+  el.classList.add('active');
+  if (id === 'resumo') buildResumo();
+}
+
+// ── SDD ───────────────────────────────────────────────────────────────────────
+function buildSDD() {
+  const calMap = {};
+  DATA_SDD_CAL.forEach(r => { calMap[r.svc] = parseInt(r.cal || 0); });
+
+  const execMap = {};
+  DATA_SDD_EXEC.forEach(r => { execMap[r.svc] = r; });
+
+  // Merge: todos os SVCs que aparecem em cal ou exec
+  const svcs = [...new Set([...Object.keys(calMap), ...Object.keys(execMap)])].sort();
+
+  let totalCal = 0, totalIniciadas = 0, totalAndamento = 0, totalFin = 0;
+  const rows = [];
+
+  svcs.forEach(svc => {
+    const cal   = calMap[svc] || 0;
+    const ex    = execMap[svc] || {};
+    const total = parseInt(ex.total || 0);
+    const andam = parseInt(ex.em_andamento || 0);
+    const fin   = parseInt(ex.finalizadas  || 0);
+    totalCal       += cal;
+    totalIniciadas += total;
+    totalAndamento += andam;
+    totalFin       += fin;
+    rows.push({ svc, cal, total, andam, fin, ex });
+  });
+
+  // KPIs
+  const pct = totalCal > 0 ? Math.round(totalIniciadas / totalCal * 100) : 0;
+  document.getElementById('kpi-sdd').innerHTML = `
+    ${kpiCard('Calendarizadas', totalCal, '')}
+    ${kpiCard('Iniciadas', totalIniciadas, totalIniciadas >= totalCal ? 'green' : 'yellow')}
+    ${kpiCard('Em andamento', totalAndamento, 'yellow')}
+    ${kpiCard('Finalizadas', totalFin, 'green')}
+    ${kpiCard('% Iniciadas', pct + '%', pct >= 80 ? 'green' : pct >= 50 ? 'yellow' : 'red')}
+  `;
+
+  // Tabela
+  const tbody = document.getElementById('tbody-sdd');
+  tbody.innerHTML = '';
+  rows.forEach(({ svc, cal, total, andam, fin, ex }) => {
+    const pctRow = cal > 0 ? Math.round(total / cal * 100) : 0;
+    const cls = pctRow >= 100 ? 'row-full' : pctRow > 0 ? 'row-partial' : 'row-none';
+    const fillCls = pctRow >= 100 ? 'full' : pctRow > 0 ? 'partial' : 'none';
+    const fillW = Math.min(pctRow, 100);
+    tbody.innerHTML += `
+      <tr class="${cls}">
+        <td><strong>${svc}</strong></td>
+        <td class="num">${cal}</td>
+        <td class="num"><strong>${total}</strong></td>
+        <td class="num">${andam > 0 ? `<span style="color:#1565C0;font-weight:600">${andam}</span>` : 0}</td>
+        <td class="num">${fin > 0 ? `<span style="color:var(--green);font-weight:600">${fin}</span>` : 0}</td>
+        <td class="num"><strong>${pctRow}%</strong></td>
+        <td class="progress-cell">
+          <div class="progress-bg"><div class="progress-fill ${fillCls}" style="width:${fillW}%"></div></div>
+          <div class="progress-label">${total} / ${cal}</div>
+        </td>
+        <td>${ex.primeiro_inicio || '–'}</td>
+        <td>${ex.ultimo_inicio || '–'}</td>
+      </tr>`;
+  });
+}
+
+// ── FF ────────────────────────────────────────────────────────────────────────
+const STATUS_LABEL = { finalizada:'Finalizada', em_andamento:'Em andamento', nao_iniciou:'Não iniciou' };
+
+function buildFF() {
+  // ── Enriquecer cada placa FF com seus dados de FM ─────────────────────────
+  const fmByPlate = {};
+  DATA_FM.filter(r => r.tipo_cal === 'ff').forEach(r => {
+    if (!fmByPlate[r.placa]) fmByPlate[r.placa] = [];
+    fmByPlate[r.placa].push(r);
+  });
+
+  DATA_FF.forEach(r => {
+    const fmRoutes = fmByPlate[r.placa] || [];
+    r._fm = fmRoutes;
+    r._fm_status = fmRoutes.length === 0 ? 'nao_iniciou'
+      : fmRoutes.some(f => f.em_andamento) ? 'em_andamento'
+      : 'finalizada';
+    r._fm_coletados = fmRoutes.reduce((s, f) => s + (f.coletados || 0), 0);
+    r._fm_a_coletar = fmRoutes.reduce((s, f) => s + (f.a_coletar || 0), 0);
+    // combinado: rodou se LM ou FM iniciaram
+    r._rodou    = r.status !== 'nao_iniciou' || r._fm_status !== 'nao_iniciou';
+    r._andando  = r.status === 'em_andamento' || r._fm_status === 'em_andamento';
+  });
+
+  // ── KPIs combinados LM + FM ───────────────────────────────────────────────
+  const total   = DATA_FF.length;
+  const rodou   = DATA_FF.filter(r => r._rodou).length;
+  const andando = DATA_FF.filter(r => r._andando).length;
+  const fin     = DATA_FF.filter(r => r._rodou && !r._andando).length;
+  const nao     = total - rodou;
+  const pctIni  = total > 0 ? Math.round(rodou / total * 100) : 0;
+
+  document.getElementById('kpi-ff').innerHTML = `
+    ${kpiCard('Calendarizadas', total, '')}
+    ${kpiCard('Rodando (LM+FM)', rodou, rodou > 0 ? 'green' : '')}
+    ${kpiCard('Em andamento', andando, andando > 0 ? 'yellow' : '')}
+    ${kpiCard('Finalizadas', fin, fin > 0 ? 'green' : '')}
+    ${kpiCard('Não iniciou', nao, nao === 0 ? 'green' : nao > total * .5 ? 'red' : 'yellow')}
+    ${kpiCard('% Aderência', pctIni + '%', pctIni >= 80 ? 'green' : pctIni >= 60 ? 'yellow' : 'red')}
+  `;
+
+  renderFF(DATA_FF);
+}
+
+const FF_PAGE = 200;
+let ffCurrentData = [];
+let ffShown = 0;
+
+function renderFF(data) {
+  ffCurrentData = data;
+  ffShown = 0;
+  const tbody = document.getElementById('tbody-ff');
+  tbody.innerHTML = '';
+  appendFF();
+}
+
+function appendFF() {
+  const tbody = document.getElementById('tbody-ff');
+  const chunk = ffCurrentData.slice(ffShown, ffShown + FF_PAGE);
+  const rows = chunk.map(r => {
+    const s   = r.status;
+    const fms = r._fm_status || 'nao_iniciou';
+    const fmFirstInicio = r._fm && r._fm.length > 0 ? (r._fm[0].inicio || '') : '';
+    const fmLabel = r._fm && r._fm.length > 1
+      ? `${STATUS_LABEL[fms]} (${r._fm.length} rotas)`
+      : STATUS_LABEL[fms];
+    // linha fica verde se rodou qualquer coisa
+    const trStyle = r._rodou
+      ? (r._andando ? 'background:#e3f2fd' : 'background:var(--green-l)')
+      : '';
+    return `<tr style="${trStyle}">
+      <td>${r.mlp || '–'}</td>
+      <td>${r.svc || '–'}</td>
+      <td><strong>${r.placa}</strong></td>
+      <td style="font-size:12px;color:#666">${r.cadastro || '–'}</td>
+      <td><span class="status ${s}">${STATUS_LABEL[s]}</span></td>
+      <td>${r.inicio || '–'}</td>
+      <td>${r.fim || '–'}</td>
+      <td class="num">${r.orh_real > 0 ? r.orh_real + 'h' : '–'}</td>
+      <td class="num">${r.orh_plan > 0 ? r.orh_plan + 'h' : '–'}</td>
+      <td><span class="status ${fms}">${fmLabel}</span></td>
+      <td class="num">${r._fm_coletados > 0 ? r._fm_coletados : '–'}</td>
+      <td class="num" style="color:#9E9E9E">${r._fm_a_coletar > 0 ? r._fm_a_coletar : '–'}</td>
+      <td style="font-size:12px">${r.operador || r._fm?.[0]?.operador || '–'}</td>
+    </tr>`;
+  }).join('');
+  tbody.insertAdjacentHTML('beforeend', rows);
+  ffShown += chunk.length;
+
+  const btn = document.getElementById('ff-load-more');
+  if (btn) btn.remove();
+  if (ffShown < ffCurrentData.length) {
+    const remaining = ffCurrentData.length - ffShown;
+    document.getElementById('tbody-ff').closest('table').insertAdjacentHTML('afterend',
+      `<div style="text-align:center;padding:12px">
+        <button id="ff-load-more" onclick="appendFF()"
+          style="background:var(--ml-blue-l);color:#fff;border:none;border-radius:6px;padding:8px 20px;font-size:13px;font-weight:600;cursor:pointer">
+          Carregar mais ${Math.min(FF_PAGE, remaining)} de ${remaining} restantes
+        </button>
+      </div>`
+    );
+  }
+}
+
+function filterSDD() {
+  const svcF = (document.getElementById('f-sdd-svc').value || '').toLowerCase().trim();
+  const pctF = parseFloat(document.getElementById('f-sdd-pct').value || '0') || 0;
+  document.querySelectorAll('#tbody-sdd tr').forEach(tr => {
+    const svc = tr.cells[0]?.textContent.toLowerCase() || '';
+    const pct = parseFloat(tr.cells[5]?.textContent || '0') || 0;
+    tr.style.display = (svc.includes(svcF) && pct >= pctF) ? '' : 'none';
+  });
+}
+
+function filterFF() {
+  const mlpF   = (document.getElementById('f-ff-mlp')?.value   || '').toLowerCase().trim();
+  const svcF   = (document.getElementById('f-ff-svc')?.value   || '').toLowerCase().trim();
+  const placaF = (document.getElementById('f-ff-placa')?.value || '').toLowerCase().trim();
+  const cadF   = (document.getElementById('f-ff-cad')?.value   || '').toLowerCase().trim();
+  const lmF    = (document.getElementById('f-ff-lm')?.value    || '');
+  const fmF    = (document.getElementById('f-ff-fm')?.value    || '');
+  const opF    = (document.getElementById('f-ff-op')?.value    || '').toLowerCase().trim();
+  const filtered = DATA_FF.filter(r => {
+    if (mlpF   && !(r.mlp      || '').toLowerCase().includes(mlpF))   return false;
+    if (svcF   && !(r.svc      || '').toLowerCase().includes(svcF))   return false;
+    if (placaF && !(r.placa    || '').toLowerCase().includes(placaF)) return false;
+    if (cadF   && !(r.cadastro || '').toLowerCase().includes(cadF))   return false;
+    if (lmF    && r.status !== lmF)                                    return false;
+    if (fmF    && (r._fm_status || 'nao_iniciou') !== fmF)            return false;
+    if (opF) {
+      const op = (r.operador || r._fm?.[0]?.operador || '').toLowerCase();
+      if (!op.includes(opF)) return false;
+    }
+    return true;
+  });
+  renderFF(filtered);
+}
+
+function clearFFFilters() {
+  ['f-ff-mlp','f-ff-svc','f-ff-placa','f-ff-cad','f-ff-op'].forEach(id => {
+    const el = document.getElementById(id); if (el) el.value = '';
+  });
+  ['f-ff-lm','f-ff-fm'].forEach(id => {
+    const el = document.getElementById(id); if (el) el.value = '';
+  });
+  renderFF(DATA_FF);
+}
+
+function filterReal() {
+  const placaF = (document.getElementById('f-real-placa').value || '').toLowerCase().trim();
+  const svcF   = (document.getElementById('f-real-svc').value   || '').toLowerCase().trim();
+  const tipoF  = (document.getElementById('f-real-tipo').value  || '').toLowerCase().trim();
+  const opF    = (document.getElementById('f-real-op').value    || '').toLowerCase().trim();
+  const pctMax = parseFloat(document.getElementById('f-real-pct').value || '999') || 999;
+  document.querySelectorAll('#tbody-real tr').forEach(tr => {
+    if (tr.cells.length < 9) { tr.style.display = ''; return; }
+    const placa = (tr.cells[0]?.textContent || '').toLowerCase();
+    const svc   = (tr.cells[1]?.textContent || '').toLowerCase();
+    const tipo  = (tr.cells[2]?.textContent || '').toLowerCase();
+    const op    = (tr.cells[3]?.textContent || '').toLowerCase();
+    const pct   = parseFloat(tr.cells[8]?.textContent || '999') || 999;
+    const show  = placa.includes(placaF) && svc.includes(svcF) &&
+                  tipo.includes(tipoF) && op.includes(opF) && pct <= pctMax;
+    tr.style.display = show ? '' : 'none';
+  });
+}
+
+// ── REALOCAÇÃO ────────────────────────────────────────────────────────────────
+function buildRealocacao() {
+  const n = DATA_REAL.length;
+  document.getElementById('kpi-real').innerHTML = `
+    ${kpiCard('Veículos disponíveis', n, n > 0 ? 'yellow' : 'green')}
+  `;
+  // Replace ratio in alert card
+  document.querySelector('.alert-card').innerHTML =
+    document.querySelector('.alert-card').innerHTML.replace('{{RATIO}}', Math.round(EARLY_RATIO * 100));
+
+  const tbody = document.getElementById('tbody-real');
+  tbody.innerHTML = '';
+  DATA_REAL.forEach(r => {
+    const pct = r.pct_orh || 0;
+    const cls = pct < EARLY_RATIO * 100 ? 'cedo' : '';
+    tbody.innerHTML += `
+      <tr>
+        <td><strong>${r.placa}</strong></td>
+        <td>${r.svc || '–'}</td>
+        <td style="font-size:12px">${r.tipo_veiculo || '–'}</td>
+        <td style="font-size:12px">${r.operador || '–'}</td>
+        <td>${r.inicio || '–'}</td>
+        <td><strong>${r.fim || '–'}</strong></td>
+        <td class="num">${r.orh_real}h</td>
+        <td class="num">${r.orh_plan > 0 ? r.orh_plan + 'h' : '–'}</td>
+        <td class="num"><span class="status ${cls}">${pct > 0 ? pct + '%' : '–'}</span></td>
+        <td class="num">${r.entregas ?? '–'}</td>
+      </tr>`;
+  });
+
+  if (n === 0) {
+    tbody.innerHTML = '<tr><td colspan="10" style="text-align:center;padding:24px;color:#aaa">Nenhum veículo com encerramento antecipado encontrado até agora.</td></tr>';
+  }
+}
+
+// ── KPI CARD HELPER ───────────────────────────────────────────────────────────
+function kpiCard(label, value, cls) {
+  return `<div class="kpi ${cls}"><div class="label">${label}</div><div class="value">${value}</div></div>`;
+}
+
+// ── RESUMO ────────────────────────────────────────────────────────────────────
+let resumoBuilt = false;
+
+function buildResumo() {
+  if (resumoBuilt) return;
+  resumoBuilt = true;
+
+  // ── 1. Totais SDD
+  const calMap = {};
+  DATA_SDD_CAL.forEach(r => { calMap[r.svc] = parseInt(r.cal || 0); });
+  const execMap = {};
+  DATA_SDD_EXEC.forEach(r => { execMap[r.svc] = r; });
+  const sddCal   = DATA_SDD_CAL.reduce((s,r) => s + parseInt(r.cal||0), 0);
+  const sddExec  = DATA_SDD_EXEC.reduce((s,r) => s + parseInt(r.total||0), 0);
+  const sddAndam = DATA_SDD_EXEC.reduce((s,r) => s + parseInt(r.em_andamento||0), 0);
+  const sddFin   = DATA_SDD_EXEC.reduce((s,r) => s + parseInt(r.finalizadas||0), 0);
+  const sddPct   = sddCal > 0 ? Math.round(sddExec / sddCal * 100) : 0;
+
+  // ── 2. Totais FF — combinado LM + FM (usar dados já enriquecidos por buildFF)
+  // buildFF pode não ter rodado ainda; recomputar aqui para garantir
+  const _fmByPlate = {};
+  DATA_FM.filter(r => r.tipo_cal === 'ff').forEach(r => {
+    if (!_fmByPlate[r.placa]) _fmByPlate[r.placa] = [];
+    _fmByPlate[r.placa].push(r);
+  });
+  const ffTotal  = DATA_FF.length;
+  const ffRodou  = DATA_FF.filter(r => {
+    const fmS = (_fmByPlate[r.placa] || []).length === 0 ? 'nao_iniciou'
+      : (_fmByPlate[r.placa] || []).some(f => f.em_andamento) ? 'em_andamento' : 'finalizada';
+    return r.status !== 'nao_iniciou' || fmS !== 'nao_iniciou';
+  }).length;
+  const ffAndam  = DATA_FF.filter(r => {
+    const fmAndando = (_fmByPlate[r.placa] || []).some(f => f.em_andamento);
+    return r.status === 'em_andamento' || fmAndando;
+  }).length;
+  const ffFin    = ffRodou - ffAndam;
+  const ffNao    = ffTotal - ffRodou;
+  const ffPct    = ffTotal > 0 ? Math.round(ffRodou / ffTotal * 100) : 0;
+
+  // ── Hero SDD
+  const sddColor = sddPct >= 100 ? '#00a650' : sddPct >= 70 ? '#E6A817' : '#e53935';
+  document.getElementById('sdd-score').textContent = sddPct + '%';
+  document.getElementById('sdd-score').style.color = sddColor;
+  document.getElementById('sdd-score-sub').textContent =
+    `${sddExec.toLocaleString()} de ${sddCal.toLocaleString()} calendarizadas`;
+  document.getElementById('sdd-badges').innerHTML = `
+    <div class="score-badge"><div class="sb-val">${sddExec.toLocaleString()}</div><div class="sb-lbl">Iniciadas</div></div>
+    <div class="score-badge"><div class="sb-val">${sddAndam}</div><div class="sb-lbl">Em andamento</div></div>
+    <div class="score-badge"><div class="sb-val">${sddFin.toLocaleString()}</div><div class="sb-lbl">Finalizadas</div></div>
+  `;
+
+  // ── Hero FF (combinado LM + FM)
+  const ffColor = ffPct >= 90 ? '#00a650' : ffPct >= 70 ? '#E6A817' : '#e53935';
+  document.getElementById('ff-score').textContent = ffPct + '%';
+  document.getElementById('ff-score').style.color = ffColor;
+  document.getElementById('ff-score-sub').textContent =
+    `${ffRodou.toLocaleString()} de ${ffTotal.toLocaleString()} placas · LM + FM`;
+  document.getElementById('ff-badges').innerHTML = `
+    <div class="score-badge"><div class="sb-val">${ffRodou.toLocaleString()}</div><div class="sb-lbl">Rodando (LM+FM)</div></div>
+    <div class="score-badge"><div class="sb-val">${ffAndam}</div><div class="sb-lbl">Em andamento</div></div>
+    <div class="score-badge"><div class="sb-val">${ffFin.toLocaleString()}</div><div class="sb-lbl">Finalizadas</div></div>
+    <div class="score-badge"><div class="sb-val">${DATA_REAL.length}</div><div class="sb-lbl">Disponíveis realoc.</div></div>
+  `;
+
+  // ── FM card
+  const fmFF  = DATA_FM.filter(r => r.tipo_cal === 'ff');
+  const fmSDD = DATA_FM.filter(r => r.tipo_cal === 'sdd');
+  const fmFFAndam = fmFF.filter(r => r.em_andamento).length;
+  const fmFFfin   = fmFF.filter(r => !r.em_andamento).length;
+  const fmSddAndam = fmSDD.filter(r => r.em_andamento).length;
+  const fmSddfin   = fmSDD.filter(r => !r.em_andamento).length;
+  const fmTotalCol = DATA_FM.reduce((s,r) => s + (r.coletados||0), 0);
+  const fmTotalACol= DATA_FM.reduce((s,r) => s + (r.a_coletar||0), 0);
+
+  function fmKpi(val, lbl, color) {
+    return `<div style="text-align:center;min-width:100px">
+      <div style="font-size:26px;font-weight:800;color:${color}">${val}</div>
+      <div style="font-size:11px;color:#888;margin-top:2px">${lbl}</div>
+    </div>`;
+  }
+  document.getElementById('fm-summary').innerHTML = `
+    ${fmKpi(fmFF.length, 'Rotas FM – FF', '#3483FA')}
+    ${fmKpi(fmFFAndam, 'FF em andamento', '#E6A817')}
+    ${fmKpi(fmFFfin, 'FF finalizadas', '#00a650')}
+    <div style="width:1px;background:#eee;align-self:stretch;margin:0 8px"></div>
+    ${fmKpi(fmSDD.length, 'Rotas FM – SDD', '#9B59B6')}
+    ${fmKpi(fmSddAndam, 'SDD em andamento', '#E6A817')}
+    ${fmKpi(fmSddfin, 'SDD finalizadas', '#00a650')}
+    <div style="width:1px;background:#eee;align-self:stretch;margin:0 8px"></div>
+    ${fmKpi(fmTotalCol.toLocaleString(), 'Shipments coletados', '#2D3277')}
+    ${fmKpi(fmTotalACol.toLocaleString(), 'Shipments a coletar', '#9E9E9E')}
+  `;
+
+  // ── 3. SDD por SVC – barras CSS (ordenado por % ASC)
+  const svcs = [...new Set([...Object.keys(calMap), ...Object.keys(execMap)])].sort();
+  const svcRows = svcs
+    .map(svc => {
+      const cal   = calMap[svc] || 0;
+      const total = parseInt(execMap[svc]?.total || 0);
+      const pct   = cal > 0 ? Math.round(total / cal * 100) : (total > 0 ? 999 : 0);
+      return { svc, cal, total, pct };
+    })
+    .filter(r => r.cal > 0)                  // só calendarizados
+    .sort((a, b) => a.pct - b.pct);          // piores primeiro
+
+  const barList = document.getElementById('svc-bar-list');
+  barList.innerHTML = svcRows.map(r => {
+    const pctCap = Math.min(r.pct, 100);
+    const color  = r.pct >= 100 ? '#00a650' : r.pct >= 70 ? '#3483FA' : r.pct >= 40 ? '#E6A817' : '#e53935';
+    return `<div class="svc-bar-row">
+      <span class="svc-bar-name">${r.svc}</span>
+      <div class="svc-bar-bg">
+        <div class="svc-bar-fill" style="width:${pctCap}%;background:${color}"></div>
+      </div>
+      <span class="svc-bar-val" style="color:${color}">${r.pct}%</span>
+    </div>`;
+  }).join('');
+
+  // ── 4. FF donut (combinado LM + FM)
+  new Chart(document.getElementById('chart-ff-donut'), {
+    type: 'doughnut',
+    data: {
+      labels: ['Finalizada', 'Em andamento', 'Não iniciou'],
+      datasets: [{
+        data: [ffFin, ffAndam, ffNao],
+        backgroundColor: ['#00a650', '#3483FA', '#e0e0e0'],
+        borderWidth: 2, borderColor: '#fff'
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { position: 'bottom', labels: { font: { size: 12 }, padding: 16 } },
+        tooltip: {
+          callbacks: {
+            label: ctx => ` ${ctx.label}: ${ctx.raw.toLocaleString()} (${Math.round(ctx.raw/ffTotal*100)}%) – LM+FM`
+          }
+        }
+      }
+    }
+  });
+
+  // ── 5. FF por MLP – barras horizontais (top 15, combinado LM+FM)
+  const mlpMap = {};
+  DATA_FF.forEach(r => {
+    const k = r.mlp || '(sem MLP)';
+    if (!mlpMap[k]) mlpMap[k] = { cal: 0, ini: 0 };
+    mlpMap[k].cal++;
+    const fmS = (_fmByPlate[r.placa] || []).length === 0 ? 'nao_iniciou'
+      : (_fmByPlate[r.placa] || []).some(f => f.em_andamento) ? 'em_andamento' : 'finalizada';
+    if (r.status !== 'nao_iniciou' || fmS !== 'nao_iniciou') mlpMap[k].ini++;
+  });
+  const mlpArr = Object.entries(mlpMap)
+    .map(([mlp, v]) => ({ mlp, ...v, pct: Math.round(v.ini / v.cal * 100) }))
+    .sort((a, b) => b.cal - a.cal)
+    .slice(0, 15);
+
+  new Chart(document.getElementById('chart-mlp-bar'), {
+    type: 'bar',
+    data: {
+      labels: mlpArr.map(r => r.mlp.length > 20 ? r.mlp.slice(0,20)+'…' : r.mlp),
+      datasets: [
+        { label: 'Iniciadas', data: mlpArr.map(r => r.ini), backgroundColor: '#3483FA', borderRadius: 4 },
+        { label: 'Não iniciou', data: mlpArr.map(r => r.cal - r.ini), backgroundColor: '#e0e0e0', borderRadius: 4 }
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      indexAxis: 'y',
+      scales: {
+        x: { stacked: true, grid: { color: '#f0f0f0' } },
+        y: { stacked: true, ticks: { font: { size: 11 } } }
+      },
+      plugins: {
+        legend: { position: 'bottom', labels: { font: { size: 12 } } },
+        tooltip: {
+          callbacks: {
+            afterBody: items => {
+              const idx = items[0].dataIndex;
+              return [`Aderência: ${mlpArr[idx].pct}%`];
+            }
+          }
+        }
+      }
+    }
+  });
+
+  // ── 6. Alertas
+  const alertas = [];
+
+  // SVCs SDD sem nenhuma rota ainda
+  const svcSemRota = svcRows.filter(r => r.total === 0 && r.cal > 0);
+  if (svcSemRota.length > 0) {
+    alertas.push({
+      cls: 'danger', icon: '🔴',
+      title: `${svcSemRota.length} SVC(s) SDD sem nenhuma rota iniciada`,
+      desc: svcSemRota.map(r => `${r.svc} (${r.cal} cal.)`).slice(0,5).join(' · ')
+    });
+  }
+
+  // SVCs SDD com < 50%
+  const svcBaixo = svcRows.filter(r => r.pct < 50 && r.pct > 0 && r.cal >= 10);
+  if (svcBaixo.length > 0) {
+    alertas.push({
+      cls: 'warn', icon: '⚠️',
+      title: `${svcBaixo.length} SVC(s) SDD com aderência abaixo de 50%`,
+      desc: svcBaixo.map(r => `${r.svc} ${r.pct}%`).slice(0,6).join(' · ')
+    });
+  }
+
+  // SVCs SDD acima de 100% (ambulâncias)
+  const svcAcima = svcRows.filter(r => r.pct > 100);
+  if (svcAcima.length > 0) {
+    alertas.push({
+      cls: 'ok', icon: '✅',
+      title: `${svcAcima.length} SVC(s) SDD acima de 100% (inclui ambulâncias)`,
+      desc: svcAcima.map(r => `${r.svc} ${r.pct}%`).slice(0,6).join(' · ')
+    });
+  }
+
+  // FF veículos disponíveis para realocação
+  if (DATA_REAL.length > 0) {
+    const reaisCedo = DATA_REAL.filter(r => r.pct_orh && r.pct_orh < 50);
+    alertas.push({
+      cls: reaisCedo.length > 20 ? 'warn' : 'ok', icon: '⚡',
+      title: `${DATA_REAL.length} veículo(s) FF disponíveis para nova rota`,
+      desc: `${reaisCedo.length} finalizaram com menos de 50% do ORH planejado`
+    });
+  }
+
+  // SDD geral
+  if (sddPct >= 100) {
+    alertas.push({ cls: 'ok', icon: '🟢', title: `SDD: meta cumprida (${sddPct}% de aderência)`, desc: `${sddExec} rotas iniciadas de ${sddCal} calendarizadas` });
+  } else {
+    alertas.push({ cls: sddPct >= 70 ? 'warn' : 'danger', icon: sddPct >= 70 ? '🟡' : '🔴',
+      title: `SDD: ${sddPct}% de aderência (${sddCal - sddExec} rotas ainda não iniciadas)`,
+      desc: `${sddFin} finalizadas · ${sddAndam} em andamento`
+    });
+  }
+
+  document.getElementById('resumo-alertas').innerHTML = alertas.map(a => `
+    <div class="alert-item ${a.cls}">
+      <div class="alert-icon">${a.icon}</div>
+      <div class="alert-body">
+        <div class="alert-title">${a.title}</div>
+        <div class="alert-desc">${a.desc}</div>
+      </div>
+    </div>`).join('');
+}
+
+// ── INIT ──────────────────────────────────────────────────────────────────────
+buildSDD();
+buildFF();
+buildRealocacao();
+</script>
+</body>
+</html>
