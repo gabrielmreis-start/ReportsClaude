@@ -37,15 +37,15 @@
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body { font-family: 'Source Sans 3', 'Proxima Nova', -apple-system, sans-serif; background: var(--meli-gray-bg); color: var(--meli-black); line-height: 1.4; padding: 24px 24px 48px; max-width: 100%; margin: 0 auto; }
     .header { background: var(--meli-black); color: var(--meli-yellow); padding: 20px 24px; margin: 0 -32px 24px -32px; text-align: center; }
-    .header h1 { font-size: 1.5rem; font-weight: 700; }
+    .header h1 { font-size: 1.8rem; font-weight: 700; }
     .header .subtitulo { font-size: 0.85rem; color: rgba(255,230,0,0.6); margin-top: 4px; }
-    .info-aderencia { background: #fff; border-radius: 8px; padding: 14px 20px; margin-bottom: 24px; box-shadow: 0 1px 4px rgba(0,0,0,.08); border-left: 4px solid var(--meli-yellow); font-size: 0.95rem; }
+    .info-aderencia { background: #fff; border-radius: 8px; padding: 14px 20px; margin-bottom: 24px; box-shadow: 0 1px 4px rgba(0,0,0,.08); border-left: 4px solid var(--meli-yellow); font-size: 1.1rem; }
     .info-aderencia strong { color: var(--er-vermelho); }
     .z-charts { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 24px; }
     @media (max-width: 900px) { .z-charts { grid-template-columns: 1fr; } }
     .chart-box { background: #fff; border-radius: 8px; padding: 20px; box-shadow: 0 1px 4px rgba(0,0,0,.08); border-left: 4px solid var(--meli-yellow); }
     .chart-box h2 { font-size: 1rem; color: var(--meli-gray-dark); margin-bottom: 16px; padding-bottom: 8px; border-bottom: 1px solid var(--meli-gray-light); }
-    .chart-container { position: relative; height: 280px; }
+    .chart-container { position: relative; height: 380px; }
     .gantt-box { margin-bottom: 24px; }
     .gantt-scroll { border: 1px solid var(--meli-gray-light); border-radius: 6px; overflow-x: auto; overflow-y: visible; }
     .gantt-tabela { font-size: 0.85rem; margin-top: 0; border-collapse: collapse; min-width: 1600px; }
@@ -175,13 +175,14 @@ W14	18	13,3	74,1%`;
         if (typeof Chart === "undefined") return;
         if (typeof ChartDataLabels !== "undefined") Chart.register(ChartDataLabels);
         Chart.defaults.font.family = "'Source Sans 3', sans-serif";
+        Chart.defaults.font.size = 14;
         Chart.defaults.color = '#333';
         var erSemDisplay = ["N/D", "93,3%", "76,7%", "74,1%"];
         new Chart(document.getElementById("chartSem"), { type: "bar", data: { labels: ["W11", "W12", "W13", "W14"], datasets: [
           { label: "Calendarizado", data: [0.0, 10.0, 15.0, 18.0], backgroundColor: "rgba(255,230,0,0.8)", borderColor: "#FFE600", borderWidth: 1, yAxisID: "yCarros", order: 2 },
           { label: "Executado", data: [3.3, 9.3, 11.5, 13.3], backgroundColor: "rgba(51,51,51,0.75)", borderColor: "#333", borderWidth: 1, yAxisID: "yCarros", order: 1 },
-          { label: "ER %", data: [0.0, 93.3, 76.7, 74.1], type: "line", borderColor: "#2D3277", backgroundColor: "transparent", borderWidth: 2, fill: false, yAxisID: "yEr", pointBackgroundColor: ["#999", "#7ED321", "#E60000", "#E60000"], pointBorderColor: ["#999", "#7ED321", "#E60000", "#E60000"], pointRadius: 5, order: 0 }
-        ] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: true, position: "bottom" }, tooltip: { callbacks: { label: function(ctx) { if (ctx.dataset.yAxisID === "yEr") return erSemDisplay[ctx.dataIndex]; return ctx.raw + " veiculos"; } } }, datalabels: { display: true, formatter: function(v, ctx) { return ctx.datasetIndex === 2 ? Math.round(v) + "%" : Math.round(v); }, anchor: "end", align: "top", color: "#333", font: { size: 10 } } }, scales: { x: { grid: { display: false } }, yCarros: { type: "linear", position: "left", min: 0, max: 30, grid: { color: "#eee" }, title: { display: true, text: "Veiculos" } }, yEr: { type: "linear", position: "right", min: 0, max: 107, ticks: { callback: function(v) { return v + "%"; } }, grid: { display: false }, title: { display: true, text: "ER %" } } } } });
+          { label: "ER %", data: [0.0, 93.3, 76.7, 74.1], type: "line", borderColor: "#2D3277", backgroundColor: "transparent", borderWidth: 3, fill: false, yAxisID: "yEr", pointBackgroundColor: ["#999", "#7ED321", "#E60000", "#E60000"], pointBorderColor: ["#999", "#7ED321", "#E60000", "#E60000"], pointRadius: 7, order: 0 }
+        ] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: true, position: "bottom", labels: { font: { size: 14 } } }, tooltip: { callbacks: { label: function(ctx) { if (ctx.dataset.yAxisID === "yEr") return erSemDisplay[ctx.dataIndex]; return ctx.raw + " veiculos"; } } }, datalabels: { display: true, formatter: function(v, ctx) { return ctx.datasetIndex === 2 ? Math.round(v) + "%" : Math.round(v); }, anchor: "end", align: "top", color: "#333", font: { size: 14, weight: "bold" } } }, scales: { x: { grid: { display: false }, ticks: { font: { size: 14 } } }, yCarros: { type: "linear", position: "left", min: 0, max: 30, grid: { color: "#eee" }, title: { display: true, text: "Veiculos", font: { size: 13 } }, ticks: { font: { size: 13 } } }, yEr: { type: "linear", position: "right", min: 0, max: 107, ticks: { callback: function(v) { return v + "%"; }, font: { size: 13 } }, grid: { display: false }, title: { display: true, text: "ER %", font: { size: 13 } } } } } });
         // Grafico por tipo de veiculo
         var tipoCalend = [78, 12, 18];
         var tipoExec = [77, 0, 3];
@@ -191,8 +192,8 @@ W14	18	13,3	74,1%`;
         new Chart(document.getElementById("chartTipo"), { type: "bar", data: { labels: ["Utilitario", "Van", "Vuc"], datasets: [
           { label: "Calendarizado", data: tipoCalend, backgroundColor: "rgba(255,230,0,0.8)", borderColor: "#FFE600", borderWidth: 1, yAxisID: "yRotas", order: 2 },
           { label: "Executado", data: tipoExec, backgroundColor: "rgba(51,51,51,0.75)", borderColor: "#333", borderWidth: 1, yAxisID: "yRotas", order: 1 },
-          { label: "ER %", data: tipoEr, type: "line", borderColor: "#2D3277", backgroundColor: "transparent", borderWidth: 2, fill: false, yAxisID: "yEr", pointRadius: 5, pointBackgroundColor: tipoEr.map(function(v) { return v >= 95 ? "#348338" : (v >= 90 ? "#7ED321" : (v >= 80 ? "#F5A623" : "#E60000")); }), order: 0 }
-        ] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: true, position: "bottom" }, datalabels: { display: true, formatter: function(v, ctx) { return ctx.datasetIndex === 2 ? Math.round(v) + "%" : Math.round(v); }, anchor: "end", align: "top", color: "#333", font: { size: 11 } } }, scales: { x: { grid: { display: false } }, yRotas: { type: "linear", position: "left", min: 0, max: 90, grid: { color: "#eee" }, title: { display: true, text: "Rotas" } }, yEr: { type: "linear", position: "right", min: 0, max: 110, ticks: { callback: function(v) { return v + "%"; } }, grid: { display: false }, title: { display: true, text: "ER %" } } } } });
+          { label: "ER %", data: tipoEr, type: "line", borderColor: "#2D3277", backgroundColor: "transparent", borderWidth: 3, fill: false, yAxisID: "yEr", pointRadius: 7, pointBackgroundColor: tipoEr.map(function(v) { return v >= 95 ? "#348338" : (v >= 90 ? "#7ED321" : (v >= 80 ? "#F5A623" : "#E60000")); }), order: 0 }
+        ] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: true, position: "bottom", labels: { font: { size: 14 } } }, datalabels: { display: true, formatter: function(v, ctx) { return ctx.datasetIndex === 2 ? Math.round(v) + "%" : Math.round(v); }, anchor: "end", align: "top", color: "#333", font: { size: 14, weight: "bold" } } }, scales: { x: { grid: { display: false }, ticks: { font: { size: 14 } } }, yRotas: { type: "linear", position: "left", min: 0, max: 90, grid: { color: "#eee" }, title: { display: true, text: "Rotas", font: { size: 13 } }, ticks: { font: { size: 13 } } }, yEr: { type: "linear", position: "right", min: 0, max: 110, ticks: { callback: function(v) { return v + "%"; }, font: { size: 13 } }, grid: { display: false }, title: { display: true, text: "ER %", font: { size: 13 } } } } } });
         // Sorting
         var tbl = document.getElementById("tabelaPlanoTotal");
         if (tbl) {
