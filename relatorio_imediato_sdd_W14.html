@@ -154,10 +154,22 @@ W14	18	13,3	74,1%`;
           var msgEl = document.getElementById("msg");
           if (typeof html2canvas === "undefined") { msgEl.textContent = "Recarregue com internet."; msgEl.className = "erro"; return; }
           msgEl.textContent = "Gerando..."; msgEl.className = "";
-          html2canvas(box, { scale: 2, useCORS: true, logging: false }).then(function(canvas) {
+          // Esconder botoes e expandir tabela para imagem
+          var btnWrap = document.querySelector(".btn-wrap");
+          var ganttScroll = document.querySelectorAll(".gantt-scroll");
+          if (btnWrap) btnWrap.style.display = "none";
+          ganttScroll.forEach(function(el) { el.style.overflow = "visible"; el.style.maxHeight = "none"; });
+          html2canvas(box, { scale: 3, useCORS: true, logging: false, windowWidth: 2400 }).then(function(canvas) {
             var a = document.createElement("a"); a.href = canvas.toDataURL("image/png"); a.download = "relatorio_Imediato_SDD.png"; a.click();
             msgEl.textContent = "Imagem baixada."; msgEl.className = "ok";
-          }).catch(function() { msgEl.textContent = "Erro."; msgEl.className = "erro"; });
+            // Restaurar
+            if (btnWrap) btnWrap.style.display = "";
+            ganttScroll.forEach(function(el) { el.style.overflow = ""; el.style.maxHeight = ""; });
+          }).catch(function() {
+            msgEl.textContent = "Erro."; msgEl.className = "erro";
+            if (btnWrap) btnWrap.style.display = "";
+            ganttScroll.forEach(function(el) { el.style.overflow = ""; el.style.maxHeight = ""; });
+          });
         };
         document.getElementById("btnPdf").onclick = function () { document.getElementById("msg").textContent = "Use Salvar como PDF."; document.getElementById("msg").className = "ok"; window.print(); };
         if (typeof Chart === "undefined") return;
@@ -171,9 +183,9 @@ W14	18	13,3	74,1%`;
           { label: "ER %", data: [0.0, 93.3, 76.7, 74.1], type: "line", borderColor: "#2D3277", backgroundColor: "transparent", borderWidth: 2, fill: false, yAxisID: "yEr", pointBackgroundColor: ["#999", "#7ED321", "#E60000", "#E60000"], pointBorderColor: ["#999", "#7ED321", "#E60000", "#E60000"], pointRadius: 5, order: 0 }
         ] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: true, position: "bottom" }, tooltip: { callbacks: { label: function(ctx) { if (ctx.dataset.yAxisID === "yEr") return erSemDisplay[ctx.dataIndex]; return ctx.raw + " veiculos"; } } }, datalabels: { display: true, formatter: function(v, ctx) { return ctx.datasetIndex === 2 ? Math.round(v) + "%" : Math.round(v); }, anchor: "end", align: "top", color: "#333", font: { size: 10 } } }, scales: { x: { grid: { display: false } }, yCarros: { type: "linear", position: "left", min: 0, max: 30, grid: { color: "#eee" }, title: { display: true, text: "Veiculos" } }, yEr: { type: "linear", position: "right", min: 0, max: 107, ticks: { callback: function(v) { return v + "%"; } }, grid: { display: false }, title: { display: true, text: "ER %" } } } } });
         // Grafico por tipo de veiculo
-        var tipoCalend = [78, 9, 22];
-        var tipoExec = [0, 0, 0];
-        var tipoEr = [0.0, 0.0, 0.0];
+        var tipoCalend = [78, 12, 18];
+        var tipoExec = [77, 0, 3];
+        var tipoEr = [98.7, 0.0, 16.7];
         var tipoColors = ["#FFE600", "#999", "#333"];
         var tipoExecColors = ["rgba(51,51,51,0.75)", "rgba(51,51,51,0.75)", "rgba(51,51,51,0.75)"];
         new Chart(document.getElementById("chartTipo"), { type: "bar", data: { labels: ["Utilitario", "Van", "Vuc"], datasets: [
