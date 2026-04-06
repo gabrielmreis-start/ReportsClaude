@@ -35,7 +35,7 @@
   <style>
     :root { --meli-yellow: #FFE600; --meli-black: #000; --meli-gray-dark: #333; --meli-gray: #666; --meli-gray-light: #eee; --meli-gray-bg: #F5F5F5; --meli-blue: #2D3277; --er-meta: #348338; --er-verde: #7ED321; --er-amarelo: #F5A623; --er-vermelho: #E60000; }
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: 'Source Sans 3', 'Proxima Nova', -apple-system, sans-serif; background: var(--meli-gray-bg); color: var(--meli-black); line-height: 1.4; padding: 24px 32px 48px; max-width: 1500px; margin: 0 auto; }
+    body { font-family: 'Source Sans 3', 'Proxima Nova', -apple-system, sans-serif; background: var(--meli-gray-bg); color: var(--meli-black); line-height: 1.4; padding: 24px 16px 48px; max-width: 100%; margin: 0 auto; }
     .header { background: var(--meli-black); color: var(--meli-yellow); padding: 20px 24px; margin: 0 -32px 24px -32px; text-align: center; }
     .header h1 { font-size: 1.5rem; font-weight: 700; }
     .header .subtitulo { font-size: 0.85rem; color: rgba(255,230,0,0.6); margin-top: 4px; }
@@ -46,14 +46,14 @@
     .chart-box h2 { font-size: 1rem; color: var(--meli-gray-dark); margin-bottom: 16px; padding-bottom: 8px; border-bottom: 1px solid var(--meli-gray-light); }
     .chart-container { position: relative; height: 280px; }
     .gantt-box { margin-bottom: 24px; }
-    .gantt-scroll { max-height: 520px; overflow-y: auto; overflow-x: auto; border: 1px solid var(--meli-gray-light); border-radius: 6px; }
-    .gantt-tabela { font-size: 0.85rem; margin-top: 0; width: 100%; border-collapse: collapse; }
-    .gantt-tabela th, .gantt-tabela td { padding: 4px 7px; border: 1px solid var(--meli-gray-light); white-space: nowrap; }
-    .gantt-tabela thead th { text-align: center; background: var(--meli-gray-bg); font-weight: 600; color: var(--meli-gray-dark); position: sticky; top: 0; z-index: 2; }
-    .gantt-tabela thead th:first-child { text-align: left; position: sticky; left: 0; z-index: 3; }
-    .gantt-tabela .gantt-svc { font-weight: 600; background: var(--meli-gray-bg); position: sticky; left: 0; z-index: 1; }
+    .gantt-scroll { border: 1px solid var(--meli-gray-light); border-radius: 6px; overflow: visible; }
+    .gantt-tabela { font-size: 0.72rem; margin-top: 0; width: 100%; border-collapse: collapse; table-layout: fixed; }
+    .gantt-tabela th, .gantt-tabela td { padding: 3px 4px; border: 1px solid var(--meli-gray-light); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .gantt-tabela thead th { text-align: center; background: var(--meli-gray-bg); font-weight: 600; color: var(--meli-gray-dark); }
+    .gantt-tabela thead th:first-child { text-align: left; }
+    .gantt-tabela .gantt-svc { font-weight: 600; background: var(--meli-gray-bg); }
     .gantt-tabela th.gantt-sort { cursor: pointer; user-select: none; }
-    .gantt-tabela .gantt-pe { font-size: 0.8em; text-align: center; }
+    .gantt-tabela .gantt-pe { font-size: 0.75em; text-align: center; }
     .gantt-gap { font-size: 0.7em; color: var(--meli-gray); }
     .gantt-vermelho { background: #ffebee !important; }
     .gantt-verde { background: #e8f5e9 !important; }
@@ -66,9 +66,9 @@
     .gantt-subtitulo { font-size: 0.85rem; color: var(--meli-gray); margin: -4px 0 12px 0; }
     .top10-box { margin-bottom: 24px; }
     .top10-tabela { font-size: 0.85rem; width: 100%; border-collapse: collapse; }
-    .top10-tabela th, .top10-tabela td { padding: 6px 10px; border-bottom: 1px solid var(--meli-gray-light); }
+    .top10-tabela th, .top10-tabela td { padding: 6px 10px; border-bottom: 1px solid var(--meli-gray-light); text-align: center; }
     .top10-tabela th { background: var(--meli-gray-bg); font-weight: 600; color: var(--meli-gray); }
-    .top10-tabela td.num { text-align: right; font-variant-numeric: tabular-nums; }
+    .top10-tabela td.num { text-align: center; font-variant-numeric: tabular-nums; }
     .top10-tabela .top10-gap { font-weight: 600; color: var(--er-vermelho); }
     .section { background: #fff; border-radius: 8px; padding: 20px; box-shadow: 0 1px 4px rgba(0,0,0,.08); }
     .section h2 { font-size: 1rem; color: var(--meli-gray-dark); margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid var(--meli-gray-light); }
