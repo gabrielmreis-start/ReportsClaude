@@ -113,9 +113,9 @@
   <section class="section top10-box">
     <h2>Abertura por SVC - W14</h2>
     <table class="top10-tabela">
-      <thead><tr><th>SVC</th><th class="num">Plan (rotas)</th><th class="num">Exec SDD</th><th class="num">Gap</th><th class="num">ER%</th></tr></thead>
+      <thead><tr><th>SVC</th><th class="num">Calendarizado</th><th class="num">Executado SDD</th><th class="num">Gap (rotas)</th><th class="num">ER%</th></tr></thead>
       <tbody>
-  <tr><td>SSP4</td><td class='num'>108</td><td class='num'>77</td><td class='num top10-gap'>31</td><td class='num er-vermelho'>71,3%</td></tr>chr(10)  <tr><td>SSP22</td><td class='num'>30</td><td class='num'>0</td><td class='num top10-gap'>30</td><td class='num er-vermelho'>0,0%</td></tr>chr(10)  <tr><td>SSP26</td><td class='num'>30</td><td class='num'>0</td><td class='num top10-gap'>30</td><td class='num er-vermelho'>0,0%</td></tr>chr(10)  <tr><td>SMG1</td><td class='num'>30</td><td class='num'>3</td><td class='num top10-gap'>27</td><td class='num er-vermelho'>10,0%</td></tr>
+  <tr><td>SSP4</td><td class='num'>108</td><td class='num'>77</td><td class='num top10-gap'>31</td><td class='num er-vermelho'>71,3%</td></tr>
       </tbody>
     </table>
   </section>
@@ -165,8 +165,8 @@ W14	18	13,3	74,1%`;
         Chart.defaults.color = '#333';
         var erSemDisplay = ["N/D", "93,3%", "76,7%", "74,1%"];
         new Chart(document.getElementById("chartSem"), { type: "bar", data: { labels: ["W11", "W12", "W13", "W14"], datasets: [
-          { label: "Veiculos plan", data: [0.0, 10.0, 15.0, 18.0], backgroundColor: "rgba(255,230,0,0.7)", borderColor: "#FFE600", borderWidth: 1, yAxisID: "yCarros", order: 2 },
-          { label: "Veiculos exec", data: [3.3, 9.3, 11.5, 13.3], backgroundColor: "rgba(0,166,80,0.7)", borderColor: "#00a650", borderWidth: 1, yAxisID: "yCarros", order: 1 },
+          { label: "Calendarizado", data: [0.0, 10.0, 15.0, 18.0], backgroundColor: "rgba(255,230,0,0.8)", borderColor: "#FFE600", borderWidth: 1, yAxisID: "yCarros", order: 2 },
+          { label: "Executado", data: [3.3, 9.3, 11.5, 13.3], backgroundColor: "rgba(51,51,51,0.75)", borderColor: "#333", borderWidth: 1, yAxisID: "yCarros", order: 1 },
           { label: "ER %", data: [0.0, 93.3, 76.7, 74.1], type: "line", borderColor: "#2D3277", backgroundColor: "transparent", borderWidth: 2, fill: false, yAxisID: "yEr", pointBackgroundColor: ["#999", "#7ED321", "#E60000", "#E60000"], pointBorderColor: ["#999", "#7ED321", "#E60000", "#E60000"], pointRadius: 5, order: 0 }
         ] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: true, position: "bottom" }, tooltip: { callbacks: { label: function(ctx) { if (ctx.dataset.yAxisID === "yEr") return erSemDisplay[ctx.dataIndex]; return ctx.raw + " veiculos"; } } }, datalabels: { display: true, formatter: function(v, ctx) { return ctx.datasetIndex === 2 ? Math.round(v) + "%" : Math.round(v); }, anchor: "end", align: "top", color: "#333", font: { size: 10 } } }, scales: { x: { grid: { display: false } }, yCarros: { type: "linear", position: "left", min: 0, max: 30, grid: { color: "#eee" }, title: { display: true, text: "Veiculos" } }, yEr: { type: "linear", position: "right", min: 0, max: 107, ticks: { callback: function(v) { return v + "%"; } }, grid: { display: false }, title: { display: true, text: "ER %" } } } } });
         // Sorting
