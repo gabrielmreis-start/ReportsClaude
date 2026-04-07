@@ -22,6 +22,8 @@
     --text-muted: #9498b3;
     --shadow-sm: 0 1px 3px rgba(45,50,119,0.06);
     --shadow-md: 0 4px 16px rgba(45,50,119,0.08);
+    --red-warn: #e53935;
+    --orange-warn: #ff9800;
   }
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -45,14 +47,10 @@
   }
 
   .header {
-    display: flex;
-    align-items: flex-end;
+    display: flex; align-items: flex-end;
     justify-content: space-between;
-    margin-bottom: 28px;
-    gap: 20px;
-    flex-wrap: wrap;
+    margin-bottom: 28px; gap: 20px; flex-wrap: wrap;
   }
-
   .header-text h1 {
     font-size: 26px; font-weight: 800;
     color: var(--ml-blue); letter-spacing: -0.3px; margin-bottom: 4px;
@@ -60,7 +58,6 @@
   .header-text p {
     font-size: 14px; color: var(--text-muted); font-weight: 400;
   }
-
   .badge {
     display: inline-flex; align-items: center; gap: 6px;
     background: var(--ml-yellow); color: var(--ml-blue);
@@ -70,79 +67,45 @@
   }
   .badge-dot { width: 6px; height: 6px; background: var(--ml-blue); border-radius: 50%; }
 
-  /* Controls row */
+  /* Controls */
   .controls-row {
     display: flex; align-items: center; gap: 24px;
     margin-bottom: 24px; flex-wrap: wrap;
   }
-
-  .filter-group {
-    display: flex; align-items: center; gap: 8px;
-  }
-
+  .filter-group { display: flex; align-items: center; gap: 8px; }
   .controls-label {
     font-size: 11px; font-weight: 700; color: var(--text-muted);
     text-transform: uppercase; letter-spacing: 0.8px;
   }
-
-  .controls-sep {
-    width: 1px; height: 28px; background: var(--border);
-  }
+  .controls-sep { width: 1px; height: 28px; background: var(--border); }
 
   .btn-pill {
-    padding: 7px 16px;
-    border: 1.5px solid var(--border);
-    border-radius: 20px;
-    background: var(--bg);
-    color: var(--text-secondary);
-    font-family: 'Inter', sans-serif;
-    font-size: 12px; font-weight: 600;
+    padding: 7px 16px; border: 1.5px solid var(--border); border-radius: 20px;
+    background: var(--bg); color: var(--text-secondary);
+    font-family: 'Inter', sans-serif; font-size: 12px; font-weight: 600;
     cursor: pointer; transition: all 0.2s ease;
   }
-  .btn-pill:hover {
-    border-color: var(--ml-blue-light);
-    color: var(--ml-blue-light);
-    background: rgba(52,131,250,0.04);
-  }
-  .btn-pill.active {
-    background: var(--ml-blue);
-    border-color: var(--ml-blue);
-    color: #fff;
-    box-shadow: 0 2px 8px rgba(45,50,119,0.25);
-  }
+  .btn-pill:hover { border-color: var(--ml-blue-light); color: var(--ml-blue-light); background: rgba(52,131,250,0.04); }
+  .btn-pill.active { background: var(--ml-blue); border-color: var(--ml-blue); color: #fff; box-shadow: 0 2px 8px rgba(45,50,119,0.25); }
 
-  /* Type toggle - bigger, more prominent */
   .btn-type {
-    padding: 8px 20px;
-    border: 2px solid var(--border);
-    border-radius: 8px;
-    background: var(--bg);
-    color: var(--text-secondary);
-    font-family: 'Inter', sans-serif;
-    font-size: 13px; font-weight: 700;
-    cursor: pointer; transition: all 0.2s ease;
-    letter-spacing: 0.3px;
+    padding: 8px 20px; border: 2px solid var(--border); border-radius: 8px;
+    background: var(--bg); color: var(--text-secondary);
+    font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 700;
+    cursor: pointer; transition: all 0.2s ease; letter-spacing: 0.3px;
   }
-  .btn-type:hover {
-    border-color: var(--ml-blue-light);
-    color: var(--ml-blue-light);
-  }
+  .btn-type:hover { border-color: var(--ml-blue-light); color: var(--ml-blue-light); }
   .btn-type.active {
-    background: var(--ml-yellow);
-    border-color: var(--ml-yellow);
-    color: var(--ml-blue);
-    box-shadow: 0 2px 10px rgba(255,230,0,0.35);
+    background: var(--ml-yellow); border-color: var(--ml-yellow);
+    color: var(--ml-blue); box-shadow: 0 2px 10px rgba(255,230,0,0.35);
   }
 
-  /* KPI cards */
+  /* KPIs */
   .kpi-bar {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
+    display: grid; grid-template-columns: repeat(5, 1fr);
     gap: 14px; margin-bottom: 24px;
   }
-  @media (max-width: 900px) {
-    .kpi-bar { grid-template-columns: repeat(2, 1fr); }
-  }
+  @media (max-width: 900px) { .kpi-bar { grid-template-columns: repeat(2, 1fr); } }
 
   .kpi {
     background: var(--card); border: 1px solid var(--border);
@@ -165,11 +128,10 @@
     font-weight: 600; margin-top: 4px;
   }
 
-  /* Chart card */
+  /* Chart */
   .chart-card {
     background: var(--card); border: 1px solid var(--border);
-    border-radius: 16px; padding: 32px;
-    box-shadow: var(--shadow-md);
+    border-radius: 16px; padding: 32px; box-shadow: var(--shadow-md);
   }
   .chart-wrapper { position: relative; width: 100%; height: 520px; }
 
@@ -185,19 +147,15 @@
   }
   .legend-dot {
     width: 12px; height: 12px; border-radius: 50%;
-    border: 2px solid #fff;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+    border: 2px solid #fff; box-shadow: 0 1px 3px rgba(0,0,0,0.15);
   }
 
-  /* Bubble size legend */
   .bubble-legend {
     display: flex; align-items: flex-end; gap: 6px;
     margin-left: 12px; padding-left: 16px;
     border-left: 1px solid var(--border);
   }
-  .bubble-col {
-    display: flex; flex-direction: column; align-items: center; gap: 3px;
-  }
+  .bubble-col { display: flex; flex-direction: column; align-items: center; gap: 3px; }
   .bubble-circle {
     border-radius: 50%;
     background: rgba(45,50,119,0.10);
@@ -213,7 +171,11 @@
     align-self: center;
   }
 
-  /* Footer */
+  /* SP Legend for delay */
+  .sp-legend {
+    display: flex; align-items: center; gap: 16px;
+  }
+
   .footer {
     display: flex; align-items: center; justify-content: space-between;
     margin-top: 24px; padding: 0 4px;
@@ -244,11 +206,10 @@
       <span class="controls-label">Tipo</span>
       <button class="btn-type active" data-type="ff">FF</button>
       <button class="btn-type" data-type="sdd">SDD</button>
+      <button class="btn-type" data-type="delay">Delay</button>
     </div>
-
     <div class="controls-sep"></div>
-
-    <div class="filter-group">
+    <div class="filter-group" id="topFilterGroup">
       <span class="controls-label">Top SVCs</span>
       <button class="btn-pill" data-top="5">Top 5</button>
       <button class="btn-pill" data-top="10">Top 10</button>
@@ -264,18 +225,7 @@
     <div class="chart-wrapper">
       <canvas id="scatterChart"></canvas>
     </div>
-    <div class="legend-row">
-      <div class="legend-item">
-        <span class="legend-dot" style="background:#a8c4f5"></span> Menor Share
-      </div>
-      <div class="legend-item">
-        <span class="legend-dot" style="background:#3483FA"></span> Share Médio
-      </div>
-      <div class="legend-item">
-        <span class="legend-dot" style="background:#2D3277"></span> Maior Share
-      </div>
-      <div class="bubble-legend" id="bubbleLegend"></div>
-    </div>
+    <div class="legend-row" id="legendRow"></div>
   </div>
 
   <div class="footer">
@@ -288,7 +238,7 @@
 </div>
 
 <script>
-/* ── DATA ── */
+/* ═══════════════ DATA ═══════════════ */
 var DATA_FF = [
   {svc:"SSP16",share:48,rotas:2397},{svc:"SSP46",share:41,rotas:125},
   {svc:"SSP21",share:36,rotas:2611},{svc:"SSP1",share:33,rotas:2203},
@@ -321,12 +271,31 @@ var DATA_SDD = [
   {svc:"SSP8",share:10,rotas:1672},{svc:"SSP9",share:10,rotas:1200}
 ];
 
-/* ── STATE ── */
+var DATA_DELAY = [
+  {svc:"SSP49",sp:"SP3",contribution:0.10,delay:5.50},
+  {svc:"SSP34",sp:"SP2",contribution:0.12,delay:2.48},
+  {svc:"SSP6", sp:"SP3",contribution:0.11,delay:2.45},
+  {svc:"SSP5", sp:"SP2",contribution:0.17,delay:2.35},
+  {svc:"SSP17",sp:"SP1",contribution:0.10,delay:2.35},
+  {svc:"SSP40",sp:"SP3",contribution:0.08,delay:2.20},
+  {svc:"SSP48",sp:"SP3",contribution:0.08,delay:2.10},
+  {svc:"SSP30",sp:"SP2",contribution:0.12,delay:2.09},
+  {svc:"SSP20",sp:"SP1",contribution:0.10,delay:1.87},
+  {svc:"SSP15",sp:"SP1",contribution:0.09,delay:1.38}
+];
+
+var SP_COLORS = {
+  SP1: '#3483FA',
+  SP2: '#FFE600',
+  SP3: '#e53935'
+};
+
+/* ═══════════════ STATE ═══════════════ */
 var currentType = 'ff';
 var currentTop = 15;
 
-/* ── HELPERS ── */
-function getColor(share, maxShare) {
+/* ═══════════════ HELPERS ═══════════════ */
+function getColorBlue(share, maxShare) {
   var t = maxShare > 0 ? Math.max(0, Math.min(1, share / maxShare)) : 0;
   var r = Math.round(168 - t * 123);
   var g = Math.round(196 - t * 146);
@@ -334,116 +303,204 @@ function getColor(share, maxShare) {
   return 'rgb(' + r + ',' + g + ',' + b + ')';
 }
 
-function getRadius(rotas, maxRotas) {
-  if (maxRotas <= 0) return 6;
-  var t = Math.max(0, Math.min(1, rotas / maxRotas));
+function getDelayColor(delay) {
+  /* green 1% → yellow 2.5% → red 5.5% */
+  var t = Math.max(0, Math.min(1, (delay - 1) / 4.5));
+  if (t < 0.5) {
+    var p = t * 2;
+    var r = Math.round(76 + p * 179);
+    var g = Math.round(175 - p * 20);
+    var b = Math.round(80 - p * 60);
+    return 'rgb(' + r + ',' + g + ',' + b + ')';
+  } else {
+    var p2 = (t - 0.5) * 2;
+    var r2 = Math.round(255 - p2 * 26);
+    var g2 = Math.round(155 - p2 * 98);
+    var b2 = Math.round(20 - p2 * 10);
+    return 'rgb(' + r2 + ',' + g2 + ',' + b2 + ')';
+  }
+}
+
+function getRadius(val, maxVal) {
+  if (maxVal <= 0) return 8;
+  var t = Math.max(0, Math.min(1, val / maxVal));
   return 6 + t * 14;
 }
 
-function createKpiElement(value, label) {
-  var kpi = document.createElement('div');
-  kpi.className = 'kpi';
-  var valEl = document.createElement('div');
-  valEl.className = 'kpi-value';
-  valEl.textContent = value;
-  var labEl = document.createElement('div');
-  labEl.className = 'kpi-label';
-  labEl.textContent = label;
-  kpi.appendChild(valEl);
-  kpi.appendChild(labEl);
+function createEl(tag, cls, text) {
+  var el = document.createElement(tag);
+  if (cls) el.className = cls;
+  if (text !== undefined) el.textContent = text;
+  return el;
+}
+
+function createKpi(value, label) {
+  var kpi = createEl('div', 'kpi');
+  kpi.appendChild(createEl('div', 'kpi-value', value));
+  kpi.appendChild(createEl('div', 'kpi-label', label));
   return kpi;
 }
 
-function buildBubbleLegend(maxRotas) {
-  var container = document.getElementById('bubbleLegend');
-  while (container.firstChild) container.removeChild(container.firstChild);
+function clearEl(el) { while (el.firstChild) el.removeChild(el.firstChild); }
 
-  var title = document.createElement('span');
-  title.className = 'bubble-title';
-  title.textContent = 'Rotas';
+function buildBubbleLegend(container, maxVal, labelText) {
+  var title = createEl('span', 'bubble-title', labelText);
   container.appendChild(title);
 
-  var steps = [0.2, 0.5, 1.0];
-  steps.forEach(function(pct) {
-    var val = Math.round(maxRotas * pct);
-    var r = getRadius(val, maxRotas);
-    var col = document.createElement('div');
-    col.className = 'bubble-col';
-
-    var circle = document.createElement('div');
-    circle.className = 'bubble-circle';
+  [0.25, 0.5, 1.0].forEach(function(pct) {
+    var val = Math.round(maxVal * pct);
+    var r = getRadius(val, maxVal);
+    var col = createEl('div', 'bubble-col');
+    var circle = createEl('div', 'bubble-circle');
     circle.style.width = (r * 2) + 'px';
     circle.style.height = (r * 2) + 'px';
-
-    var lbl = document.createElement('span');
-    lbl.className = 'bubble-val';
-    lbl.textContent = val >= 1000 ? (val / 1000).toFixed(1) + 'K' : String(val);
-
+    var lbl = createEl('span', 'bubble-val', val >= 1000 ? (val / 1000).toFixed(1) + 'K' : String(val));
     col.appendChild(circle);
     col.appendChild(lbl);
     container.appendChild(col);
   });
 }
 
-/* ── CHART ── */
+/* ═══════════════ RENDER ═══════════════ */
 var chart = null;
 
-function getData() {
+function getScatterData() {
+  if (currentType === 'delay') return DATA_DELAY.slice();
   var src = currentType === 'ff' ? DATA_FF : DATA_SDD;
   var filtered = src.filter(function(d) { return d.rotas > 0; });
   var sorted = filtered.slice().sort(function(a,b) { return b.rotas - a.rotas; });
   return currentTop === 0 ? sorted : sorted.slice(0, currentTop);
 }
 
-function updateKPIs(data) {
-  var label = currentType === 'ff' ? 'FF' : 'SDD';
-  var avgShare = (data.reduce(function(s,d){ return s + d.share; }, 0) / data.length).toFixed(1);
-  var totalRotas = data.reduce(function(s,d){ return s + d.rotas; }, 0);
-  var maxShare = data.reduce(function(m,d){ return d.share > m.share ? d : m; }, data[0]);
-  var maxRotas = data.reduce(function(m,d){ return d.rotas > m.rotas ? d : m; }, data[0]);
-
+function renderKPIs(data) {
   var bar = document.getElementById('kpiBar');
-  while (bar.firstChild) bar.removeChild(bar.firstChild);
+  clearEl(bar);
 
-  bar.appendChild(createKpiElement(String(data.length), 'SVCs exibidos'));
-  bar.appendChild(createKpiElement(avgShare + '%', 'Share ' + label + ' médio'));
-  bar.appendChild(createKpiElement(totalRotas.toLocaleString('pt-BR'), 'Total rotas'));
-  bar.appendChild(createKpiElement(maxShare.svc + ' (' + maxShare.share + '%)', 'Maior share'));
-  bar.appendChild(createKpiElement(maxRotas.svc + ' (' + maxRotas.rotas.toLocaleString('pt-BR') + ')', 'Mais rotas'));
+  if (currentType === 'delay') {
+    var avgDelay = (data.reduce(function(s,d){ return s + d.delay; }, 0) / data.length).toFixed(2);
+    var avgContr = (data.reduce(function(s,d){ return s + d.contribution; }, 0) / data.length).toFixed(2);
+    var worst = data.reduce(function(m,d){ return d.delay > m.delay ? d : m; }, data[0]);
+    var best = data.reduce(function(m,d){ return d.delay < m.delay ? d : m; }, data[0]);
+    var sp3Count = data.filter(function(d){ return d.sp === 'SP3'; }).length;
+
+    bar.appendChild(createKpi(String(data.length), 'SVCs'));
+    bar.appendChild(createKpi(avgDelay + '%', 'Delay LM médio'));
+    bar.appendChild(createKpi(avgContr + '%', 'Contribution médio'));
+    bar.appendChild(createKpi(worst.svc + ' (' + worst.delay.toFixed(2) + '%)', 'Pior delay'));
+    bar.appendChild(createKpi(best.svc + ' (' + best.delay.toFixed(2) + '%)', 'Melhor delay'));
+  } else {
+    var label = currentType === 'ff' ? 'FF' : 'SDD';
+    var avgShare = (data.reduce(function(s,d){ return s + d.share; }, 0) / data.length).toFixed(1);
+    var totalRotas = data.reduce(function(s,d){ return s + d.rotas; }, 0);
+    var maxShare = data.reduce(function(m,d){ return d.share > m.share ? d : m; }, data[0]);
+    var maxRotas = data.reduce(function(m,d){ return d.rotas > m.rotas ? d : m; }, data[0]);
+
+    bar.appendChild(createKpi(String(data.length), 'SVCs exibidos'));
+    bar.appendChild(createKpi(avgShare + '%', 'Share ' + label + ' médio'));
+    bar.appendChild(createKpi(totalRotas.toLocaleString('pt-BR'), 'Total rotas'));
+    bar.appendChild(createKpi(maxShare.svc + ' (' + maxShare.share + '%)', 'Maior share'));
+    bar.appendChild(createKpi(maxRotas.svc + ' (' + maxRotas.rotas.toLocaleString('pt-BR') + ')', 'Mais rotas'));
+  }
+}
+
+function renderLegend(data) {
+  var row = document.getElementById('legendRow');
+  clearEl(row);
+
+  if (currentType === 'delay') {
+    /* SP color legend */
+    var spLeg = createEl('div', 'sp-legend');
+    ['SP1','SP2','SP3'].forEach(function(sp) {
+      var item = createEl('div', 'legend-item');
+      var dot = createEl('span', 'legend-dot');
+      dot.style.background = SP_COLORS[sp];
+      if (sp === 'SP2') dot.style.borderColor = '#e8eaf0';
+      item.appendChild(dot);
+      item.appendChild(document.createTextNode(' ' + sp));
+      spLeg.appendChild(item);
+    });
+    row.appendChild(spLeg);
+
+    /* Delay severity color */
+    var sevLeg = createEl('div', 'sp-legend');
+    sevLeg.style.marginLeft = '16px';
+    sevLeg.style.paddingLeft = '16px';
+    sevLeg.style.borderLeft = '1px solid #e8eaf0';
+
+    [{c:'#4caf80',l:'< 2%'},{c:'#ff9b14',l:'~2.5%'},{c:'#e53935',l:'> 4%'}].forEach(function(s) {
+      var item = createEl('div', 'legend-item');
+      var dot = createEl('span', 'legend-dot');
+      dot.style.background = s.c;
+      item.appendChild(dot);
+      item.appendChild(document.createTextNode(' ' + s.l));
+      sevLeg.appendChild(item);
+    });
+    var sevTitle = createEl('span', 'bubble-title', 'Delay');
+    sevLeg.insertBefore(sevTitle, sevLeg.firstChild);
+    row.appendChild(sevLeg);
+
+  } else {
+    /* Share color legend */
+    [{c:'#a8c4f5',l:'Menor Share'},{c:'#3483FA',l:'Share Médio'},{c:'#2D3277',l:'Maior Share'}].forEach(function(s) {
+      var item = createEl('div', 'legend-item');
+      var dot = createEl('span', 'legend-dot');
+      dot.style.background = s.c;
+      item.appendChild(dot);
+      item.appendChild(document.createTextNode(' ' + s.l));
+      row.appendChild(item);
+    });
+
+    /* Bubble size legend */
+    var maxRotas = data.reduce(function(m,d){ return Math.max(m, d.rotas); }, 0);
+    var bub = createEl('div', 'bubble-legend');
+    buildBubbleLegend(bub, maxRotas, 'Rotas');
+    row.appendChild(bub);
+  }
 }
 
 function render() {
-  var data = getData();
+  var data = getScatterData();
   if (!data.length) return;
 
+  /* Show/hide top filter */
+  document.getElementById('topFilterGroup').style.display = currentType === 'delay' ? 'none' : 'flex';
+
+  /* Update header */
+  if (currentType === 'delay') {
+    document.getElementById('chartTitle').textContent = 'Top 10 Contribution Delay LM x SVC';
+    document.getElementById('chartSubtitle').textContent = 'Contribution Delay LM (%) vs Delay LM (%) — cor por SP';
+  } else {
+    var label = currentType === 'ff' ? 'FF' : 'SDD';
+    var fullLabel = currentType === 'ff' ? 'Flex Fleet' : 'Same Day Delivery';
+    document.getElementById('chartTitle').textContent = 'QTDE Rotas x Share ' + label + ' x SVC';
+    document.getElementById('chartSubtitle').textContent = 'Share de ' + fullLabel + ' (%) vs Quantidade de rotas por Service Center';
+  }
+
+  renderKPIs(data);
+  renderLegend(data);
+
+  if (chart) chart.destroy();
+  var ctx = document.getElementById('scatterChart').getContext('2d');
+
+  if (currentType === 'delay') {
+    renderDelayChart(ctx, data);
+  } else {
+    renderShareChart(ctx, data);
+  }
+}
+
+function renderShareChart(ctx, data) {
   var label = currentType === 'ff' ? 'FF' : 'SDD';
-  var fullLabel = currentType === 'ff' ? 'Flex Fleet' : 'Same Day Delivery';
-
-  document.getElementById('chartTitle').textContent = 'QTDE Rotas x Share ' + label + ' x SVC';
-  document.getElementById('chartSubtitle').textContent = 'Share de ' + fullLabel + ' (%) vs Quantidade de rotas por Service Center';
-
-  updateKPIs(data);
-
   var maxShare = data.reduce(function(m,d){ return Math.max(m, d.share); }, 0);
   var maxRotas = data.reduce(function(m,d){ return Math.max(m, d.rotas); }, 0);
-
-  buildBubbleLegend(maxRotas);
-
-  var points = data.map(function(d) {
-    return { x: d.share, y: d.rotas, label: d.svc };
-  });
-  var bgColors = data.map(function(d) { return getColor(d.share, maxShare); });
-  var radii = data.map(function(d) { return getRadius(d.rotas, maxRotas); });
-
-  /* Dynamic axis limits */
   var xMax = Math.ceil((maxShare + 5) / 5) * 5;
   var yMax = Math.ceil((maxRotas * 1.15) / 500) * 500;
   if (xMax < 10) xMax = 10;
   if (yMax < 500) yMax = 500;
 
-  if (chart) chart.destroy();
-
-  var ctx = document.getElementById('scatterChart').getContext('2d');
+  var points = data.map(function(d) { return { x: d.share, y: d.rotas, label: d.svc }; });
+  var bgColors = data.map(function(d) { return getColorBlue(d.share, maxShare); });
+  var radii = data.map(function(d) { return getRadius(d.rotas, maxRotas); });
 
   chart = new Chart(ctx, {
     type: 'scatter',
@@ -451,89 +508,47 @@ function render() {
       datasets: [{
         data: points,
         backgroundColor: bgColors,
-        borderColor: bgColors.map(function(c) {
-          return c.replace('rgb(', 'rgba(').replace(')', ',0.7)');
-        }),
+        borderColor: bgColors.map(function(c) { return c.replace('rgb(', 'rgba(').replace(')', ',0.7)'); }),
         borderWidth: 2,
         pointRadius: radii,
-        pointHoverRadius: radii.map(function(r) { return r + 4; }),
-        pointStyle: 'circle'
+        pointHoverRadius: radii.map(function(r) { return r + 4; })
       }]
     },
     options: {
-      responsive: true,
-      maintainAspectRatio: false,
+      responsive: true, maintainAspectRatio: false,
       layout: { padding: { top: 24, right: 52, bottom: 12, left: 12 } },
       scales: {
         x: {
-          title: {
-            display: true, text: 'Share ' + label + ' (%)',
-            color: '#2D3277',
-            font: { size: 13, weight: '700', family: 'Inter' },
-            padding: { top: 12 }
-          },
-          ticks: {
-            callback: function(v) { return v + '%'; },
-            color: '#5a5f7a',
-            font: { size: 11, weight: '500', family: 'Inter' },
-            stepSize: 5
-          },
-          grid: { color: '#eef0f5', lineWidth: 1 },
-          border: { color: '#d8dbe5' },
+          title: { display: true, text: 'Share ' + label + ' (%)', color: '#2D3277', font: { size: 13, weight: '700', family: 'Inter' }, padding: { top: 12 } },
+          ticks: { callback: function(v) { return v + '%'; }, color: '#5a5f7a', font: { size: 11, weight: '500', family: 'Inter' }, stepSize: 5 },
+          grid: { color: '#eef0f5' }, border: { color: '#d8dbe5' },
           min: 0, max: xMax
         },
         y: {
-          title: {
-            display: true, text: 'QTDE_ROTAS',
-            color: '#2D3277',
-            font: { size: 13, weight: '700', family: 'Inter' },
-            padding: { bottom: 12 }
-          },
-          ticks: {
-            callback: function(v) { return v >= 1000 ? (v/1000).toFixed(0) + 'K' : v; },
-            color: '#5a5f7a',
-            font: { size: 11, weight: '500', family: 'Inter' },
-            stepSize: 500
-          },
-          grid: { color: '#eef0f5', lineWidth: 1 },
-          border: { color: '#d8dbe5' },
+          title: { display: true, text: 'QTDE_ROTAS', color: '#2D3277', font: { size: 13, weight: '700', family: 'Inter' }, padding: { bottom: 12 } },
+          ticks: { callback: function(v) { return v >= 1000 ? (v/1000).toFixed(0) + 'K' : v; }, color: '#5a5f7a', font: { size: 11, weight: '500', family: 'Inter' }, stepSize: 500 },
+          grid: { color: '#eef0f5' }, border: { color: '#d8dbe5' },
           min: 0, max: yMax
         }
       },
       plugins: {
         legend: { display: false },
         tooltip: {
-          backgroundColor: '#2D3277',
-          titleColor: '#FFE600',
-          bodyColor: '#fff',
-          borderColor: 'rgba(52,131,250,0.3)',
-          borderWidth: 1,
-          cornerRadius: 8,
-          padding: 12,
+          backgroundColor: '#2D3277', titleColor: '#FFE600', bodyColor: '#fff',
+          borderColor: 'rgba(52,131,250,0.3)', borderWidth: 1, cornerRadius: 8, padding: 12,
           titleFont: { family: 'Inter', weight: '700', size: 14 },
           bodyFont: { family: 'Inter', size: 12 },
           callbacks: {
-            title: function(ctx) { return ctx[0].raw.label; },
-            label: function(ctx) {
-              return [
-                'Share ' + label + ': ' + ctx.raw.x + '%',
-                'Rotas: ' + ctx.raw.y.toLocaleString('pt-BR')
-              ];
-            }
+            title: function(c) { return c[0].raw.label; },
+            label: function(c) { return ['Share ' + label + ': ' + c.raw.x + '%', 'Rotas: ' + c.raw.y.toLocaleString('pt-BR')]; }
           }
         },
         datalabels: {
-          align: function(context) {
-            var val = context.dataset.data[context.dataIndex];
-            return val.y > (yMax * 0.85) ? 'bottom' : 'top';
-          },
-          anchor: 'end',
-          offset: 6,
-          color: '#2D3277',
+          align: function(context) { return context.dataset.data[context.dataIndex].y > (yMax * 0.85) ? 'bottom' : 'top'; },
+          anchor: 'end', offset: 6, color: '#2D3277',
           font: { size: 11, weight: '700', family: 'Inter' },
-          formatter: function(value) { return value.label; },
-          textStrokeColor: '#fff',
-          textStrokeWidth: 3
+          formatter: function(v) { return v.label; },
+          textStrokeColor: '#fff', textStrokeWidth: 3
         }
       }
     },
@@ -541,7 +556,81 @@ function render() {
   });
 }
 
-/* ── EVENT LISTENERS ── */
+function renderDelayChart(ctx, data) {
+  var points = data.map(function(d) {
+    return { x: d.contribution, y: d.delay, label: d.svc, sp: d.sp };
+  });
+
+  var bgColors = data.map(function(d) { return getDelayColor(d.delay); });
+  var borderColors = data.map(function(d) { return SP_COLORS[d.sp]; });
+  var radii = data.map(function() { return 12; });
+
+  var xMax = 0.22;
+  var yMax = 6.5;
+
+  chart = new Chart(ctx, {
+    type: 'scatter',
+    data: {
+      datasets: [{
+        data: points,
+        backgroundColor: bgColors,
+        borderColor: borderColors,
+        borderWidth: 3,
+        pointRadius: radii,
+        pointHoverRadius: radii.map(function(r) { return r + 4; })
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      layout: { padding: { top: 24, right: 52, bottom: 12, left: 12 } },
+      scales: {
+        x: {
+          title: { display: true, text: 'Contribution Delay LM (%)', color: '#2D3277', font: { size: 13, weight: '700', family: 'Inter' }, padding: { top: 12 } },
+          ticks: { callback: function(v) { return v.toFixed(2) + '%'; }, color: '#5a5f7a', font: { size: 11, weight: '500', family: 'Inter' }, stepSize: 0.02 },
+          grid: { color: '#eef0f5' }, border: { color: '#d8dbe5' },
+          min: 0.04, max: xMax
+        },
+        y: {
+          title: { display: true, text: 'Delay LM (%)', color: '#2D3277', font: { size: 13, weight: '700', family: 'Inter' }, padding: { bottom: 12 } },
+          ticks: { callback: function(v) { return v.toFixed(1) + '%'; }, color: '#5a5f7a', font: { size: 11, weight: '500', family: 'Inter' }, stepSize: 0.5 },
+          grid: { color: '#eef0f5' }, border: { color: '#d8dbe5' },
+          min: 0.5, max: yMax
+        }
+      },
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          backgroundColor: '#2D3277', titleColor: '#FFE600', bodyColor: '#fff',
+          borderColor: 'rgba(52,131,250,0.3)', borderWidth: 1, cornerRadius: 8, padding: 12,
+          titleFont: { family: 'Inter', weight: '700', size: 14 },
+          bodyFont: { family: 'Inter', size: 12 },
+          callbacks: {
+            title: function(c) { return c[0].raw.label + ' (' + c[0].raw.sp + ')'; },
+            label: function(c) {
+              return [
+                'Delay LM: ' + c.raw.y.toFixed(2) + '%',
+                'Contribution: ' + c.raw.x.toFixed(2) + '%'
+              ];
+            }
+          }
+        },
+        datalabels: {
+          align: function(context) {
+            var val = context.dataset.data[context.dataIndex];
+            return val.y > 5 ? 'bottom' : 'top';
+          },
+          anchor: 'end', offset: 6, color: '#2D3277',
+          font: { size: 11, weight: '700', family: 'Inter' },
+          formatter: function(v) { return v.label; },
+          textStrokeColor: '#fff', textStrokeWidth: 3
+        }
+      }
+    },
+    plugins: [ChartDataLabels]
+  });
+}
+
+/* ═══════════════ EVENTS ═══════════════ */
 document.querySelectorAll('.btn-type').forEach(function(btn) {
   btn.addEventListener('click', function() {
     document.querySelectorAll('.btn-type').forEach(function(b) { b.classList.remove('active'); });
