@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>QTDE Rotas x Share FF x SVC</title>
+<title>QTDE Rotas x Share x SVC</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-datalabels/2.2.0/chartjs-plugin-datalabels.min.js"></script>
 <style>
@@ -22,7 +22,6 @@
     --text-muted: #9498b3;
     --shadow-sm: 0 1px 3px rgba(45,50,119,0.06);
     --shadow-md: 0 4px 16px rgba(45,50,119,0.08);
-    --shadow-lg: 0 8px 32px rgba(45,50,119,0.10);
   }
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -34,7 +33,6 @@
     min-height: 100vh;
   }
 
-  /* Top accent bar */
   .top-bar {
     height: 4px;
     background: linear-gradient(90deg, var(--ml-yellow) 0%, var(--ml-blue-light) 50%, var(--ml-blue) 100%);
@@ -46,225 +44,183 @@
     padding: 36px 40px 48px;
   }
 
-  /* Header */
   .header {
     display: flex;
     align-items: flex-end;
     justify-content: space-between;
-    margin-bottom: 32px;
+    margin-bottom: 28px;
     gap: 20px;
     flex-wrap: wrap;
   }
 
   .header-text h1 {
-    font-size: 26px;
-    font-weight: 800;
-    color: var(--ml-blue);
-    letter-spacing: -0.3px;
-    margin-bottom: 4px;
+    font-size: 26px; font-weight: 800;
+    color: var(--ml-blue); letter-spacing: -0.3px; margin-bottom: 4px;
   }
-
   .header-text p {
-    font-size: 14px;
-    color: var(--text-muted);
-    font-weight: 400;
+    font-size: 14px; color: var(--text-muted); font-weight: 400;
   }
 
   .badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    background: var(--ml-yellow);
-    color: var(--ml-blue);
-    font-size: 11px;
-    font-weight: 700;
-    padding: 5px 12px;
-    border-radius: 20px;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
+    display: inline-flex; align-items: center; gap: 6px;
+    background: var(--ml-yellow); color: var(--ml-blue);
+    font-size: 11px; font-weight: 700;
+    padding: 5px 12px; border-radius: 20px;
+    text-transform: uppercase; letter-spacing: 0.5px;
+  }
+  .badge-dot { width: 6px; height: 6px; background: var(--ml-blue); border-radius: 50%; }
+
+  /* Controls row */
+  .controls-row {
+    display: flex; align-items: center; gap: 24px;
+    margin-bottom: 24px; flex-wrap: wrap;
   }
 
-  .badge-dot {
-    width: 6px; height: 6px;
-    background: var(--ml-blue);
-    border-radius: 50%;
-  }
-
-  /* Filter pills */
-  .controls {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 24px;
-    flex-wrap: wrap;
+  .filter-group {
+    display: flex; align-items: center; gap: 8px;
   }
 
   .controls-label {
-    font-size: 12px;
-    font-weight: 600;
-    color: var(--text-muted);
-    text-transform: uppercase;
-    letter-spacing: 0.8px;
-    margin-right: 4px;
+    font-size: 11px; font-weight: 700; color: var(--text-muted);
+    text-transform: uppercase; letter-spacing: 0.8px;
   }
 
-  .btn-top {
+  .controls-sep {
+    width: 1px; height: 28px; background: var(--border);
+  }
+
+  .btn-pill {
     padding: 7px 16px;
     border: 1.5px solid var(--border);
     border-radius: 20px;
     background: var(--bg);
     color: var(--text-secondary);
     font-family: 'Inter', sans-serif;
-    font-size: 12px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s ease;
+    font-size: 12px; font-weight: 600;
+    cursor: pointer; transition: all 0.2s ease;
   }
-
-  .btn-top:hover {
+  .btn-pill:hover {
     border-color: var(--ml-blue-light);
     color: var(--ml-blue-light);
     background: rgba(52,131,250,0.04);
   }
-
-  .btn-top.active {
+  .btn-pill.active {
     background: var(--ml-blue);
     border-color: var(--ml-blue);
     color: #fff;
     box-shadow: 0 2px 8px rgba(45,50,119,0.25);
   }
 
+  /* Type toggle - bigger, more prominent */
+  .btn-type {
+    padding: 8px 20px;
+    border: 2px solid var(--border);
+    border-radius: 8px;
+    background: var(--bg);
+    color: var(--text-secondary);
+    font-family: 'Inter', sans-serif;
+    font-size: 13px; font-weight: 700;
+    cursor: pointer; transition: all 0.2s ease;
+    letter-spacing: 0.3px;
+  }
+  .btn-type:hover {
+    border-color: var(--ml-blue-light);
+    color: var(--ml-blue-light);
+  }
+  .btn-type.active {
+    background: var(--ml-yellow);
+    border-color: var(--ml-yellow);
+    color: var(--ml-blue);
+    box-shadow: 0 2px 10px rgba(255,230,0,0.35);
+  }
+
   /* KPI cards */
   .kpi-bar {
     display: grid;
     grid-template-columns: repeat(5, 1fr);
-    gap: 14px;
-    margin-bottom: 24px;
+    gap: 14px; margin-bottom: 24px;
   }
-
   @media (max-width: 900px) {
     .kpi-bar { grid-template-columns: repeat(2, 1fr); }
   }
 
   .kpi {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 18px 16px 14px;
-    text-align: center;
-    box-shadow: var(--shadow-sm);
-    position: relative;
-    overflow: hidden;
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 12px; padding: 18px 16px 14px;
+    text-align: center; box-shadow: var(--shadow-sm);
+    position: relative; overflow: hidden;
   }
-
   .kpi::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 3px;
+    content: ''; position: absolute;
+    top: 0; left: 0; right: 0; height: 3px;
     background: var(--ml-yellow);
   }
-
   .kpi-value {
-    font-size: 22px;
-    font-weight: 800;
-    color: var(--ml-blue);
-    font-variant-numeric: tabular-nums;
-    line-height: 1.2;
+    font-size: 22px; font-weight: 800; color: var(--ml-blue);
+    font-variant-numeric: tabular-nums; line-height: 1.2;
   }
-
   .kpi-label {
-    font-size: 10px;
-    color: var(--text-muted);
-    text-transform: uppercase;
-    letter-spacing: 0.8px;
-    font-weight: 600;
-    margin-top: 4px;
+    font-size: 10px; color: var(--text-muted);
+    text-transform: uppercase; letter-spacing: 0.8px;
+    font-weight: 600; margin-top: 4px;
   }
 
   /* Chart card */
   .chart-card {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    padding: 32px;
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 16px; padding: 32px;
     box-shadow: var(--shadow-md);
   }
-
-  .chart-wrapper {
-    position: relative;
-    width: 100%;
-    height: 520px;
-  }
+  .chart-wrapper { position: relative; width: 100%; height: 520px; }
 
   /* Legend */
   .legend-row {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 24px;
-    margin-top: 20px;
-    padding-top: 16px;
-    border-top: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    gap: 20px; margin-top: 20px; padding-top: 16px;
+    border-top: 1px solid var(--border); flex-wrap: wrap;
   }
-
   .legend-item {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    font-size: 12px;
-    color: var(--text-secondary);
-    font-weight: 500;
+    display: flex; align-items: center; gap: 6px;
+    font-size: 12px; color: var(--text-secondary); font-weight: 500;
   }
-
   .legend-dot {
-    width: 12px; height: 12px;
-    border-radius: 50%;
+    width: 12px; height: 12px; border-radius: 50%;
     border: 2px solid #fff;
     box-shadow: 0 1px 3px rgba(0,0,0,0.15);
   }
 
-  .size-hint {
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    font-size: 12px;
-    color: var(--text-muted);
-    font-weight: 500;
-    margin-left: 16px;
-    padding-left: 16px;
+  /* Bubble size legend */
+  .bubble-legend {
+    display: flex; align-items: flex-end; gap: 6px;
+    margin-left: 12px; padding-left: 16px;
     border-left: 1px solid var(--border);
   }
-
-  .size-circle {
+  .bubble-col {
+    display: flex; flex-direction: column; align-items: center; gap: 3px;
+  }
+  .bubble-circle {
     border-radius: 50%;
-    background: rgba(45,50,119,0.12);
-    border: 1.5px solid rgba(45,50,119,0.25);
+    background: rgba(45,50,119,0.10);
+    border: 1.5px solid rgba(45,50,119,0.20);
+  }
+  .bubble-val {
+    font-size: 9px; font-weight: 600; color: var(--text-muted);
+    font-variant-numeric: tabular-nums;
+  }
+  .bubble-title {
+    font-size: 10px; font-weight: 600; color: var(--text-muted);
+    margin-right: 8px; text-transform: uppercase; letter-spacing: 0.4px;
+    align-self: center;
   }
 
   /* Footer */
   .footer {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-top: 24px;
-    padding: 0 4px;
-    font-size: 11px;
-    color: var(--text-muted);
-    font-weight: 500;
+    display: flex; align-items: center; justify-content: space-between;
+    margin-top: 24px; padding: 0 4px;
+    font-size: 11px; color: var(--text-muted); font-weight: 500;
   }
-
-  .footer-meli {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-  }
-
-  .meli-square {
-    width: 14px; height: 14px;
-    background: var(--ml-yellow);
-    border-radius: 3px;
-  }
+  .footer-meli { display: flex; align-items: center; gap: 6px; }
+  .meli-square { width: 14px; height: 14px; background: var(--ml-yellow); border-radius: 3px; }
 </style>
 </head>
 <body>
@@ -274,8 +230,8 @@
 <div class="container">
   <div class="header">
     <div class="header-text">
-      <h1>QTDE Rotas x Share FF x SVC</h1>
-      <p>Share de Flex Fleet (%) vs Quantidade de rotas por Service Center</p>
+      <h1 id="chartTitle">QTDE Rotas x Share FF x SVC</h1>
+      <p id="chartSubtitle">Share de Flex Fleet (%) vs Quantidade de rotas por Service Center</p>
     </div>
     <div class="badge">
       <span class="badge-dot"></span>
@@ -283,13 +239,23 @@
     </div>
   </div>
 
-  <div class="controls">
-    <span class="controls-label">Top SVCs</span>
-    <button class="btn-top" data-top="5">Top 5</button>
-    <button class="btn-top" data-top="10">Top 10</button>
-    <button class="btn-top active" data-top="15">Top 15</button>
-    <button class="btn-top" data-top="20">Top 20</button>
-    <button class="btn-top" data-top="0">Todos</button>
+  <div class="controls-row">
+    <div class="filter-group">
+      <span class="controls-label">Tipo</span>
+      <button class="btn-type active" data-type="ff">FF</button>
+      <button class="btn-type" data-type="sdd">SDD</button>
+    </div>
+
+    <div class="controls-sep"></div>
+
+    <div class="filter-group">
+      <span class="controls-label">Top SVCs</span>
+      <button class="btn-pill" data-top="5">Top 5</button>
+      <button class="btn-pill" data-top="10">Top 10</button>
+      <button class="btn-pill active" data-top="15">Top 15</button>
+      <button class="btn-pill" data-top="20">Top 20</button>
+      <button class="btn-pill" data-top="0">Todos</button>
+    </div>
   </div>
 
   <div id="kpiBar" class="kpi-bar"></div>
@@ -308,12 +274,7 @@
       <div class="legend-item">
         <span class="legend-dot" style="background:#2D3277"></span> Maior Share
       </div>
-      <div class="size-hint">
-        <span class="size-circle" style="width:8px;height:8px"></span>
-        <span class="size-circle" style="width:14px;height:14px"></span>
-        <span class="size-circle" style="width:20px;height:20px"></span>
-        Tamanho = volume de rotas
-      </div>
+      <div class="bubble-legend" id="bubbleLegend"></div>
     </div>
   </div>
 
@@ -322,56 +283,61 @@
       <span class="meli-square"></span>
       Mercado Livre — Logística
     </div>
-    <span>Fonte: CSV — Share FF por SVC | 07/04/2026</span>
+    <span>Fonte: CSV — Share por SVC | 07/04/2026</span>
   </div>
 </div>
 
 <script>
-var RAW_DATA = [
-  {svc:"SSP16",share:48,rotas:2397},
-  {svc:"SSP46",share:41,rotas:125},
-  {svc:"SSP21",share:36,rotas:2611},
-  {svc:"SSP1",share:33,rotas:2203},
-  {svc:"SSP7",share:32,rotas:3391},
-  {svc:"SSP40",share:30,rotas:2607},
-  {svc:"SSP25",share:27,rotas:2657},
-  {svc:"SSP20",share:27,rotas:3496},
-  {svc:"SSP29",share:25,rotas:2321},
-  {svc:"SSP17",share:24,rotas:2541},
-  {svc:"SSP30",share:24,rotas:3609},
-  {svc:"SSP38",share:24,rotas:1890},
-  {svc:"SSP48",share:24,rotas:2239},
-  {svc:"SSP9",share:23,rotas:2728},
-  {svc:"SSP27",share:22,rotas:1888},
-  {svc:"SSP6",share:21,rotas:2181},
-  {svc:"SSP18",share:21,rotas:2458},
-  {svc:"SSP8",share:20,rotas:3287},
-  {svc:"SSP5",share:20,rotas:3913},
-  {svc:"SSP34",share:20,rotas:2174},
-  {svc:"SSP45",share:17,rotas:1750},
-  {svc:"SSP15",share:15,rotas:2620},
-  {svc:"SSP49",share:15,rotas:703},
-  {svc:"SSP23",share:12,rotas:1595},
-  {svc:"SSP39",share:12,rotas:751},
-  {svc:"SSP36",share:11,rotas:736}
+/* ── DATA ── */
+var DATA_FF = [
+  {svc:"SSP16",share:48,rotas:2397},{svc:"SSP46",share:41,rotas:125},
+  {svc:"SSP21",share:36,rotas:2611},{svc:"SSP1",share:33,rotas:2203},
+  {svc:"SSP7",share:32,rotas:3391},{svc:"SSP40",share:30,rotas:2607},
+  {svc:"SSP25",share:27,rotas:2657},{svc:"SSP20",share:27,rotas:3496},
+  {svc:"SSP29",share:25,rotas:2321},{svc:"SSP17",share:24,rotas:2541},
+  {svc:"SSP30",share:24,rotas:3609},{svc:"SSP38",share:24,rotas:1890},
+  {svc:"SSP48",share:24,rotas:2239},{svc:"SSP9",share:23,rotas:2728},
+  {svc:"SSP27",share:22,rotas:1888},{svc:"SSP6",share:21,rotas:2181},
+  {svc:"SSP18",share:21,rotas:2458},{svc:"SSP8",share:20,rotas:3287},
+  {svc:"SSP5",share:20,rotas:3913},{svc:"SSP34",share:20,rotas:2174},
+  {svc:"SSP45",share:17,rotas:1750},{svc:"SSP15",share:15,rotas:2620},
+  {svc:"SSP49",share:15,rotas:703},{svc:"SSP23",share:12,rotas:1595},
+  {svc:"SSP39",share:12,rotas:751},{svc:"SSP36",share:11,rotas:736}
 ];
 
-var SORTED = RAW_DATA.slice().sort(function(a,b){ return b.rotas - a.rotas; });
+var DATA_SDD = [
+  {svc:"SSP1",share:12,rotas:773},{svc:"SSP15",share:6,rotas:954},
+  {svc:"SSP16",share:0,rotas:0},{svc:"SSP17",share:6,rotas:670},
+  {svc:"SSP18",share:7,rotas:841},{svc:"SSP20",share:9,rotas:1166},
+  {svc:"SSP21",share:2,rotas:162},{svc:"SSP23",share:21,rotas:2745},
+  {svc:"SSP25",share:9,rotas:892},{svc:"SSP27",share:6,rotas:559},
+  {svc:"SSP29",share:8,rotas:733},{svc:"SSP30",share:1,rotas:201},
+  {svc:"SSP34",share:17,rotas:1917},{svc:"SSP36",share:9,rotas:577},
+  {svc:"SSP38",share:19,rotas:1475},{svc:"SSP39",share:14,rotas:913},
+  {svc:"SSP40",share:0,rotas:5},{svc:"SSP45",share:9,rotas:919},
+  {svc:"SSP46",share:19,rotas:57},{svc:"SSP48",share:7,rotas:697},
+  {svc:"SSP49",share:6,rotas:285},{svc:"SSP5",share:12,rotas:2368},
+  {svc:"SSP6",share:6,rotas:597},{svc:"SSP7",share:5,rotas:573},
+  {svc:"SSP8",share:10,rotas:1672},{svc:"SSP9",share:10,rotas:1200}
+];
 
-function getColor(share) {
-  var minS = 10, maxS = 50;
-  var t = Math.max(0, Math.min(1, (share - minS) / (maxS - minS)));
-  // Light meli-blue → dark meli-blue
+/* ── STATE ── */
+var currentType = 'ff';
+var currentTop = 15;
+
+/* ── HELPERS ── */
+function getColor(share, maxShare) {
+  var t = maxShare > 0 ? Math.max(0, Math.min(1, share / maxShare)) : 0;
   var r = Math.round(168 - t * 123);
   var g = Math.round(196 - t * 146);
   var b = Math.round(245 - t * 126);
   return 'rgb(' + r + ',' + g + ',' + b + ')';
 }
 
-function getRadius(rotas) {
-  var min = 100, max = 4000;
-  var t = Math.max(0, Math.min(1, (rotas - min) / (max - min)));
-  return 7 + t * 12;
+function getRadius(rotas, maxRotas) {
+  if (maxRotas <= 0) return 6;
+  var t = Math.max(0, Math.min(1, rotas / maxRotas));
+  return 6 + t * 14;
 }
 
 function createKpiElement(value, label) {
@@ -388,9 +354,49 @@ function createKpiElement(value, label) {
   return kpi;
 }
 
+function buildBubbleLegend(maxRotas) {
+  var container = document.getElementById('bubbleLegend');
+  while (container.firstChild) container.removeChild(container.firstChild);
+
+  var title = document.createElement('span');
+  title.className = 'bubble-title';
+  title.textContent = 'Rotas';
+  container.appendChild(title);
+
+  var steps = [0.2, 0.5, 1.0];
+  steps.forEach(function(pct) {
+    var val = Math.round(maxRotas * pct);
+    var r = getRadius(val, maxRotas);
+    var col = document.createElement('div');
+    col.className = 'bubble-col';
+
+    var circle = document.createElement('div');
+    circle.className = 'bubble-circle';
+    circle.style.width = (r * 2) + 'px';
+    circle.style.height = (r * 2) + 'px';
+
+    var lbl = document.createElement('span');
+    lbl.className = 'bubble-val';
+    lbl.textContent = val >= 1000 ? (val / 1000).toFixed(1) + 'K' : String(val);
+
+    col.appendChild(circle);
+    col.appendChild(lbl);
+    container.appendChild(col);
+  });
+}
+
+/* ── CHART ── */
 var chart = null;
 
+function getData() {
+  var src = currentType === 'ff' ? DATA_FF : DATA_SDD;
+  var filtered = src.filter(function(d) { return d.rotas > 0; });
+  var sorted = filtered.slice().sort(function(a,b) { return b.rotas - a.rotas; });
+  return currentTop === 0 ? sorted : sorted.slice(0, currentTop);
+}
+
 function updateKPIs(data) {
+  var label = currentType === 'ff' ? 'FF' : 'SDD';
   var avgShare = (data.reduce(function(s,d){ return s + d.share; }, 0) / data.length).toFixed(1);
   var totalRotas = data.reduce(function(s,d){ return s + d.rotas; }, 0);
   var maxShare = data.reduce(function(m,d){ return d.share > m.share ? d : m; }, data[0]);
@@ -400,22 +406,40 @@ function updateKPIs(data) {
   while (bar.firstChild) bar.removeChild(bar.firstChild);
 
   bar.appendChild(createKpiElement(String(data.length), 'SVCs exibidos'));
-  bar.appendChild(createKpiElement(avgShare + '%', 'Share FF médio'));
+  bar.appendChild(createKpiElement(avgShare + '%', 'Share ' + label + ' médio'));
   bar.appendChild(createKpiElement(totalRotas.toLocaleString('pt-BR'), 'Total rotas'));
   bar.appendChild(createKpiElement(maxShare.svc + ' (' + maxShare.share + '%)', 'Maior share'));
   bar.appendChild(createKpiElement(maxRotas.svc + ' (' + maxRotas.rotas.toLocaleString('pt-BR') + ')', 'Mais rotas'));
 }
 
-function renderChart(topN) {
-  var data = topN === 0 ? SORTED : SORTED.slice(0, topN);
+function render() {
+  var data = getData();
+  if (!data.length) return;
+
+  var label = currentType === 'ff' ? 'FF' : 'SDD';
+  var fullLabel = currentType === 'ff' ? 'Flex Fleet' : 'Same Day Delivery';
+
+  document.getElementById('chartTitle').textContent = 'QTDE Rotas x Share ' + label + ' x SVC';
+  document.getElementById('chartSubtitle').textContent = 'Share de ' + fullLabel + ' (%) vs Quantidade de rotas por Service Center';
+
   updateKPIs(data);
+
+  var maxShare = data.reduce(function(m,d){ return Math.max(m, d.share); }, 0);
+  var maxRotas = data.reduce(function(m,d){ return Math.max(m, d.rotas); }, 0);
+
+  buildBubbleLegend(maxRotas);
 
   var points = data.map(function(d) {
     return { x: d.share, y: d.rotas, label: d.svc };
   });
+  var bgColors = data.map(function(d) { return getColor(d.share, maxShare); });
+  var radii = data.map(function(d) { return getRadius(d.rotas, maxRotas); });
 
-  var bgColors = data.map(function(d) { return getColor(d.share); });
-  var radii = data.map(function(d) { return getRadius(d.rotas); });
+  /* Dynamic axis limits */
+  var xMax = Math.ceil((maxShare + 5) / 5) * 5;
+  var yMax = Math.ceil((maxRotas * 1.15) / 500) * 500;
+  if (xMax < 10) xMax = 10;
+  if (yMax < 500) yMax = 500;
 
   if (chart) chart.destroy();
 
@@ -439,11 +463,11 @@ function renderChart(topN) {
     options: {
       responsive: true,
       maintainAspectRatio: false,
-      layout: { padding: { top: 24, right: 48, bottom: 12, left: 12 } },
+      layout: { padding: { top: 24, right: 52, bottom: 12, left: 12 } },
       scales: {
         x: {
           title: {
-            display: true, text: 'Share FF (%)',
+            display: true, text: 'Share ' + label + ' (%)',
             color: '#2D3277',
             font: { size: 13, weight: '700', family: 'Inter' },
             padding: { top: 12 }
@@ -456,7 +480,7 @@ function renderChart(topN) {
           },
           grid: { color: '#eef0f5', lineWidth: 1 },
           border: { color: '#d8dbe5' },
-          min: 5, max: 55
+          min: 0, max: xMax
         },
         y: {
           title: {
@@ -473,7 +497,7 @@ function renderChart(topN) {
           },
           grid: { color: '#eef0f5', lineWidth: 1 },
           border: { color: '#d8dbe5' },
-          min: 0, max: 4500
+          min: 0, max: yMax
         }
       },
       plugins: {
@@ -492,7 +516,7 @@ function renderChart(topN) {
             title: function(ctx) { return ctx[0].raw.label; },
             label: function(ctx) {
               return [
-                'Share FF: ' + ctx.raw.x + '%',
+                'Share ' + label + ': ' + ctx.raw.x + '%',
                 'Rotas: ' + ctx.raw.y.toLocaleString('pt-BR')
               ];
             }
@@ -500,9 +524,8 @@ function renderChart(topN) {
         },
         datalabels: {
           align: function(context) {
-            var idx = context.dataIndex;
-            var val = context.dataset.data[idx];
-            return val.y > 3500 ? 'bottom' : 'top';
+            var val = context.dataset.data[context.dataIndex];
+            return val.y > (yMax * 0.85) ? 'bottom' : 'top';
           },
           anchor: 'end',
           offset: 6,
@@ -518,15 +541,26 @@ function renderChart(topN) {
   });
 }
 
-document.querySelectorAll('.btn-top').forEach(function(btn) {
+/* ── EVENT LISTENERS ── */
+document.querySelectorAll('.btn-type').forEach(function(btn) {
   btn.addEventListener('click', function() {
-    document.querySelectorAll('.btn-top').forEach(function(b) { b.classList.remove('active'); });
+    document.querySelectorAll('.btn-type').forEach(function(b) { b.classList.remove('active'); });
     this.classList.add('active');
-    renderChart(parseInt(this.dataset.top));
+    currentType = this.dataset.type;
+    render();
   });
 });
 
-renderChart(15);
+document.querySelectorAll('.btn-pill').forEach(function(btn) {
+  btn.addEventListener('click', function() {
+    document.querySelectorAll('.btn-pill').forEach(function(b) { b.classList.remove('active'); });
+    this.classList.add('active');
+    currentTop = parseInt(this.dataset.top);
+    render();
+  });
+});
+
+render();
 </script>
 
 </body>
