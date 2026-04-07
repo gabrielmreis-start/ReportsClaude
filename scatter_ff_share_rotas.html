@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QTDE Rotas x Share FF x SVC</title>
+<script src="https://unpkg.com/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script src="https://unpkg.com/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.min.js"></script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+
+  :root {
+    --bg: #0f0f1a;
+    --card: #1a1a2e;
+    --border: rgba(255,255,255,0.08);
+    --text: #e0e0e0;
+    --text-muted: #8a8a9a;
+    --accent: #3483FA;
+    --accent-light: #5ba0ff;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    padding: 32px;
+  }
+
+  .container { max-width: 1200px; margin: 0 auto; }
+
+  .header { margin-bottom: 28px; }
+  .header h1 { font-size: 28px; font-weight: 700; color: #fff; margin-bottom: 6px; }
+  .header p { font-size: 14px; color: var(--text-muted); }
+
+  .controls {
+    display: flex; align-items: center; gap: 16px;
+    margin-bottom: 24px; flex-wrap: wrap;
+  }
+  .controls label {
+    font-size: 13px; font-weight: 600; color: var(--text-muted);
+    text-transform: uppercase; letter-spacing: 0.5px;
+  }
+  .filter-group { display: flex; align-items: center; gap: 8px; }
+
+  .btn-top {
+    padding: 6px 14px; border: 1px solid var(--border); border-radius: 6px;
+    background: transparent; color: var(--text-muted);
+    font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 500;
+    cursor: pointer; transition: all 0.2s;
+  }
+  .btn-top:hover { border-color: var(--accent); color: var(--accent-light); }
+  .btn-top.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+
+  .chart-card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 12px; padding: 28px;
+  }
+  .chart-wrapper { position: relative; width: 100%; height: 560px; }
+
+  .kpi-bar {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 12px; margin-bottom: 20px;
+  }
+  .kpi {
+    background: rgba(52, 131, 250, 0.08);
+    border: 1px solid rgba(52, 131, 250, 0.15);
+    border-radius: 8px; padding: 14px 16px; text-align: center;
+  }
+  .kpi-value {
+    font-size: 22px; font-weight: 700; color: #fff;
+    font-variant-numeric: tabular-nums;
+  }
+  .kpi-label {
+    font-size: 11px; color: var(--text-muted);
+    text-transform: uppercase; letter-spacing: 0.5px; margin-top: 2px;
+  }
+
+  .footer { text-align: center; margin-top: 20px; font-size: 12px; color: var(--text-muted); }
+
+  .legend-hint {
+    display: flex; align-items: center; gap: 16px;
+    justify-content: center; margin-top: 12px; font-size: 12px; color: var(--text-muted);
+  }
+  .legend-dot {
+    width: 10px; height: 10px; border-radius: 50%;
+    display: inline-block; margin-right: 4px;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <h1>QTDE Rotas x Share FF x SVC</h1>
+    <p>Scatter plot — Share de FF (%) vs Quantidade de rotas por SVC</p>
+  </div>
+
+  <div class="controls">
+    <div class="filter-group">
+      <label>Filtro:</label>
+      <button class="btn-top" data-top="5">Top 5</button>
+      <button class="btn-top" data-top="10">Top 10</button>
+      <button class="btn-top active" data-top="15">Top 15</button>
+      <button class="btn-top" data-top="20">Top 20</button>
+      <button class="btn-top" data-top="0">Todos</button>
+    </div>
+  </div>
+
+  <div id="kpiBar" class="kpi-bar"></div>
+
+  <div class="chart-card">
+    <div class="chart-wrapper">
+      <canvas id="scatterChart"></canvas>
+    </div>
+    <div class="legend-hint">
+      <span><span class="legend-dot" style="background:#9fc5f8"></span> Menor Share</span>
+      <span><span class="legend-dot" style="background:#3483FA"></span> Share Médio</span>
+      <span><span class="legend-dot" style="background:#0a1f3d"></span> Maior Share</span>
+    </div>
+  </div>
+
+  <div class="footer">
+    Fonte: CSV — Share FF por SVC | Gerado em 07/04/2026
+  </div>
+</div>
+
+<script>
+const RAW_DATA = [
+  {svc:"SSP16",share:48,rotas:2397},
+  {svc:"SSP46",share:41,rotas:125},
+  {svc:"SSP21",share:36,rotas:2611},
+  {svc:"SSP1",share:33,rotas:2203},
+  {svc:"SSP7",share:32,rotas:3391},
+  {svc:"SSP40",share:30,rotas:2607},
+  {svc:"SSP25",share:27,rotas:2657},
+  {svc:"SSP20",share:27,rotas:3496},
+  {svc:"SSP29",share:25,rotas:2321},
+  {svc:"SSP17",share:24,rotas:2541},
+  {svc:"SSP30",share:24,rotas:3609},
+  {svc:"SSP38",share:24,rotas:1890},
+  {svc:"SSP48",share:24,rotas:2239},
+  {svc:"SSP9",share:23,rotas:2728},
+  {svc:"SSP27",share:22,rotas:1888},
+  {svc:"SSP6",share:21,rotas:2181},
+  {svc:"SSP18",share:21,rotas:2458},
+  {svc:"SSP8",share:20,rotas:3287},
+  {svc:"SSP5",share:20,rotas:3913},
+  {svc:"SSP34",share:20,rotas:2174},
+  {svc:"SSP45",share:17,rotas:1750},
+  {svc:"SSP15",share:15,rotas:2620},
+  {svc:"SSP49",share:15,rotas:703},
+  {svc:"SSP23",share:12,rotas:1595},
+  {svc:"SSP39",share:12,rotas:751},
+  {svc:"SSP36",share:11,rotas:736}
+];
+
+const SORTED = [...RAW_DATA].sort((a,b) => b.rotas - a.rotas);
+
+function getColor(share) {
+  const minS = 10, maxS = 50;
+  const t = Math.max(0, Math.min(1, (share - minS) / (maxS - minS)));
+  const r = Math.round(180 - t * 155);
+  const g = Math.round(210 - t * 130);
+  const b = Math.round(250 - t * 100);
+  return 'rgb(' + r + ',' + g + ',' + b + ')';
+}
+
+function getRadius(rotas) {
+  const min = 100, max = 4000;
+  const t = Math.max(0, Math.min(1, (rotas - min) / (max - min)));
+  return 6 + t * 10;
+}
+
+function createKpiElement(value, label) {
+  var kpi = document.createElement('div');
+  kpi.className = 'kpi';
+  var valEl = document.createElement('div');
+  valEl.className = 'kpi-value';
+  valEl.textContent = value;
+  var labEl = document.createElement('div');
+  labEl.className = 'kpi-label';
+  labEl.textContent = label;
+  kpi.appendChild(valEl);
+  kpi.appendChild(labEl);
+  return kpi;
+}
+
+let chart = null;
+
+function updateKPIs(data) {
+  var avgShare = (data.reduce(function(s,d){ return s + d.share; }, 0) / data.length).toFixed(1);
+  var totalRotas = data.reduce(function(s,d){ return s + d.rotas; }, 0);
+  var maxShare = data.reduce(function(m,d){ return d.share > m.share ? d : m; }, data[0]);
+  var maxRotas = data.reduce(function(m,d){ return d.rotas > m.rotas ? d : m; }, data[0]);
+
+  var bar = document.getElementById('kpiBar');
+  while (bar.firstChild) bar.removeChild(bar.firstChild);
+
+  bar.appendChild(createKpiElement(String(data.length), 'SVCs exibidos'));
+  bar.appendChild(createKpiElement(avgShare + '%', 'Share FF médio'));
+  bar.appendChild(createKpiElement(totalRotas.toLocaleString('pt-BR'), 'Total rotas'));
+  bar.appendChild(createKpiElement(maxShare.svc + ' (' + maxShare.share + '%)', 'Maior Share'));
+  bar.appendChild(createKpiElement(maxRotas.svc + ' (' + maxRotas.rotas.toLocaleString('pt-BR') + ')', 'Mais rotas'));
+}
+
+function renderChart(topN) {
+  var data = topN === 0 ? SORTED : SORTED.slice(0, topN);
+  updateKPIs(data);
+
+  var points = data.map(function(d) {
+    return { x: d.share, y: d.rotas, label: d.svc };
+  });
+
+  var bgColors = data.map(function(d) { return getColor(d.share); });
+  var radii = data.map(function(d) { return getRadius(d.rotas); });
+
+  if (chart) chart.destroy();
+
+  var ctx = document.getElementById('scatterChart').getContext('2d');
+
+  chart = new Chart(ctx, {
+    type: 'scatter',
+    data: {
+      datasets: [{
+        data: points,
+        backgroundColor: bgColors,
+        borderColor: bgColors.map(function(c) { return c.replace('rgb', 'rgba').replace(')', ',0.6)'); }),
+        borderWidth: 1.5,
+        pointRadius: radii,
+        pointHoverRadius: radii.map(function(r) { return r + 3; })
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      layout: { padding: { top: 20, right: 40, bottom: 10, left: 10 } },
+      scales: {
+        x: {
+          title: {
+            display: true, text: 'Share FF (%)',
+            color: '#8a8a9a', font: { size: 13, weight: '600', family: 'Inter' }
+          },
+          ticks: {
+            callback: function(v) { return v + '%'; },
+            color: '#8a8a9a', font: { size: 11, family: 'Inter' }, stepSize: 5
+          },
+          grid: { color: 'rgba(255,255,255,0.05)', drawBorder: false },
+          min: 5, max: 55
+        },
+        y: {
+          title: {
+            display: true, text: 'QTDE_ROTAS',
+            color: '#8a8a9a', font: { size: 13, weight: '600', family: 'Inter' }
+          },
+          ticks: {
+            callback: function(v) { return v >= 1000 ? (v/1000).toFixed(0) + 'K' : v; },
+            color: '#8a8a9a', font: { size: 11, family: 'Inter' }, stepSize: 500
+          },
+          grid: { color: 'rgba(255,255,255,0.05)', drawBorder: false },
+          min: 0, max: 4500
+        }
+      },
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          backgroundColor: '#1a1a2e',
+          borderColor: 'rgba(52,131,250,0.3)',
+          borderWidth: 1,
+          titleFont: { family: 'Inter', weight: '600' },
+          bodyFont: { family: 'Inter' },
+          callbacks: {
+            title: function(ctx) { return ctx[0].raw.label; },
+            label: function(ctx) { return ['Share FF: ' + ctx.raw.x + '%', 'Rotas: ' + ctx.raw.y.toLocaleString('pt-BR')]; }
+          }
+        },
+        datalabels: {
+          align: 'top', anchor: 'end', offset: 4,
+          color: '#c0c0d0',
+          font: { size: 11, weight: '600', family: 'Inter' },
+          formatter: function(value) { return value.label; }
+        }
+      }
+    },
+    plugins: [ChartDataLabels]
+  });
+}
+
+document.querySelectorAll('.btn-top').forEach(function(btn) {
+  btn.addEventListener('click', function() {
+    document.querySelectorAll('.btn-top').forEach(function(b) { b.classList.remove('active'); });
+    this.classList.add('active');
+    renderChart(parseInt(this.dataset.top));
+  });
+});
+
+renderChart(15);
+</script>
+
+</body>
+</html>
