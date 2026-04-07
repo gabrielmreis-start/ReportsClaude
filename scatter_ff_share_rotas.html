@@ -7,109 +7,289 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-datalabels/2.2.0/chartjs-plugin-datalabels.min.js"></script>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
 
   :root {
-    --bg: #0f0f1a;
-    --card: #1a1a2e;
-    --border: rgba(255,255,255,0.08);
-    --text: #e0e0e0;
-    --text-muted: #8a8a9a;
     --ml-yellow: #FFE600;
     --ml-blue: #2D3277;
     --ml-blue-light: #3483FA;
-    --accent: #3483FA;
-    --accent-light: #5ba0ff;
+    --bg: #ffffff;
+    --surface: #f7f8fc;
+    --card: #ffffff;
+    --border: #e8eaf0;
+    --text: #1a1a2e;
+    --text-secondary: #5a5f7a;
+    --text-muted: #9498b3;
+    --shadow-sm: 0 1px 3px rgba(45,50,119,0.06);
+    --shadow-md: 0 4px 16px rgba(45,50,119,0.08);
+    --shadow-lg: 0 8px 32px rgba(45,50,119,0.10);
   }
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
 
   body {
-    font-family: 'Inter', sans-serif;
-    background: var(--bg);
+    font-family: 'Inter', -apple-system, sans-serif;
+    background: var(--surface);
     color: var(--text);
     min-height: 100vh;
-    padding: 32px;
   }
 
-  .container { max-width: 1200px; margin: 0 auto; }
+  /* Top accent bar */
+  .top-bar {
+    height: 4px;
+    background: linear-gradient(90deg, var(--ml-yellow) 0%, var(--ml-blue-light) 50%, var(--ml-blue) 100%);
+  }
 
-  .header { margin-bottom: 28px; }
-  .header h1 { font-size: 28px; font-weight: 700; color: var(--ml-yellow); margin-bottom: 6px; }
-  .header p { font-size: 14px; color: var(--text-muted); }
+  .container {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 36px 40px 48px;
+  }
 
+  /* Header */
+  .header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    margin-bottom: 32px;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+
+  .header-text h1 {
+    font-size: 26px;
+    font-weight: 800;
+    color: var(--ml-blue);
+    letter-spacing: -0.3px;
+    margin-bottom: 4px;
+  }
+
+  .header-text p {
+    font-size: 14px;
+    color: var(--text-muted);
+    font-weight: 400;
+  }
+
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--ml-yellow);
+    color: var(--ml-blue);
+    font-size: 11px;
+    font-weight: 700;
+    padding: 5px 12px;
+    border-radius: 20px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .badge-dot {
+    width: 6px; height: 6px;
+    background: var(--ml-blue);
+    border-radius: 50%;
+  }
+
+  /* Filter pills */
   .controls {
-    display: flex; align-items: center; gap: 16px;
-    margin-bottom: 24px; flex-wrap: wrap;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
   }
-  .controls label {
-    font-size: 13px; font-weight: 600; color: var(--text-muted);
-    text-transform: uppercase; letter-spacing: 0.5px;
+
+  .controls-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    margin-right: 4px;
   }
-  .filter-group { display: flex; align-items: center; gap: 8px; }
 
   .btn-top {
-    padding: 6px 14px; border: 1px solid var(--border); border-radius: 6px;
-    background: transparent; color: var(--text-muted);
-    font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 500;
-    cursor: pointer; transition: all 0.2s;
+    padding: 7px 16px;
+    border: 1.5px solid var(--border);
+    border-radius: 20px;
+    background: var(--bg);
+    color: var(--text-secondary);
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
   }
-  .btn-top:hover { border-color: var(--accent); color: var(--accent-light); }
-  .btn-top.active { background: var(--ml-yellow); border-color: var(--ml-yellow); color: #1a1a2e; font-weight: 700; }
 
-  .chart-card {
-    background: var(--card); border: 1px solid var(--border);
-    border-radius: 12px; padding: 28px;
+  .btn-top:hover {
+    border-color: var(--ml-blue-light);
+    color: var(--ml-blue-light);
+    background: rgba(52,131,250,0.04);
   }
-  .chart-wrapper { position: relative; width: 100%; height: 560px; }
 
+  .btn-top.active {
+    background: var(--ml-blue);
+    border-color: var(--ml-blue);
+    color: #fff;
+    box-shadow: 0 2px 8px rgba(45,50,119,0.25);
+  }
+
+  /* KPI cards */
   .kpi-bar {
-    display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-    gap: 12px; margin-bottom: 20px;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 14px;
+    margin-bottom: 24px;
   }
+
+  @media (max-width: 900px) {
+    .kpi-bar { grid-template-columns: repeat(2, 1fr); }
+  }
+
   .kpi {
-    background: rgba(45, 50, 119, 0.25);
-    border: 1px solid rgba(45, 50, 119, 0.4);
-    border-radius: 8px; padding: 14px 16px; text-align: center;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 18px 16px 14px;
+    text-align: center;
+    box-shadow: var(--shadow-sm);
+    position: relative;
+    overflow: hidden;
   }
+
+  .kpi::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: var(--ml-yellow);
+  }
+
   .kpi-value {
-    font-size: 22px; font-weight: 700; color: var(--ml-yellow);
+    font-size: 22px;
+    font-weight: 800;
+    color: var(--ml-blue);
     font-variant-numeric: tabular-nums;
+    line-height: 1.2;
   }
+
   .kpi-label {
-    font-size: 11px; color: var(--text-muted);
-    text-transform: uppercase; letter-spacing: 0.5px; margin-top: 2px;
+    font-size: 10px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    font-weight: 600;
+    margin-top: 4px;
   }
 
-  .footer { text-align: center; margin-top: 20px; font-size: 12px; color: var(--text-muted); }
-
-  .legend-hint {
-    display: flex; align-items: center; gap: 16px;
-    justify-content: center; margin-top: 12px; font-size: 12px; color: var(--text-muted);
+  /* Chart card */
+  .chart-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 32px;
+    box-shadow: var(--shadow-md);
   }
+
+  .chart-wrapper {
+    position: relative;
+    width: 100%;
+    height: 520px;
+  }
+
+  /* Legend */
+  .legend-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 24px;
+    margin-top: 20px;
+    padding-top: 16px;
+    border-top: 1px solid var(--border);
+  }
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    color: var(--text-secondary);
+    font-weight: 500;
+  }
+
   .legend-dot {
-    width: 10px; height: 10px; border-radius: 50%;
-    display: inline-block; margin-right: 4px;
+    width: 12px; height: 12px;
+    border-radius: 50%;
+    border: 2px solid #fff;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+  }
+
+  .size-hint {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 12px;
+    color: var(--text-muted);
+    font-weight: 500;
+    margin-left: 16px;
+    padding-left: 16px;
+    border-left: 1px solid var(--border);
+  }
+
+  .size-circle {
+    border-radius: 50%;
+    background: rgba(45,50,119,0.12);
+    border: 1.5px solid rgba(45,50,119,0.25);
+  }
+
+  /* Footer */
+  .footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 24px;
+    padding: 0 4px;
+    font-size: 11px;
+    color: var(--text-muted);
+    font-weight: 500;
+  }
+
+  .footer-meli {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .meli-square {
+    width: 14px; height: 14px;
+    background: var(--ml-yellow);
+    border-radius: 3px;
   }
 </style>
 </head>
 <body>
 
+<div class="top-bar"></div>
+
 <div class="container">
   <div class="header">
-    <h1>QTDE Rotas x Share FF x SVC</h1>
-    <p>Scatter plot — Share de FF (%) vs Quantidade de rotas por SVC</p>
+    <div class="header-text">
+      <h1>QTDE Rotas x Share FF x SVC</h1>
+      <p>Share de Flex Fleet (%) vs Quantidade de rotas por Service Center</p>
+    </div>
+    <div class="badge">
+      <span class="badge-dot"></span>
+      Logística Last-Mile
+    </div>
   </div>
 
   <div class="controls">
-    <div class="filter-group">
-      <label>Filtro:</label>
-      <button class="btn-top" data-top="5">Top 5</button>
-      <button class="btn-top" data-top="10">Top 10</button>
-      <button class="btn-top active" data-top="15">Top 15</button>
-      <button class="btn-top" data-top="20">Top 20</button>
-      <button class="btn-top" data-top="0">Todos</button>
-    </div>
+    <span class="controls-label">Top SVCs</span>
+    <button class="btn-top" data-top="5">Top 5</button>
+    <button class="btn-top" data-top="10">Top 10</button>
+    <button class="btn-top active" data-top="15">Top 15</button>
+    <button class="btn-top" data-top="20">Top 20</button>
+    <button class="btn-top" data-top="0">Todos</button>
   </div>
 
   <div id="kpiBar" class="kpi-bar"></div>
@@ -118,20 +298,36 @@
     <div class="chart-wrapper">
       <canvas id="scatterChart"></canvas>
     </div>
-    <div class="legend-hint">
-      <span><span class="legend-dot" style="background:#9883fa"></span> Menor Share</span>
-      <span><span class="legend-dot" style="background:#3483FA"></span> Share Médio</span>
-      <span><span class="legend-dot" style="background:#2D3277"></span> Maior Share</span>
+    <div class="legend-row">
+      <div class="legend-item">
+        <span class="legend-dot" style="background:#a8c4f5"></span> Menor Share
+      </div>
+      <div class="legend-item">
+        <span class="legend-dot" style="background:#3483FA"></span> Share Médio
+      </div>
+      <div class="legend-item">
+        <span class="legend-dot" style="background:#2D3277"></span> Maior Share
+      </div>
+      <div class="size-hint">
+        <span class="size-circle" style="width:8px;height:8px"></span>
+        <span class="size-circle" style="width:14px;height:14px"></span>
+        <span class="size-circle" style="width:20px;height:20px"></span>
+        Tamanho = volume de rotas
+      </div>
     </div>
   </div>
 
   <div class="footer">
-    Fonte: CSV — Share FF por SVC | Gerado em 07/04/2026
+    <div class="footer-meli">
+      <span class="meli-square"></span>
+      Mercado Livre — Logística
+    </div>
+    <span>Fonte: CSV — Share FF por SVC | 07/04/2026</span>
   </div>
 </div>
 
 <script>
-const RAW_DATA = [
+var RAW_DATA = [
   {svc:"SSP16",share:48,rotas:2397},
   {svc:"SSP46",share:41,rotas:125},
   {svc:"SSP21",share:36,rotas:2611},
@@ -160,22 +356,22 @@ const RAW_DATA = [
   {svc:"SSP36",share:11,rotas:736}
 ];
 
-const SORTED = [...RAW_DATA].sort((a,b) => b.rotas - a.rotas);
+var SORTED = RAW_DATA.slice().sort(function(a,b){ return b.rotas - a.rotas; });
 
 function getColor(share) {
-  // Meli blue gradient: light #3483FA → dark #2D3277
-  const minS = 10, maxS = 50;
-  const t = Math.max(0, Math.min(1, (share - minS) / (maxS - minS)));
-  var r = Math.round(52 + (1-t) * 100);
-  var g = Math.round(50 + (1-t) * 81);
-  var b = Math.round(119 + (1-t) * 131);
+  var minS = 10, maxS = 50;
+  var t = Math.max(0, Math.min(1, (share - minS) / (maxS - minS)));
+  // Light meli-blue → dark meli-blue
+  var r = Math.round(168 - t * 123);
+  var g = Math.round(196 - t * 146);
+  var b = Math.round(245 - t * 126);
   return 'rgb(' + r + ',' + g + ',' + b + ')';
 }
 
 function getRadius(rotas) {
-  const min = 100, max = 4000;
-  const t = Math.max(0, Math.min(1, (rotas - min) / (max - min)));
-  return 6 + t * 10;
+  var min = 100, max = 4000;
+  var t = Math.max(0, Math.min(1, (rotas - min) / (max - min)));
+  return 7 + t * 12;
 }
 
 function createKpiElement(value, label) {
@@ -192,7 +388,7 @@ function createKpiElement(value, label) {
   return kpi;
 }
 
-let chart = null;
+var chart = null;
 
 function updateKPIs(data) {
   var avgShare = (data.reduce(function(s,d){ return s + d.share; }, 0) / data.length).toFixed(1);
@@ -206,7 +402,7 @@ function updateKPIs(data) {
   bar.appendChild(createKpiElement(String(data.length), 'SVCs exibidos'));
   bar.appendChild(createKpiElement(avgShare + '%', 'Share FF médio'));
   bar.appendChild(createKpiElement(totalRotas.toLocaleString('pt-BR'), 'Total rotas'));
-  bar.appendChild(createKpiElement(maxShare.svc + ' (' + maxShare.share + '%)', 'Maior Share'));
+  bar.appendChild(createKpiElement(maxShare.svc + ' (' + maxShare.share + '%)', 'Maior share'));
   bar.appendChild(createKpiElement(maxRotas.svc + ' (' + maxRotas.rotas.toLocaleString('pt-BR') + ')', 'Mais rotas'));
 }
 
@@ -231,60 +427,90 @@ function renderChart(topN) {
       datasets: [{
         data: points,
         backgroundColor: bgColors,
-        borderColor: bgColors.map(function(c) { return c.replace('rgb', 'rgba').replace(')', ',0.6)'); }),
-        borderWidth: 1.5,
+        borderColor: bgColors.map(function(c) {
+          return c.replace('rgb(', 'rgba(').replace(')', ',0.7)');
+        }),
+        borderWidth: 2,
         pointRadius: radii,
-        pointHoverRadius: radii.map(function(r) { return r + 3; })
+        pointHoverRadius: radii.map(function(r) { return r + 4; }),
+        pointStyle: 'circle'
       }]
     },
     options: {
       responsive: true,
       maintainAspectRatio: false,
-      layout: { padding: { top: 20, right: 40, bottom: 10, left: 10 } },
+      layout: { padding: { top: 24, right: 48, bottom: 12, left: 12 } },
       scales: {
         x: {
           title: {
             display: true, text: 'Share FF (%)',
-            color: '#8a8a9a', font: { size: 13, weight: '600', family: 'Inter' }
+            color: '#2D3277',
+            font: { size: 13, weight: '700', family: 'Inter' },
+            padding: { top: 12 }
           },
           ticks: {
             callback: function(v) { return v + '%'; },
-            color: '#8a8a9a', font: { size: 11, family: 'Inter' }, stepSize: 5
+            color: '#5a5f7a',
+            font: { size: 11, weight: '500', family: 'Inter' },
+            stepSize: 5
           },
-          grid: { color: 'rgba(255,255,255,0.05)', drawBorder: false },
+          grid: { color: '#eef0f5', lineWidth: 1 },
+          border: { color: '#d8dbe5' },
           min: 5, max: 55
         },
         y: {
           title: {
             display: true, text: 'QTDE_ROTAS',
-            color: '#8a8a9a', font: { size: 13, weight: '600', family: 'Inter' }
+            color: '#2D3277',
+            font: { size: 13, weight: '700', family: 'Inter' },
+            padding: { bottom: 12 }
           },
           ticks: {
             callback: function(v) { return v >= 1000 ? (v/1000).toFixed(0) + 'K' : v; },
-            color: '#8a8a9a', font: { size: 11, family: 'Inter' }, stepSize: 500
+            color: '#5a5f7a',
+            font: { size: 11, weight: '500', family: 'Inter' },
+            stepSize: 500
           },
-          grid: { color: 'rgba(255,255,255,0.05)', drawBorder: false },
+          grid: { color: '#eef0f5', lineWidth: 1 },
+          border: { color: '#d8dbe5' },
           min: 0, max: 4500
         }
       },
       plugins: {
         legend: { display: false },
         tooltip: {
-          backgroundColor: '#1a1a2e',
+          backgroundColor: '#2D3277',
+          titleColor: '#FFE600',
+          bodyColor: '#fff',
           borderColor: 'rgba(52,131,250,0.3)',
           borderWidth: 1,
-          titleFont: { family: 'Inter', weight: '600' },
-          bodyFont: { family: 'Inter' },
+          cornerRadius: 8,
+          padding: 12,
+          titleFont: { family: 'Inter', weight: '700', size: 14 },
+          bodyFont: { family: 'Inter', size: 12 },
           callbacks: {
             title: function(ctx) { return ctx[0].raw.label; },
-            label: function(ctx) { return ['Share FF: ' + ctx.raw.x + '%', 'Rotas: ' + ctx.raw.y.toLocaleString('pt-BR')]; }
+            label: function(ctx) {
+              return [
+                'Share FF: ' + ctx.raw.x + '%',
+                'Rotas: ' + ctx.raw.y.toLocaleString('pt-BR')
+              ];
+            }
           }
         },
         datalabels: {
-          align: 'top', anchor: 'end', offset: 4,
-          color: '#c0c0d0',
-          font: { size: 11, weight: '600', family: 'Inter' },
-          formatter: function(value) { return value.label; }
+          align: function(context) {
+            var idx = context.dataIndex;
+            var val = context.dataset.data[idx];
+            return val.y > 3500 ? 'bottom' : 'top';
+          },
+          anchor: 'end',
+          offset: 6,
+          color: '#2D3277',
+          font: { size: 11, weight: '700', family: 'Inter' },
+          formatter: function(value) { return value.label; },
+          textStrokeColor: '#fff',
+          textStrokeWidth: 3
         }
       }
     },
