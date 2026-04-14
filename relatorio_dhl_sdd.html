@@ -47,11 +47,13 @@
     .chart-box h2 { font-size: 1rem; color: var(--meli-gray-dark); margin-bottom: 16px; padding-bottom: 8px; border-bottom: 1px solid var(--meli-gray-light); }
     .chart-container { position: relative; height: 260px; }
     .gantt-box { margin-bottom: 24px; }
-    .gantt-scroll { overflow-y: visible; overflow-x: hidden; border: 1px solid var(--meli-gray-light); border-radius: 6px; }
+    .gantt-scroll { overflow-y: visible; overflow-x: auto; border: 1px solid var(--meli-gray-light); border-radius: 6px; }
     .gantt-tabela { font-size: 1.05rem; margin-top: 0; width: 100%; border-collapse: collapse; }
     .gantt-tabela th, .gantt-tabela td { padding: 8px 12px; border: 1px solid var(--meli-gray-light); white-space: nowrap; }
     .gantt-tabela thead th { text-align: center; background: var(--meli-gray-bg); font-weight: 600; color: var(--meli-gray-dark); }
     .gantt-tabela thead th:first-child { text-align: left; }
+    .gantt-tabela td.num { text-align: center; }
+    .top10-tabela td.num, .top10-tabela th.num { text-align: center; }
     .gantt-tabela td.num { text-align: center; }
     .gantt-tabela .gantt-svc { font-weight: 600; background: var(--meli-gray-bg); }
     .gantt-tabela th.gantt-sort { cursor: pointer; user-select: none; }
@@ -68,7 +70,7 @@
     .gantt-empty { color: var(--meli-gray); font-size: 0.9rem; }
     .top10-box { margin-bottom: 24px; }
     .top10-tabela { font-size: 1rem; width: 100%; border-collapse: collapse; }
-    .top10-tabela th, .top10-tabela td { padding: 8px 12px 10px; border-bottom: 1px solid var(--meli-gray-light); }
+    .top10-tabela th, .top10-tabela td { padding: 8px 12px 12px 10px; border-bottom: 1px solid var(--meli-gray-light); }
     .top10-tabela th { background: var(--meli-gray-bg); font-weight: 600; color: var(--meli-gray); }
     .top10-tabela td.num { text-align: right; font-variant-numeric: tabular-nums; }
     .top10-tabela .top10-gap { font-weight: 600; color: var(--er-vermelho); }
@@ -147,6 +149,7 @@
   
   
   
+  
   <div class="gantt-scroll">
   <table class="gantt-tabela gantt-compact" id="tabelaGantt">
     <thead><tr><th class="gantt-sort" data-col="0">SVC</th><th class='num gantt-sort' data-col='1'>W7</th><th class='num gantt-sort' data-col='2'>W8</th><th class='num gantt-sort' data-col='3'>W9</th><th class='num gantt-sort' data-col='4'>W10</th><th class='num gantt-sort' data-col='5'>W11</th><th class='num gantt-sort' data-col='6'>W12</th><th class='num gantt-sort' data-col='7'>W13</th><th class='num gantt-sort' data-col='8'>W14</th><th class='num gantt-sort' data-col='9'>W15</th></tr></thead>
@@ -205,8 +208,8 @@ W15	478,3	368,0	75,3%`;
         var erSemDisplay = ['67,0%', '68,3%', '66,5%', '75,3%'];
         var carrosNegMes = [206.0, 245.8, 233.2, 357.2, 483.9];
         var carrosNegSem = [480.3, 480.3, 485.3, 478.3];
-        var optsMes = { responsive: true, maintainAspectRatio: false, layout: { padding: { top: 0 } }, plugins: { legend: { display: true, position: "bottom", align: "center" }, tooltip: { callbacks: { label: function(ctx) { if (ctx.dataset.yAxisID === "yEr") return fmtErBr(ctx.raw); return ctx.raw + " carros"; } } }, datalabels: { display: true, formatter: function(v, ctx) { return ctx.datasetIndex === 0 ? Math.round(v) : Math.round(v) + "%"; }, anchor: "end", align: "top", color: "#333", font: { size: 10 } } }, scales: { x: { grid: { display: false } }, yCarros: { type: "linear", position: "left", min: 0, max: 550, grid: { color: "#eee" } }, yEr: { type: "linear", position: "right", min: 0, max: 110, ticks: { callback: function(v) { return v + "%"; } }, grid: { display: false } } } };
-        var optsSem = { responsive: true, maintainAspectRatio: false, layout: { padding: { top: 0 } }, plugins: { legend: { display: true, position: "bottom", align: "center" }, tooltip: { callbacks: { label: function(ctx) { if (ctx.dataset.yAxisID === "yEr") return erSemDisplay[ctx.dataIndex] || fmtErBr(ctx.raw); return ctx.raw + " carros"; } } }, datalabels: { display: true, formatter: function(v, ctx) { var val = ctx.datasetIndex === 0 ? v : (typeof v === "number" ? v : parseFloat(String(v).replace(",", ".")) || 0); return ctx.datasetIndex === 0 ? Math.round(val) : Math.round(val) + "%"; }, anchor: "end", align: "top", color: "#333", font: { size: 10 } } }, scales: { x: { grid: { display: false } }, yCarros: { type: "linear", position: "left", min: 0, max: 550, grid: { color: "#eee" } }, yEr: { type: "linear", position: "right", min: 0, max: 100, ticks: { callback: function(v) { return v + "%"; } }, grid: { display: false } } } };
+        var optsMes = { responsive: true, maintainAspectRatio: false, layout: { padding: { top: 0 } }, plugins: { legend: { display: true, position: "bottom", align: "center", labels: { font: { size: 13 } } }, tooltip: { callbacks: { label: function(ctx) { if (ctx.dataset.yAxisID === "yEr") return fmtErBr(ctx.raw); return ctx.raw + " carros"; } } }, datalabels: { display: true, formatter: function(v, ctx) { return ctx.datasetIndex === 0 ? Math.round(v) : Math.round(v) + "%"; }, anchor: "end", align: "top", color: "#333", font: { size: 13 } } }, scales: { x: { grid: { display: false }, ticks: { font: { size: 13 } } }, yCarros: { type: "linear", position: "left", min: 0, max: 550, grid: { color: "#eee" } }, yEr: { type: "linear", position: "right", min: 0, max: 110, ticks: { callback: function(v) { return v + "%"; } }, grid: { display: false } } } };
+        var optsSem = { responsive: true, maintainAspectRatio: false, layout: { padding: { top: 0 } }, plugins: { legend: { display: true, position: "bottom", align: "center", labels: { font: { size: 13 } } }, tooltip: { callbacks: { label: function(ctx) { if (ctx.dataset.yAxisID === "yEr") return erSemDisplay[ctx.dataIndex] || fmtErBr(ctx.raw); return ctx.raw + " carros"; } } }, datalabels: { display: true, formatter: function(v, ctx) { var val = ctx.datasetIndex === 0 ? v : (typeof v === "number" ? v : parseFloat(String(v).replace(",", ".")) || 0); return ctx.datasetIndex === 0 ? Math.round(val) : Math.round(val) + "%"; }, anchor: "end", align: "top", color: "#333", font: { size: 13 } } }, scales: { x: { grid: { display: false }, ticks: { font: { size: 13 } } }, yCarros: { type: "linear", position: "left", min: 0, max: 550, grid: { color: "#eee" } }, yEr: { type: "linear", position: "right", min: 0, max: 100, ticks: { callback: function(v) { return v + "%"; } }, grid: { display: false } } } };
         new Chart(document.getElementById("chartMes"), { type: "bar", data: { labels: ['Nov/2025', 'Dez/2025', 'Jan/2026', 'Fev/2026', 'Mar/2026'], datasets: [{ label: "Carros negociados", data: carrosNegMes, backgroundColor: "rgba(255,230,0,0.8)", borderColor: "#FFE600", borderWidth: 1, yAxisID: "yCarros", order: 1 }, { label: "ER %", data: [93.7, 94.5, 96.4, 75.9, 67.4], type: "line", borderColor: "#2D3277", backgroundColor: "transparent", borderWidth: 2, fill: false, yAxisID: "yEr", pointBackgroundColor: ["#7ED321","#7ED321","#348338","#E60000","#E60000"], pointBorderColor: ["#7ED321","#7ED321","#348338","#E60000","#E60000"], order: 2 }] }, options: optsMes });
         new Chart(document.getElementById("chartSem"), { type: "bar", data: { labels: ['W12', 'W13', 'W14', 'W15'], datasets: [{ label: "Carros negociados", data: carrosNegSem, backgroundColor: "rgba(255,230,0,0.8)", borderColor: "#FFE600", borderWidth: 1, yAxisID: "yCarros", order: 1 }, { label: "ER %", data: [67.0, 68.3, 66.5, 75.3], type: "line", borderColor: "#2D3277", backgroundColor: "transparent", borderWidth: 2, fill: false, yAxisID: "yEr", pointBackgroundColor: ["#E60000","#E60000","#E60000","#E60000"], pointBorderColor: ["#E60000","#E60000","#E60000","#E60000"], order: 2 }] }, options: optsSem });
         (function() {
