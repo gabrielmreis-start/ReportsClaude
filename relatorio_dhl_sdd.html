@@ -48,15 +48,16 @@
     .chart-container { position: relative; height: 260px; }
     .gantt-box { margin-bottom: 24px; }
     .gantt-scroll { overflow-y: visible; overflow-x: hidden; border: 1px solid var(--meli-gray-light); border-radius: 6px; }
-    .gantt-tabela { font-size: 0.9rem; margin-top: 0; width: 100%; border-collapse: collapse; }
-    .gantt-tabela th, .gantt-tabela td { padding: 4px 8px; border: 1px solid var(--meli-gray-light); white-space: nowrap; }
+    .gantt-tabela { font-size: 1.05rem; margin-top: 0; width: 100%; border-collapse: collapse; }
+    .gantt-tabela th, .gantt-tabela td { padding: 8px 12px; border: 1px solid var(--meli-gray-light); white-space: nowrap; }
     .gantt-tabela thead th { text-align: center; background: var(--meli-gray-bg); font-weight: 600; color: var(--meli-gray-dark); }
     .gantt-tabela thead th:first-child { text-align: left; }
+    .gantt-tabela td.num { text-align: center; }
     .gantt-tabela .gantt-svc { font-weight: 600; background: var(--meli-gray-bg); }
     .gantt-tabela th.gantt-sort { cursor: pointer; user-select: none; }
     .gantt-tabela th.gantt-sort:hover { text-decoration: underline; }
-    .gantt-tabela .gantt-pe { font-size: 0.85em; text-align: center; }
-    .gantt-gap { font-size: 0.75em; color: var(--meli-gray); }
+    .gantt-tabela .gantt-pe { font-size: 1em; text-align: center; }
+    .gantt-gap { font-size: 0.9em; color: var(--meli-gray); }
     .gantt-vermelho { background: #ffebee !important; }
     .gantt-verde { background: #e8f5e9 !important; }
     .gantt-cinza { background: #f5f5f5 !important; }
@@ -66,8 +67,8 @@
     .gantt-subtitulo { font-size: 0.85rem; color: var(--meli-gray); margin: -4px 0 12px 0; }
     .gantt-empty { color: var(--meli-gray); font-size: 0.9rem; }
     .top10-box { margin-bottom: 24px; }
-    .top10-tabela { font-size: 0.85rem; width: 100%; border-collapse: collapse; }
-    .top10-tabela th, .top10-tabela td { padding: 6px 10px; border-bottom: 1px solid var(--meli-gray-light); }
+    .top10-tabela { font-size: 1rem; width: 100%; border-collapse: collapse; }
+    .top10-tabela th, .top10-tabela td { padding: 8px 12px 10px; border-bottom: 1px solid var(--meli-gray-light); }
     .top10-tabela th { background: var(--meli-gray-bg); font-weight: 600; color: var(--meli-gray); }
     .top10-tabela td.num { text-align: right; font-variant-numeric: tabular-nums; }
     .top10-tabela .top10-gap { font-weight: 600; color: var(--er-vermelho); }
@@ -143,6 +144,7 @@
     <h2 class="gantt-titulo">Proposta DHL 2026</h2>
     <p class="gantt-subtitulo">Planejado (acum.) / Executado (sem.) / Gap</p>
 
+  
   
   
   <div class="gantt-scroll">
