@@ -70,6 +70,25 @@
   .val-bad  { color: #E04040; font-weight: 700; }
   .num { text-align: right; }
 
+  /* Financial summary card */
+  .net-block { text-align: center; padding: 12px 0 6px; }
+  .net-amount { font-size: 38px; font-weight: 700; color: #00A650; letter-spacing: -1px; }
+  .net-desc { font-size: 12px; color: #666; margin-top: 4px; }
+  .fin-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin: 14px 0; }
+  .fin-box { border-radius: 8px; padding: 14px 10px; text-align: center; }
+  .fin-box.fgreen { background: #e6f7ee; }
+  .fin-box.fred   { background: #fde8e8; }
+  .fin-box.fgray  { background: #f4f4f4; }
+  .fin-box .fin-n { font-size: 22px; font-weight: 700; color: #2D3277; }
+  .fin-box .fin-label { font-size: 11px; color: #666; margin: 4px 0 2px; }
+  .fin-box.fgreen .fin-val { font-size: 13px; font-weight: 700; color: #00A650; }
+  .fin-box.fred   .fin-val { font-size: 13px; font-weight: 700; color: #E04040; }
+  .fin-box.fgray  .fin-val { font-size: 13px; font-weight: 600; color: #888; }
+  .fin-divider { display: flex; justify-content: space-around; font-size: 11px; color: #aaa;
+                  padding: 6px 0; border-top: 1px solid #eee; margin-top: 6px; }
+  .tfoot-note { font-size: 11px; color: #888; margin-top: 10px; padding: 10px 14px;
+                background: #fffbe6; border-left: 3px solid #FFE600; border-radius: 4px; }
+
   footer { text-align: center; font-size: 11px; color: #aaa; padding: 20px;
            border-top: 1px solid #e5e5e5; margin-top: 8px; }
 </style>
@@ -122,8 +141,34 @@
       <canvas id="chartScore" height="200"></canvas>
     </div>
     <div class="card">
-      <h2>KM Total por Faixa de Score</h2>
-      <canvas id="chartKm" height="200"></canvas>
+      <h2>Impacto Financeiro — Se Score &lt; 90 usa km_plan</h2>
+      <div class="net-block">
+        <div class="net-amount">-R$ 52.868</div>
+        <div class="net-desc">economia líquida com a regra (km_plan vs odômetro)</div>
+      </div>
+      <div class="fin-grid">
+        <div class="fin-box fgreen">
+          <div class="fin-n">2.092</div>
+          <div class="fin-label">rotas pagaria MENOS</div>
+          <div class="fin-val">▼ R$ 109.710</div>
+        </div>
+        <div class="fin-box fred">
+          <div class="fin-n">1.335</div>
+          <div class="fin-label">rotas pagaria MAIS</div>
+          <div class="fin-val">▲ R$ 56.842</div>
+        </div>
+        <div class="fin-box fgray">
+          <div class="fin-n">19.204</div>
+          <div class="fin-label">sem impacto (mesma faixa)</div>
+          <div class="fin-val">84,9% das rotas</div>
+        </div>
+      </div>
+      <div class="fin-divider">
+        <span>22.631 rotas analisadas</span>
+        <span>Frete atual (odôm.): R$ 5.777.214</span>
+        <span>Frete c/ plan: R$ 5.724.346</span>
+      </div>
+      <div style="font-size:10px;color:#bbb;margin-top:6px;text-align:center">Tarifa Padrão · BASEROTAS_LASTMILE + BD_Rotas_Realizadas · Abril 2026</div>
     </div>
   </div>
 
@@ -171,6 +216,12 @@
       </table>
     </div>
   </div>
+  <div class="tfoot-note">
+    <strong>ⓘ Hub "Não mapeado" (14.217 rotas no total · 4.430 com score &lt; 90):</strong>
+    rotas presentes no BT_BASEROTAS_LASTMILE sem correspondência no BD_Rotas_Realizadas (HUB_Ajustado = nulo).
+    Distribuídas em 100+ SVCs — top: SSP18, SSP15, SSP4, SSP9, SBA1, SSP20, SPR2…
+    Na análise financeira, essas rotas usam <strong>Tarifa Padrão</strong>.
+  </div>
 
 </div>
 
@@ -209,28 +260,6 @@ new Chart(document.getElementById('chartScore'), {
   }
 });
 
-const kmData = [66061, 233745, 302752, 728854, 2475684, 3655918, 0];
-new Chart(document.getElementById('chartKm'), {
-  type: 'bar',
-  data: {
-    labels: scoreLabels,
-    datasets: [{ label: 'KM Total', data: kmData, backgroundColor: scoreColors, borderRadius: 5 }]
-  },
-  options: {
-    plugins: {
-      legend: { display: false },
-      datalabels: {
-        anchor: 'center', align: 'center',
-        color: '#fff', font: { weight: 'bold', size: 11 },
-        formatter: v => v > 0 ? fmt(v) : ''
-      }
-    },
-    scales: {
-      y: { ticks: { callback: v => fmt(v) }, grid: { color: '#f0f0f0' } },
-      x: { grid: { display: false } }
-    }
-  }
-});
 
 // --- Tabela HUBs ---
 const hubs = [
