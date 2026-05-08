@@ -91,6 +91,27 @@
 
   footer { text-align: center; font-size: 11px; color: #aaa; padding: 20px;
            border-top: 1px solid #e5e5e5; margin-top: 8px; }
+
+  .ff { display:flex;flex-direction:column;gap:4px; }
+  .ff label { font-size:10px;text-transform:uppercase;color:#666;letter-spacing:.5px; }
+  .ff input, .ff select { border:1px solid #ddd;border-radius:6px;padding:6px 8px;font-size:12px;outline:none; }
+  .ff input:focus, .ff select:focus { border-color:#3483FA; }
+  .imp-btn { border:2px solid #ddd;background:white;padding:5px 12px;border-radius:20px;
+             cursor:pointer;font-size:12px;font-weight:600;transition:.15s;white-space:nowrap; }
+  .imp-btn.active       { border-color:#3483FA;background:#3483FA;color:white; }
+  .imp-btn.imp-mais.active  { border-color:#E04040;background:#E04040;color:white; }
+  .imp-btn.imp-menos.active { border-color:#00A650;background:#00A650;color:white; }
+  .imp-btn.imp-zero.active  { border-color:#888;background:#888;color:white; }
+  .sortable { cursor:pointer;user-select:none; }
+  .sortable:hover { background:#3D4590; }
+  .pag-btn { border:1px solid #ddd;background:white;padding:4px 10px;border-radius:6px;cursor:pointer;font-size:12px; }
+  .pag-btn.active { background:#3483FA;color:white;border-color:#3483FA;font-weight:700; }
+  .pag-btn:hover:not(.active) { background:#f0f4ff; }
+  .pag-btn:disabled { opacity:.4;cursor:default; }
+  .tag-mais  { background:#fde8e8;color:#E04040;padding:2px 8px;border-radius:12px;font-weight:700;font-size:11px; }
+  .tag-menos { background:#e6f7ee;color:#00A650;padding:2px 8px;border-radius:12px;font-weight:700;font-size:11px; }
+  .tag-zero  { background:#f4f4f4;color:#888;padding:2px 8px;border-radius:12px;font-size:11px; }
+
 </style>
 </head>
 <body>
@@ -223,6 +244,86 @@
     Na análise financeira, essas rotas usam <strong>Tarifa Padrão</strong>.
   </div>
 
+  <p class="section-title" style="margin-top:32px">
+    Detalhe das Rotas com Score &lt; 90% &mdash; Simulacao km_plan
+    <span>22.631 rotas &middot; Tarifa Padrao &middot; Abril 2026</span>
+  </p>
+
+  <div class="card" style="margin-bottom:16px;padding:16px 20px">
+    <div style="display:flex;flex-wrap:wrap;gap:12px;align-items:flex-end">
+      <div style="display:flex;flex-direction:column;gap:4px">
+        <label style="font-size:10px;text-transform:uppercase;color:#666;letter-spacing:.5px">Filtro de Impacto</label>
+        <div style="display:flex;gap:6px;flex-wrap:wrap">
+          <button class="imp-btn active" data-val="" onclick="setImpact(this)">Todos (22.631)</button>
+          <button class="imp-btn imp-mais" data-val="M" onclick="setImpact(this)">&#9650; Paga Mais (1.337)</button>
+          <button class="imp-btn imp-menos" data-val="L" onclick="setImpact(this)">&#9660; Paga Menos (2.089)</button>
+          <button class="imp-btn imp-zero" data-val="N" onclick="setImpact(this)">&#9632; Sem Impacto (19.205)</button>
+        </div>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:10px;margin-left:auto;align-items:flex-end">
+        <div class="ff"><label>HUB</label><input type="text" id="f-hub" placeholder="buscar..." oninput="applyFilters()"></div>
+        <div class="ff"><label>Veiculo</label>
+          <select id="f-veh" onchange="applyFilters()">
+            <option value="">Todos</option>
+            <option value="P">PASSEIO</option>
+            <option value="U">UTILITARIOS</option>
+            <option value="V">VAN</option>
+          </select>
+        </div>
+        <div class="ff"><label>Ciclo</label>
+          <select id="f-cic" onchange="applyFilters()">
+            <option value="">Todos</option>
+            <option value="AM">AM</option>
+            <option value="PM">PM</option>
+          </select>
+        </div>
+        <div class="ff"><label>Score min</label>
+          <input type="number" id="f-sc-min" min="0" max="89" placeholder="0" oninput="applyFilters()" style="width:66px">
+        </div>
+        <div class="ff"><label>Score max</label>
+          <input type="number" id="f-sc-max" min="0" max="89" value="89" placeholder="89" oninput="applyFilters()" style="width:66px">
+        </div>
+        <div class="ff"><label>ID Rota</label>
+          <input type="text" id="f-id" placeholder="ID..." oninput="applyFilters()" style="width:110px">
+        </div>
+        <div class="ff" style="justify-content:flex-end">
+          <button onclick="clearFilters()"
+            style="background:#eee;border:none;padding:7px 14px;border-radius:6px;cursor:pointer;font-size:12px">
+            Limpar
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" style="padding:16px 20px">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;flex-wrap:wrap;gap:8px">
+      <span id="result-count" style="font-size:12px;color:#666">carregando...</span>
+      <div id="pag-top"></div>
+    </div>
+    <div class="table-wrap">
+      <table id="rt" style="font-size:12px">
+        <thead>
+          <tr>
+            <th class="sortable" onclick="sortBy(0)">ID Rota</th>
+            <th class="sortable" onclick="sortBy(1)">HUB</th>
+            <th class="sortable" onclick="sortBy(2)">Veiculo</th>
+            <th class="sortable" onclick="sortBy(3)">Ciclo</th>
+            <th class="sortable num" onclick="sortBy(4)">Score</th>
+            <th class="sortable num" onclick="sortBy(5)">KM Odo</th>
+            <th class="sortable num" onclick="sortBy(6)">KM Plan</th>
+            <th class="sortable num" onclick="sortBy(7)">Tarifa Odo</th>
+            <th class="sortable num" onclick="sortBy(8)">Tarifa Plan</th>
+            <th class="sortable num" onclick="sortBy('delta')">Delta R$</th>
+            <th>Impacto</th>
+          </tr>
+        </thead>
+        <tbody id="tbody-r"></tbody>
+      </table>
+    </div>
+    <div id="pag-bot" style="margin-top:14px;display:flex;justify-content:center"></div>
+  </div>
+
 </div>
 
 <footer>Gerado por Claude · BigQuery meli-bi-data + meli-sbox · BT_BASEROTAS_LASTMILE · BD_Rotas_Realizadas · BT_SHP_RTT_TRAVELS · Abril 2026</footer>
@@ -323,6 +424,206 @@ hubs.forEach((d, i) => {
       <td class="num ${deltaClass}">+${delta.toFixed(1)}</td>
     </tr>`;
 });
+</script>
+
+<script>
+const RD=[["359869301","GRU II","V","AM",89.3,94.0,88.0,328.53,328.53,"N"],["362188555","GRU II","V","AM",81.8,107.0,103.0,377.85,377.85,"N"],["363243826","GRU II","V","AM",87.7,77.7,87.0,328.53,328.53,"N"],["369027072","GRU II","V","AM",89.6,70.6,98.0,328.53,328.53,"N"],["369525185","GRU II","V","AM",76.4,75.8,87.0,328.53,328.53,"N"],["371043142","GRU II","V","AM",72.7,84.4,96.0,328.53,328.53,"N"],["371045753","GRU II","V","AM",82.8,70.3,91.0,328.53,328.53,"N"],["357494222","N\u00e3o mapeado","U","AM",82.1,27.2,59.0,262.73,262.73,"N"],["358947856","N\u00e3o mapeado","P","AM",42.6,11.4,19.0,206.84,206.84,"N"],["359537389","N\u00e3o mapeado","P","AM",88.2,41.2,69.0,206.84,206.84,"N"],["359831319","N\u00e3o mapeado","P","AM",79.4,0.8,16.0,206.84,206.84,"N"],["359835239","N\u00e3o mapeado","P","PM",76.1,68.3,12.0,163.24,163.24,"N"],["359835876","N\u00e3o mapeado","P","AM",88.7,0.0,12.0,206.84,206.84,"N"],["359837675","N\u00e3o mapeado","P","AM",48.9,19.7,15.0,206.84,206.84,"N"],["359840503","N\u00e3o mapeado","U","AM",86.9,48.2,25.0,262.73,262.73,"N"],["359840650","N\u00e3o mapeado","P","AM",71.3,32.4,54.0,206.84,206.84,"N"],["359841735","N\u00e3o mapeado","P","AM",79.8,26.5,9.0,206.84,206.84,"N"],["359843128","N\u00e3o mapeado","P","AM",46.1,10.5,13.0,206.84,206.84,"N"],["359845158","N\u00e3o mapeado","P","AM",68.8,61.1,8.0,206.84,206.84,"N"],["359846761","N\u00e3o mapeado","P","AM",69.9,11.1,17.0,206.84,206.84,"N"],["359847132","N\u00e3o mapeado","P","AM",36.1,2.2,6.0,206.84,206.84,"N"],["359847503","N\u00e3o mapeado","U","AM",74.6,32.6,98.0,262.73,262.73,"N"],["359848161","N\u00e3o mapeado","P","PM",48.9,27.0,18.0,163.24,163.24,"N"],["359849092","N\u00e3o mapeado","P","PM",63.6,14.3,16.0,163.24,163.24,"N"],["359849253","N\u00e3o mapeado","P","AM",86.1,0.3,39.0,206.84,206.84,"N"],["359849995","N\u00e3o mapeado","V","AM",88.3,16.6,12.0,328.53,328.53,"N"],["359850037","N\u00e3o mapeado","P","AM",44.7,40.7,6.0,206.84,206.84,"N"],["359850919","N\u00e3o mapeado","P","AM",89.5,56.0,94.0,206.84,206.84,"N"],["359854034","N\u00e3o mapeado","P","AM",80.6,29.6,34.0,206.84,206.84,"N"],["359854580","N\u00e3o mapeado","P","PM",88.3,21.9,43.0,163.24,163.24,"N"],["359855630","N\u00e3o mapeado","U","AM",86.4,70.5,18.0,262.73,262.73,"N"],["359858745","N\u00e3o mapeado","P","AM",86.3,13.6,14.0,206.84,206.84,"N"],["359858773","N\u00e3o mapeado","P","AM",76.4,8.6,17.0,206.84,206.84,"N"],["359861055","N\u00e3o mapeado","P","PM",82.8,27.1,17.0,163.24,163.24,"N"],["359862623","N\u00e3o mapeado","P","AM",86.7,3.7,28.0,206.84,206.84,"N"],["359862805","N\u00e3o mapeado","P","AM",63.6,7.3,15.0,206.84,206.84,"N"],["359866438","N\u00e3o mapeado","P","AM",63.1,28.2,13.0,206.84,206.84,"N"],["359869077","N\u00e3o mapeado","P","AM",77.3,89.9,22.0,206.84,206.84,"N"],["359870869","N\u00e3o mapeado","P","PM",81.4,6.0,4.0,163.24,163.24,"N"],["359871443","N\u00e3o mapeado","P","AM",82.8,13.0,18.0,206.84,206.84,"N"],["359874600","N\u00e3o mapeado","P","AM",64.3,0.9,12.0,206.84,206.84,"N"],["359875608","N\u00e3o mapeado","P","AM",39.6,0.0,24.0,206.84,206.84,"N"],["359879850","N\u00e3o mapeado","U","AM",77.4,25.6,73.0,262.73,262.73,"N"],["359880480","N\u00e3o mapeado","P","AM",71.5,15.6,13.0,206.84,206.84,"N"],["359882797","N\u00e3o mapeado","P","PM",32.0,0.0,18.0,163.24,163.24,"N"],["359886864","N\u00e3o mapeado","P","PM",77.2,12.0,28.0,163.24,163.24,"N"],["359891260","N\u00e3o mapeado","P","AM",58.3,95.7,66.0,206.84,206.84,"N"],["359892905","N\u00e3o mapeado","P","PM",84.6,83.1,20.0,163.24,163.24,"N"],["359895691","N\u00e3o mapeado","P","PM",45.0,6.4,11.0,163.24,163.24,"N"],["359895775","N\u00e3o mapeado","P","AM",70.4,6.6,8.0,206.84,206.84,"N"],["359903209","N\u00e3o mapeado","P","AM",43.1,212.7,10.0,304.26,206.84,"L"],["359933029","N\u00e3o mapeado","P","AM",44.9,298.0,16.0,304.26,206.84,"L"],["359956213","N\u00e3o mapeado","P","AM",56.3,284.9,49.0,304.26,206.84,"L"],["360000607","N\u00e3o mapeado","P","AM",67.3,88.6,103.0,206.84,241.58,"M"],["360011779","N\u00e3o mapeado","P","PM",61.2,125.6,60.0,190.62,163.24,"L"],["360024407","N\u00e3o mapeado","P","PM",83.4,90.4,128.0,163.24,190.62,"M"],["360048333","N\u00e3o mapeado","P","PM",79.0,151.0,99.0,213.51,163.24,"L"],["360373077","N\u00e3o mapeado","P","AM",69.8,5.3,116.0,206.84,241.58,"M"],["360424303","N\u00e3o mapeado","P","AM",88.4,4.5,105.0,206.84,241.58,"M"],["360467822","N\u00e3o mapeado","P","AM",77.5,158.7,47.0,270.35,206.84,"L"],["360538102","N\u00e3o mapeado","P","AM",71.9,118.5,8.0,241.58,206.84,"L"],["360563743","N\u00e3o mapeado","P","PM",78.4,36.4,130.0,163.24,190.62,"M"],["360573557","N\u00e3o mapeado","P","PM",82.4,135.8,63.0,190.62,163.24,"L"],["360589510","N\u00e3o mapeado","P","PM",86.8,45.5,120.0,163.24,190.62,"M"],["360950199","N\u00e3o mapeado","U","AM",79.0,73.3,171.0,262.73,343.29,"M"],["360975126","N\u00e3o mapeado","U","AM",78.8,201.6,32.0,381.39,262.73,"L"],["361299611","N\u00e3o mapeado","P","AM",69.6,34.3,113.0,206.84,241.58,"M"],["361306688","N\u00e3o mapeado","P","AM",54.3,101.0,47.0,241.58,206.84,"L"],["361665368","N\u00e3o mapeado","P","AM",56.5,109.5,13.0,241.58,206.84,"L"],["361669330","N\u00e3o mapeado","P","AM",79.0,1.9,133.0,206.84,241.58,"M"],["361704407","N\u00e3o mapeado","P","PM",85.8,0.2,119.0,163.24,190.62,"M"],["361751265","N\u00e3o mapeado","U","AM",85.3,91.4,172.0,262.73,343.29,"M"],["361759350","N\u00e3o mapeado","U","AM",81.9,103.6,33.0,300.94,262.73,"L"],["361785222","N\u00e3o mapeado","P","AM",64.5,351.9,36.0,338.99,206.84,"L"],["361798844","N\u00e3o mapeado","U","AM",89.3,121.1,215.0,300.94,381.39,"M"],["361809344","N\u00e3o mapeado","P","AM",80.7,88.3,103.0,206.84,241.58,"M"],["361815140","N\u00e3o mapeado","P","AM",81.4,139.2,40.0,241.58,206.84,"L"],["362158308","N\u00e3o mapeado","P","AM",58.8,2.9,124.0,206.84,241.58,"M"],["362255972","N\u00e3o mapeado","P","PM",67.2,235.8,40.0,240.15,163.24,"L"],["362325853","N\u00e3o mapeado","U","AM",79.5,100.0,179.0,262.73,343.29,"M"],["362327736","N\u00e3o mapeado","P","PM",88.1,51.4,166.0,163.24,213.51,"M"],["362358529","N\u00e3o mapeado","P","AM",88.7,161.1,38.0,270.35,206.84,"L"],["362676707","N\u00e3o mapeado","P","AM",52.4,125.8,11.0,241.58,206.84,"L"],["362679465","N\u00e3o mapeado","U","AM",60.5,0.1,136.0,262.73,300.94,"M"],["362817344","N\u00e3o mapeado","P","PM",48.9,267.5,12.0,240.15,163.24,"L"],["362875374","N\u00e3o mapeado","P","PM",78.4,48.2,168.0,163.24,213.51,"M"],["362892573","N\u00e3o mapeado","U","AM",36.8,186.7,11.0,343.29,262.73,"L"],["362894428","N\u00e3o mapeado","U","AM",68.6,87.1,156.0,262.73,343.29,"M"],["363227635","N\u00e3o mapeado","P","AM",41.5,0.2,168.0,206.84,270.35,"M"],["363256587","N\u00e3o mapeado","P","PM",89.6,2.3,104.0,163.24,190.62,"M"],["363304019","N\u00e3o mapeado","P","PM",89.8,128.2,7.0,190.62,163.24,"L"],["363416117","N\u00e3o mapeado","P","AM",47.2,139.7,92.0,241.58,206.84,"L"],["363437243","N\u00e3o mapeado","P","PM",61.3,46.6,183.0,163.24,213.51,"M"],["363452083","N\u00e3o mapeado","P","PM",75.1,40.6,156.0,163.24,213.51,"M"],["363454120","N\u00e3o mapeado","P","PM",79.5,44.0,104.0,163.24,190.62,"M"],["363455625","N\u00e3o mapeado","P","AM",57.2,133.1,14.0,241.58,206.84,"L"],["363456773","N\u00e3o mapeado","P","PM",62.2,102.2,52.0,190.62,163.24,"L"],["363781272","N\u00e3o mapeado","U","AM",88.0,272.3,114.0,381.39,300.94,"L"],["363782042","N\u00e3o mapeado","U","AM",88.5,126.9,72.0,300.94,262.73,"L"],["363921076","N\u00e3o mapeado","P","AM",89.7,187.3,47.0,270.35,206.84,"L"],["363921272","N\u00e3o mapeado","U","AM",85.9,71.4,135.0,262.73,300.94,"M"],["363972624","N\u00e3o mapeado","P","PM",55.0,174.4,89.0,213.51,163.24,"L"],["363999602","N\u00e3o mapeado","P","PM",67.1,29.8,142.0,163.24,190.62,"M"],["364440462","N\u00e3o mapeado","P","AM",88.5,120.6,12.0,241.58,206.84,"L"],["364457052","N\u00e3o mapeado","P","PM",80.6,269.2,12.0,240.15,163.24,"L"],["364493403","N\u00e3o mapeado","P","AM",62.7,23.9,139.0,206.84,241.58,"M"],["364889512","N\u00e3o mapeado","U","AM",84.1,153.6,72.0,343.29,262.73,"L"],["364990116","N\u00e3o mapeado","P","AM",76.7,124.2,42.0,241.58,206.84,"L"],["365081270","N\u00e3o mapeado","P","AM",89.2,48.6,141.0,206.84,241.58,"M"],["365085575","N\u00e3o mapeado","P","AM",44.8,41.1,201.0,206.84,304.26,"M"],["365095452","N\u00e3o mapeado","P","AM",81.4,35.3,120.0,206.84,241.58,"M"],["365095620","N\u00e3o mapeado","P","AM",74.7,53.1,119.0,206.84,241.58,"M"],["365432376","N\u00e3o mapeado","P","AM",89.6,110.8,172.0,241.58,270.35,"M"],["365450513","N\u00e3o mapeado","U","AM",59.3,0.2,137.0,262.73,300.94,"M"],["365455959","N\u00e3o mapeado","P","AM",78.7,165.1,18.0,270.35,206.84,"L"],["365462672","N\u00e3o mapeado","P","AM",65.8,729.1,8.0,338.99,206.84,"L"],["365499758","N\u00e3o mapeado","P","AM",88.4,266.2,20.0,304.26,206.84,"L"],["365575533","N\u00e3o mapeado","P","AM",83.1,51.9,109.0,206.84,241.58,"M"],["365615909","N\u00e3o mapeado","P","PM",88.1,27.6,145.0,163.24,190.62,"M"],["365625800","N\u00e3o mapeado","P","PM",73.0,121.1,67.0,190.62,163.24,"L"],["365632471","N\u00e3o mapeado","P","PM",89.8,67.5,185.0,163.24,213.51,"M"],["365699034","N\u00e3o mapeado","P","AM",77.0,82.0,141.0,206.84,241.58,"M"],["365983031","N\u00e3o mapeado","U","AM",84.7,0.4,133.0,262.73,300.94,"M"],["365996793","N\u00e3o mapeado","U","AM",82.4,65.8,104.0,262.73,300.94,"M"],["366091286","N\u00e3o mapeado","U","AM",84.9,75.6,135.0,262.73,300.94,"M"],["366119993","N\u00e3o mapeado","P","PM",72.8,125.5,37.0,190.62,163.24,"L"],["366133279","N\u00e3o mapeado","P","PM",86.7,242.8,22.0,240.15,163.24,"L"],["366135442","N\u00e3o mapeado","P","AM",73.3,107.2,53.0,241.58,206.84,"L"],["366138942","N\u00e3o mapeado","P","PM",67.3,133.4,16.0,190.62,163.24,"L"],["366186997","N\u00e3o mapeado","P","PM",89.8,38.1,194.0,163.24,213.51,"M"],["366208697","N\u00e3o mapeado","P","PM",79.2,55.2,104.0,163.24,190.62,"M"],["366218322","N\u00e3o mapeado","P","AM",56.9,41.5,153.0,206.84,270.35,"M"],["366548071","N\u00e3o mapeado","P","AM",86.5,2.6,180.0,206.84,270.35,"M"],["366660533","N\u00e3o mapeado","P","AM",89.4,184.2,14.0,270.35,206.84,"L"],["366699957","N\u00e3o mapeado","U","AM",89.8,100.4,54.0,300.94,262.73,"L"],["366732332","N\u00e3o mapeado","P","AM",75.2,385.8,39.0,338.99,206.84,"L"],["366736357","N\u00e3o mapeado","P","PM",40.7,34.7,182.0,163.24,213.51,"M"],["366744694","N\u00e3o mapeado","P","PM",89.5,54.2,200.0,163.24,213.51,"M"],["366770909","N\u00e3o mapeado","P","PM",78.5,46.5,145.0,163.24,190.62,"M"],["366836282","N\u00e3o mapeado","U","AM",29.9,7.1,133.0,262.73,300.94,"M"],["367090739","N\u00e3o mapeado","U","AM",89.4,155.7,76.0,343.29,262.73,"L"],["367139186","N\u00e3o mapeado","P","AM",73.4,153.3,6.0,270.35,206.84,"L"],["367197839","N\u00e3o mapeado","P","AM",84.1,138.3,45.0,241.58,206.84,"L"],["367240399","N\u00e3o mapeado","P","AM",52.1,16.4,111.0,248.21,289.89,"M"],["367246881","N\u00e3o mapeado","P","AM",58.7,148.8,66.0,241.58,206.84,"L"],["367313675","N\u00e3o mapeado","P","PM",87.9,49.4,182.0,163.24,213.51,"M"],["367760436","N\u00e3o mapeado","P","AM",77.7,216.7,35.0,365.11,248.21,"L"],["367783830","N\u00e3o mapeado","P","AM",59.1,106.2,33.0,289.89,248.21,"L"],["368289524","N\u00e3o mapeado","P","AM",61.9,136.9,80.0,241.58,206.84,"L"],["368361624","N\u00e3o mapeado","P","AM",89.5,260.9,26.0,304.26,206.84,"L"]];
+</script>
+
+<script>
+
+(function() {
+  var VEH = {P:'PASSEIO', U:'UTILITARIOS', V:'VAN'};
+  var filteredRows = RD.slice();
+  var sortCol = 4;
+  var sortDir = 1;
+  var curPage = 1;
+  var PAGE_SIZE = 50;
+  var impactFilter = '';
+
+  // Escape text to prevent XSS when using textContent via DOM
+  function esc(v) {
+    return String(v).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  }
+
+  window.setImpact = function(btn) {
+    document.querySelectorAll('.imp-btn').forEach(function(b){ b.classList.remove('active'); });
+    btn.classList.add('active');
+    impactFilter = btn.dataset.val;
+    applyFilters();
+  };
+
+  window.applyFilters = function() {
+    var hub   = document.getElementById('f-hub').value.toLowerCase().trim();
+    var veh   = document.getElementById('f-veh').value;
+    var cic   = document.getElementById('f-cic').value;
+    var scMin = parseFloat(document.getElementById('f-sc-min').value);
+    var scMax = parseFloat(document.getElementById('f-sc-max').value);
+    if (isNaN(scMin)) scMin = 0;
+    if (isNaN(scMax)) scMax = 89;
+    var idR   = document.getElementById('f-id').value.trim();
+
+    filteredRows = RD.filter(function(r) {
+      if (impactFilter && r[9] !== impactFilter) return false;
+      if (hub && r[1].toLowerCase().indexOf(hub) === -1) return false;
+      if (veh && r[2] !== veh) return false;
+      if (cic && r[3] !== cic) return false;
+      if (r[4] < scMin || r[4] > scMax) return false;
+      if (idR && r[0].indexOf(idR) === -1) return false;
+      return true;
+    });
+
+    doSort();
+    curPage = 1;
+    render();
+  };
+
+  window.sortBy = function(col) {
+    if (col === sortCol) { sortDir = -sortDir; }
+    else { sortCol = col; sortDir = (col === 'delta') ? -1 : 1; }
+    doSort();
+    render();
+  };
+
+  function doSort() {
+    filteredRows.sort(function(a, b) {
+      var va, vb;
+      if (sortCol === 'delta') { va = a[8]-a[7]; vb = b[8]-b[7]; }
+      else { va = a[sortCol]; vb = b[sortCol]; }
+      if (va === vb) return 0;
+      if (typeof va === 'string') return sortDir * va.localeCompare(vb);
+      return sortDir * (va - vb);
+    });
+  }
+
+  function render() {
+    var total = filteredRows.length;
+    var pages = Math.max(1, Math.ceil(total / PAGE_SIZE));
+    curPage = Math.max(1, Math.min(curPage, pages));
+    var start = (curPage - 1) * PAGE_SIZE;
+    var slice = filteredRows.slice(start, start + PAGE_SIZE);
+
+    document.getElementById('result-count').textContent =
+      total.toLocaleString('pt-BR') + ' rotas (pag. ' + curPage + '/' + pages + ')';
+
+    var tbody = document.getElementById('tbody-r');
+    while (tbody.firstChild) tbody.removeChild(tbody.firstChild);
+
+    slice.forEach(function(r) {
+      var delta = r[8] - r[7];
+      var tr = document.createElement('tr');
+
+      function td(txt, cls) {
+        var cell = document.createElement('td');
+        if (cls) cell.className = cls;
+        cell.textContent = txt;
+        return cell;
+      }
+
+      tr.appendChild(td(r[0]));
+      tr.appendChild(td(r[1]));
+      tr.appendChild(td(VEH[r[2]]));
+      tr.appendChild(td(r[3]));
+      tr.appendChild(td(r[4].toFixed(1), 'num'));
+      tr.appendChild(td(r[5].toFixed(1), 'num'));
+      tr.appendChild(td(r[6].toFixed(1), 'num'));
+      tr.appendChild(td('R$ ' + r[7].toFixed(2), 'num'));
+      tr.appendChild(td('R$ ' + r[8].toFixed(2), 'num'));
+
+      // Delta cell — uses span with fixed class, no user data in HTML
+      var deltaCell = document.createElement('td');
+      deltaCell.className = 'num';
+      var span = document.createElement('span');
+      if (delta > 0.01) {
+        span.style.color = '#E04040';
+        span.style.fontWeight = '700';
+        span.textContent = '+R$ ' + delta.toFixed(2);
+      } else if (delta < -0.01) {
+        span.style.color = '#00A650';
+        span.style.fontWeight = '700';
+        span.textContent = '-R$ ' + Math.abs(delta).toFixed(2);
+      } else {
+        span.style.color = '#bbb';
+        span.textContent = '—';
+      }
+      deltaCell.appendChild(span);
+      tr.appendChild(deltaCell);
+
+      // Impacto tag — only class changes, no user data
+      var tagCell = document.createElement('td');
+      var tag = document.createElement('span');
+      if (r[9] === 'M') {
+        tag.className = 'tag-mais';
+        tag.textContent = '▲ paga mais';
+      } else if (r[9] === 'L') {
+        tag.className = 'tag-menos';
+        tag.textContent = '▼ paga menos';
+      } else {
+        tag.className = 'tag-zero';
+        tag.textContent = 'sem impacto';
+      }
+      tagCell.appendChild(tag);
+      tr.appendChild(tagCell);
+
+      tbody.appendChild(tr);
+    });
+
+    renderPag(pages);
+  }
+
+  function renderPag(pages) {
+    var html = buildPag(pages);
+    document.getElementById('pag-top').innerHTML = html;
+    document.getElementById('pag-bot').innerHTML = html;
+  }
+
+  function buildPag(pages) {
+    if (pages <= 1) return '';
+    var parts = [];
+    parts.push(pagBtn('«', curPage > 1 ? curPage - 1 : null));
+    var lo = Math.max(1, curPage - 3);
+    var hi = Math.min(pages, curPage + 3);
+    if (lo > 1) {
+      parts.push(pagBtn('1', 1));
+      if (lo > 2) parts.push('<span style="padding:0 6px;color:#aaa">…</span>');
+    }
+    for (var i = lo; i <= hi; i++) parts.push(pagBtn(String(i), i, i === curPage));
+    if (hi < pages) {
+      if (hi < pages - 1) parts.push('<span style="padding:0 6px;color:#aaa">…</span>');
+      parts.push(pagBtn(String(pages), pages));
+    }
+    parts.push(pagBtn('»', curPage < pages ? curPage + 1 : null));
+    return '<div style="display:flex;gap:4px;align-items:center;flex-wrap:wrap">' + parts.join('') + '</div>';
+  }
+
+  function pagBtn(label, page, active) {
+    if (page === null) return '<button class="pag-btn" disabled>' + label + '</button>';
+    var cls = 'pag-btn' + (active ? ' active' : '');
+    return '<button class="' + cls + '" onclick="goPage(' + page + ')">' + label + '</button>';
+  }
+
+  window.goPage = function(p) {
+    curPage = p;
+    render();
+    var el = document.getElementById('rt');
+    if (el) { var top = el.getBoundingClientRect().top + window.scrollY - 90; window.scrollTo({top: top, behavior: 'smooth'}); }
+  };
+
+  window.clearFilters = function() {
+    document.getElementById('f-hub').value = '';
+    document.getElementById('f-veh').value = '';
+    document.getElementById('f-cic').value = '';
+    document.getElementById('f-sc-min').value = '';
+    document.getElementById('f-sc-max').value = '89';
+    document.getElementById('f-id').value = '';
+    document.querySelectorAll('.imp-btn').forEach(function(b, i){ b.classList.toggle('active', i === 0); });
+    impactFilter = '';
+    applyFilters();
+  };
+
+  applyFilters();
+})();
+
 </script>
 </body>
 </html>
